@@ -51,7 +51,7 @@ jobs:
           mv DerivedData/MinGW-i686/onscripter-ru.exe ciout ; cp -r Resources/Windows/dlls ciout/dlls ; cd ciout
           zip -qry onscripter-ru_win_r${BUILD}${{env.dev}}${{env.discord}}.zip onscripter-ru.exe dlls
       - name: Upload files
-        uses: JuliusWinther/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           replacesArtifacts: false
@@ -96,7 +96,7 @@ jobs:
           zip -qry onscripter-ru_linux64_r${BUILD}${{env.dev}}${{env.discord}}.zip onscripter-ru || exit 1
           rm onscripter-ru ; cd ..
       - name: Upload files
-        uses: JuliusWinther/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           replacesArtifacts: false
@@ -136,7 +136,7 @@ jobs:
           zip -qry onscripter-ru_osx_r${BUILD}${{env.dev}}${{env.discord}}.zip onscripter-ru-osx.app || exit 1
           rm -rf onscripter-ru-osx.app ; cd -
       - name: Upload files
-        uses: JuliusWinther/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           replacesArtifacts: false
