@@ -1614,7 +1614,6 @@ int ScriptHandler::popStringBuffer() {
 
 VariableData &ScriptHandler::getVariableData(uint32_t no) {
 	if (no < VARIABLE_RANGE) {
-		printf("%d ", &no);
 		return variable_data[no];
 	}
 
