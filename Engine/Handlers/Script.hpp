@@ -20,7 +20,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstddef>
-
+ 
 const uint32_t VARIABLE_RANGE = 19999;
 const size_t MAX_ERRBUF_LEN   = 512;
 
