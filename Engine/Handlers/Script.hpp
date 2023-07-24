@@ -20,7 +20,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstddef>
- 
+
 const uint32_t VARIABLE_RANGE = 19999;
 const size_t MAX_ERRBUF_LEN   = 512;
 
@@ -52,7 +52,7 @@ struct NestInfo {
 	const char *next_script{nullptr}; // points into script_buffer; used in gosub and for -- does not need to be deleted
 	int var_no{0}, to{0}, step{0};    // used in for
 	bool textgosub_flag{false};       // used in textgosub and pretextgosub
-	//MARK: defaults to CLICK_NONE = 0
+	// MARK: defaults to CLICK_NONE = 0
 	bool dialogueEventOnReturn{false};
 	bool noReadOnReturn{false};
 	bool gosubReturnCall{false};
@@ -191,7 +191,7 @@ public:
 	ChoiceState choiceState;
 
 	ScriptHandler();
-	ScriptHandler(const ScriptHandler &) = delete;
+	ScriptHandler(const ScriptHandler &)            = delete;
 	ScriptHandler &operator=(const ScriptHandler &) = delete;
 	~ScriptHandler();
 
@@ -211,7 +211,7 @@ public:
 	const char *readStr();
 	const char *readFilePath();
 	int32_t readInt();
-	int32_t parseInt(const char **buf, bool signFlip=false);
+	int32_t parseInt(const char **buf, bool signFlip = false);
 	void skipToken();
 
 	// function for string access
@@ -402,19 +402,19 @@ public:
 
 	std::string game_identifier;
 	char *save_path{nullptr};
-	//Mion: savedir is set by savedirCommand, stores save files
-	// and main stored gamedata files except envdata
+	// Mion: savedir is set by savedirCommand, stores save files
+	//  and main stored gamedata files except envdata
 	char *savedir{nullptr};
 	uint32_t game_hash{0};
 
-	//Mion: for more helpful error msgs
+	// Mion: for more helpful error msgs
 	bool strict_warnings{false};
 	char current_cmd[64]{};
 
 	CmdType current_cmd_type{CmdType::None}, gosub_cmd_type{CmdType::None};
-	char errbuf[MAX_ERRBUF_LEN]{}; //intended for use creating error messages
-	                               // before they are passed to errorAndExit,
-	                               // simpleErrorAndExit or processError
+	char errbuf[MAX_ERRBUF_LEN]{}; // intended for use creating error messages
+	                               //  before they are passed to errorAndExit,
+	                               //  simpleErrorAndExit or processError
 	void processError(const char *str, const char *title = nullptr,
 	                  const char *detail = nullptr, bool is_warning = false,
 	                  bool is_simple = false, bool force_message = false);
@@ -452,7 +452,7 @@ private:
 
 	const char *checkComma(const char *buf);
 	void parseStr(const char **buf);
-	int32_t parseIntExpression(const char **buf, bool signFlip=false);
+	int32_t parseIntExpression(const char **buf, bool signFlip = false);
 	void readNextOp(const char **buf, Operator *op, int32_t *num);
 	int32_t calcArithmetic(int32_t num1, Operator op, int32_t num2);
 	int32_t parseArray(const char **buf, ArrayVariable &array);
@@ -464,7 +464,7 @@ private:
 	struct ExtendedVariableData {
 		uint32_t no;
 		VariableData vd;
-	} * extended_variable_data{nullptr};
+	} *extended_variable_data{nullptr};
 	uint32_t num_extended_variable_data{0};
 	uint32_t max_extended_variable_data{1};
 
