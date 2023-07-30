@@ -817,17 +817,20 @@ int ONScripter::scrollableScrollCommand() {
 		errorAndExit("scrollable_scroll called on something that's not a scrollable");
 	int rows = script_h.readInt();
 
-	// Aggiungi le seguenti linee per gestire il trascinamento della scrollbar
-	const int scrollAmount = rows * ai.scrollableInfo.elementHeight; // Calcola l'ammontare dello scorrimento
-	ai.scrollableInfo.scrollOffset += scrollAmount;                  // Aggiorna l'offset di scorrimento
+	// Calcola l'ammontare dello scorrimento
+	const int scrollAmount = rows * ai.scrollableInfo.elementHeight;
 
-	// Assicurati che l'offset di scorrimento sia all'interno dei limiti del contenuto
+	// Aggiorna l'offset di scorrimento
+	ai.scrollableInfo.scrollOffset += scrollAmount;
+
+	// Verifica i limiti del contenuto
 	if (ai.scrollableInfo.scrollOffset < 0)
 		ai.scrollableInfo.scrollOffset = 0;
 	else if (ai.scrollableInfo.scrollOffset > (ai.scrollable.h - ai.scrollableInfo.elementHeight))
 		ai.scrollableInfo.scrollOffset = ai.scrollable.h - ai.scrollableInfo.elementHeight;
 
-	snapScrollableByOffset(&ai, ai.scrollableInfo.scrollOffset); // Sposta effettivamente il contenuto in base all'offset di scorrimento
+	// Sposta effettivamente il contenuto in base all'offset di scorrimento
+	snapScrollableByOffset(&ai, ai.scrollableInfo.scrollOffset);
 
 	return RET_CONTINUE;
 }
