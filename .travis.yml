@@ -221,5 +221,5 @@ deploy:
   name: "ONScripter-RU r${BUILD}"
   on:
     tags: false
-    repo: JuliusWinther/onscripter-ru
+    repo: umineko-project/onscripter-ru
     branch: master

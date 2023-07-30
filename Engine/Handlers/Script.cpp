@@ -158,7 +158,7 @@ const char *ScriptHandler::readToken(bool /*check_pretext*/) {
 	}
 	next_script = checkComma(buf);
 
-	// sendToLog(LogLevel::Info, "readToken [%s] len=%d [%c(%x)] %p\n", string_buffer.c_str(), string_buffer.length(), ch, ch, next_script);
+	//sendToLog(LogLevel::Info, "readToken [%s] len=%d [%c(%x)] %p\n", string_buffer.c_str(), string_buffer.length(), ch, ch, next_script);
 
 	return string_buffer.c_str();
 }
@@ -225,7 +225,7 @@ const char *ScriptHandler::readColor(bool *is_color) {
 		buf = varQueue.front().c_str();
 	} else if (varQueueOn) {
 		errorAndExit("readColor: not a valid color type.");
-		return nullptr; // dummy
+		return nullptr; //dummy
 	} else {
 		current_script = next_script;
 		SKIP_SPACE(current_script);
@@ -286,7 +286,7 @@ const char *ScriptHandler::readLabel() {
 		buf = varQueue.front().c_str();
 	} else if (varQueueOn) {
 		errorAndExit("readLabel: not a valid label.");
-		return nullptr; // dummy
+		return nullptr; //dummy
 	} else {
 		current_script = next_script;
 		SKIP_SPACE(current_script);
@@ -381,7 +381,7 @@ const char *ScriptHandler::readRaw() {
 
 	if (ons.getVariableQueue()) {
 		errorAndExit("readRaw shouldn't be used in case of variable queues");
-		return nullptr; // dummy
+		return nullptr; //dummy
 	}
 
 	current_script = next_script;
@@ -563,7 +563,7 @@ const char *ScriptHandler::getAddress(int offset) {
 int ScriptHandler::getLineByAddress(const char *address, LabelInfo *guaranteeInLabel) {
 	if ((address < script_buffer) || (address >= script_buffer + script_buffer_length)) {
 		errorAndExit("getLineByAddress: outside script bounds", nullptr, "Address Error");
-		return -1; // dummy
+		return -1; //dummy
 	}
 
 	LabelInfo *label = guaranteeInLabel ? guaranteeInLabel : getLabelByAddress(address);
@@ -744,7 +744,7 @@ void ScriptHandler::markAsKidoku(const char *address) {
 	ptrdiff_t offset = current_script - script_buffer;
 	if (address)
 		offset = address - script_buffer;
-	// sendToLog(LogLevel::Info, "mark (%c)%x:%x = %d\n", *current_script, offset /8, offset%8, kidoku_buffer[ offset/8 ] & ((char)1 << (offset % 8)));
+	//sendToLog(LogLevel::Info, "mark (%c)%x:%x = %d\n", *current_script, offset /8, offset%8, kidoku_buffer[ offset/8 ] & ((char)1 << (offset % 8)));
 	skip_enabled = (kidoku_buffer[offset / 8] & (static_cast<char>(1) << (offset % 8))) != 0;
 	kidoku_buffer[offset / 8] |= (static_cast<char>(1) << (offset % 8));
 }
@@ -818,20 +818,20 @@ void ScriptHandler::setClickstr(const char *list) {
 
 int ScriptHandler::checkClickstr(const char *buf, bool recursive_flag) {
 	if ((buf[0] == '\\') && (buf[1] == '@'))
-		return -2; // clickwait-or-page
+		return -2; //clickwait-or-page
 	if ((buf[0] == '@') || (buf[0] == '\\'))
 		return -1;
 
 	if (clickstr_list == nullptr)
 		return 0;
-	// bool only_double_byte_check = true;
+	//bool only_double_byte_check = true;
 	char *click_buf = clickstr_list;
 
 	uint32_t state         = 0;
 	uint32_t buf_codepoint = 0;
 	int ch_len             = 0;
 	while (decodeUTF8(&state, &buf_codepoint, click_buf[ch_len])) ch_len++;
-	ch_len++; // irrelevant
+	ch_len++; //irrelevant
 	uint32_t codepoint;
 
 	while (click_buf[0]) {
@@ -1200,7 +1200,7 @@ int ScriptHandler::readScript() {
 					decompressed[i] = CompressedConversionTable[decompressed[i] ^ CompressedCrcB[0]] ^ CompressedCrcB[1];
 				}
 				decompressed.emplace_back('\n');
-				script_data  = decompressed;
+				script_data = decompressed;
 				script_valid = true;
 			}
 		}
@@ -1218,7 +1218,7 @@ int ScriptHandler::readScript() {
 	script_buffer        = copyarr(reinterpret_cast<char *>(script_data.data()), script_buffer_length + 1);
 	game_hash            = static_cast<uint32_t>(script_buffer_length); // Reasonable "hash" value
 
-	// sendToLog(LogLevel::Info,"num_of_labels %d\n",num_of_labels);
+	//sendToLog(LogLevel::Info,"num_of_labels %d\n",num_of_labels);
 
 	// Haeleth: Search for gameid file (this overrides any builtin
 	// ;gameid directive, or serves its purpose if none is available)
@@ -1226,7 +1226,7 @@ int ScriptHandler::readScript() {
 	if (game_identifier.empty()) {
 		uint8_t *gameid_buffer = nullptr;
 		size_t gameid_length   = 0;
-		// Mion: search only the script path
+		//Mion: search only the script path
 		if (FileIO::readFile("game.id", ons.script_path, gameid_length, &gameid_buffer) && gameid_length > 0) {
 			game_identifier.assign(reinterpret_cast<char *>(gameid_buffer), gameid_length);
 			freearr(&gameid_buffer);
@@ -1282,7 +1282,7 @@ int ScriptHandler::readScript() {
 			global_variable_border = parseIntExpression(&buf);
 			if (global_variable_border < 0)
 				global_variable_border = 0;
-			// sendToLog(LogLevel::Info, "set global_variable_border: %d\n", global_variable_border);
+			//sendToLog(LogLevel::Info, "set global_variable_border: %d\n", global_variable_border);
 		} else if (game_identifier.empty() && !std::strncmp(buf, "gameid ", 7)) {
 			buf += 7;
 			SKIP_SPACE(buf);
@@ -1462,7 +1462,7 @@ bool ScriptHandler::findStrAlias(const char *str, std::string *buffer) {
 }
 
 void ScriptHandler::processError(const char *str, const char *title, const char *detail, bool is_warning, bool is_simple, bool force_message) {
-	// if not yet running the script, no line no/cmd - keep it simple
+	//if not yet running the script, no line no/cmd - keep it simple
 	if (script_buffer == nullptr)
 		is_simple = true;
 
@@ -1535,7 +1535,7 @@ void ScriptHandler::processError(const char *str, const char *title, const char 
 			sendToLog(LogLevel::Error, " ***[Fatal] User terminated at warning ***\n");
 		}
 
-		// Mion: grabbing the current line in the script & up to 2 previous ones,
+		//Mion: grabbing the current line in the script & up to 2 previous ones,
 		std::string line[3];
 		const char *end = getCurrent(), *buf;
 		while (*end && *end != 0x0a) end++;
@@ -1613,9 +1613,8 @@ int ScriptHandler::popStringBuffer() {
 }
 
 VariableData &ScriptHandler::getVariableData(uint32_t no) {
-	if (no < VARIABLE_RANGE) {
+	if (no < VARIABLE_RANGE)
 		return variable_data[no];
-	}
 
 	for (uint32_t i = 0; i < num_extended_variable_data; i++)
 		if (extended_variable_data[i].no == no)
@@ -1793,7 +1792,7 @@ int32_t ScriptHandler::parseInt(const char **buf, bool flipSign) {
 		(*buf)++;
 		current_variable.var_no = parseInt(buf);
 		current_variable.type   = VariableInfo::TypeInt;
-		auto v                  = getVariableData(current_variable.var_no).num;
+		auto v = getVariableData(current_variable.var_no).num;
 		return flipSign ? -v : v;
 	}
 	if (**buf == '?') {
@@ -1801,7 +1800,7 @@ int32_t ScriptHandler::parseInt(const char **buf, bool flipSign) {
 		current_variable.var_no = parseArray(buf, av);
 		current_variable.type   = VariableInfo::TypeArray;
 		current_variable.array  = av;
-		auto v                  = *getArrayPtr(current_variable.var_no, current_variable.array, 0);
+		auto v = *getArrayPtr(current_variable.var_no, current_variable.array, 0);
 		return flipSign ? -v : v;
 	}
 
@@ -1850,7 +1849,7 @@ int32_t ScriptHandler::parseInt(const char **buf, bool flipSign) {
 		alias_buf[alias_buf_len] = '\0';
 
 		if (!findNumAlias(alias_buf, &alias_no)) {
-			// sendToLog(LogLevel::Info, "can't find num alias for %s... assume 0.\n", alias_buf);
+			//sendToLog(LogLevel::Info, "can't find num alias for %s... assume 0.\n", alias_buf);
 			current_variable.type = VariableInfo::TypeNone;
 			*buf                  = buf_start;
 			return 0;
@@ -2015,7 +2014,7 @@ int32_t *ScriptHandler::getArrayPtr(int32_t no, ArrayVariable &array, int32_t of
 	if (av == nullptr) {
 		std::snprintf(errbuf, MAX_ERRBUF_LEN, "Undeclared array number %d", no);
 		errorAndExit(errbuf, nullptr, "Access Error");
-		return nullptr; // dummy
+		return nullptr; //dummy
 	}
 
 	int32_t dim = 0, i;
