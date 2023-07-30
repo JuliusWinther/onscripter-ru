@@ -33,7 +33,7 @@ extern "C" void waveCallback(int channel);
 
 const char REGISTRY_FILE[]    = "registry.txt";
 const char DLL_FILE[]         = "dll.txt";
-const char DEFAULT_ENV_FONT[] = "MS Gothic"; //haeleth change to use English-language font name
+const char DEFAULT_ENV_FONT[] = "MS Gothic"; // haeleth change to use English-language font name
 
 const char DEFAULT_WM_TITLE[] = "";
 #ifdef MACOSX
@@ -241,7 +241,7 @@ static std::unordered_map<HashedString, CommandFunc> func_lut{
     {"accept_choice_vector_size", &ONScripter::acceptChoiceVectorSizeCommand},
     {"atomic", &ONScripter::atomicCommand},
 
-    //Undocumented?
+    // Undocumented?
     {"sp_rgb_gradation", &ONScripter::sp_rgb_gradationCommand},
 
     {"yesnobox", &ONScripter::yesnoboxCommand},
@@ -444,10 +444,10 @@ static std::unordered_map<HashedString, CommandFunc> func_lut{
     {"deletescreenshot", &ONScripter::deletescreenshotCommand},
     {"delay", &ONScripter::delayCommand},
     {"definereset", &ONScripter::defineresetCommand},
-    {"d_name_refresh", &ONScripter::dialogueNameCommand}, //ons-ru
-    {"d_name", &ONScripter::dialogueNameCommand},         //ons-ru
-    {"d2", &ONScripter::dialogueCommand},                 //ons-ru
-    {"d", &ONScripter::dialogueCommand},                  //ons-ru
+    {"d_name_refresh", &ONScripter::dialogueNameCommand}, // ons-ru
+    {"d_name", &ONScripter::dialogueNameCommand},         // ons-ru
+    {"d2", &ONScripter::dialogueCommand},                 // ons-ru
+    {"d", &ONScripter::dialogueCommand},                  // ons-ru
     {"csp2", &ONScripter::cspCommand},
     {"csp", &ONScripter::cspCommand},
     {"cselgoto", &ONScripter::cselgotoCommand},
@@ -518,7 +518,7 @@ void ONScripter::initSDL() {
 
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
 		errorAndExit("Couldn't initialize SDL", SDL_GetError(), "Init Error", true);
-		return; //dummy
+		return; // dummy
 	}
 
 	mainThreadId = SDL_GetThreadID(nullptr);
@@ -576,13 +576,13 @@ void ONScripter::initSDL() {
 		freearr(&icon_buffer);
 	}
 
-	//use icon.png preferably, but try embedded resources if not found
+	// use icon.png preferably, but try embedded resources if not found
 	//(cmd-line option --use-app-icons to prefer app resources over icon.png)
 	//(Mac apps can set use-app-icons in a ons.cfg file within the
-	//bundle, to have it always use the bundle icns)
+	// bundle, to have it always use the bundle icns)
 	if (!icon || use_app_icons) {
 #ifndef WIN32
-		//backport from ponscripter
+		// backport from ponscripter
 		const InternalResource *internal_icon = getResource("icon.png");
 		if (internal_icon) {
 			if (icon)
@@ -591,30 +591,30 @@ void ONScripter::initSDL() {
 			icon              = IMG_Load_RW(rwicon, 1);
 			use_app_icons     = false;
 		}
-#endif //WIN32
+#endif // WIN32
 	}
 	// If an icon was found (and desired), use it.
 	if (icon && !use_app_icons) {
 #if defined(MACOSX) || defined(WIN32)
-		//resize the (usually 32x32) icon if necessary
+		// resize the (usually 32x32) icon if necessary
 		SDL_Surface *tmp2 = SDL_CreateRGBSurface(SDL_SWSURFACE, DEFAULT_WM_ICON_W, DEFAULT_WM_ICON_H,
 		                                         32, 0x00ff0000, 0x0000ff00,
 		                                         0x000000ff, 0xff000000);
 
 		SDL_Surface *tmp = SDL_ConvertSurface(icon, tmp2->format, SDL_SWSURFACE);
 		if (tmp->w == tmp2->w && tmp->h == tmp2->h) {
-			//already the right size, just use converted surface as-is
+			// already the right size, just use converted surface as-is
 			SDL_FreeSurface(tmp2);
 			SDL_FreeSurface(icon);
 			icon = tmp;
 		} else {
-			//resize converted surface
+			// resize converted surface
 			resizeSurface(tmp, tmp2);
 			SDL_FreeSurface(tmp);
 			SDL_FreeSurface(icon);
 			icon = tmp2;
 		}
-#endif //MACOSX || WIN32
+#endif // MACOSX || WIN32
 	}
 
 	script_h.setStr(&wm_title_string, DEFAULT_WM_TITLE);
@@ -666,8 +666,8 @@ void ONScripter::initSDL() {
 #endif
 			window.setIcon(icon);
 		}
-		//TODO: add one day?
-		//cursor_gpu = gpu.copyImageFromSurface(icon);
+		// TODO: add one day?
+		// cursor_gpu = gpu.copyImageFromSurface(icon);
 		SDL_FreeSurface(icon);
 		if (cursor_gpu)
 			cursorState(false);
@@ -741,7 +741,7 @@ void ONScripter::initSDL() {
 }
 
 void ONScripter::reopenAudioOnMismatch(const SDL_AudioSpec &spec) {
-	//reopen the audio mixer with default settings, if needed
+	// reopen the audio mixer with default settings, if needed
 	if (audio_open_flag &&
 	    (audio_format.format != spec.format ||
 	     audio_format.channels != spec.channels ||
@@ -757,7 +757,7 @@ void ONScripter::openAudio(const SDL_AudioSpec &spec) {
 		auto kbyte_size = std::stoi(it->second);
 
 		if (kbyte_size > 0 && kbyte_size <= 16 && kbyte_size % 2 == 0) {
-			//only allow powers of 2 as buffer sizes
+			// only allow powers of 2 as buffer sizes
 			audiobuffer_size = kbyte_size * 1024;
 			sendToLog(LogLevel::Info, "Using audiobuffer of %d bytes\n", audiobuffer_size);
 		} else {
@@ -785,7 +785,7 @@ void ONScripter::openAudio(const SDL_AudioSpec &spec) {
 	// Otherwise ask SDL_mixer to open a device with the default channel format (S16), and in the end
 	// go with whatever the defaults are to fallback in case of issues.
 	if (Mix_OpenAudioDevice(spec.freq, spec.format, spec.channels, audiobuffer_size, nullptr, 0) < 0 &&
-		Mix_OpenAudioDevice(spec.freq, MIX_DEFAULT_FORMAT, spec.channels, audiobuffer_size, nullptr, 0) < 0 &&
+	    Mix_OpenAudioDevice(spec.freq, MIX_DEFAULT_FORMAT, spec.channels, audiobuffer_size, nullptr, 0) < 0 &&
 	    Mix_OpenAudio(spec.freq, spec.format, spec.channels, audiobuffer_size) < 0) {
 		errorAndCont("Couldn't open audio device!", SDL_GetError(), "Init Error", true);
 		audio_open_flag = false;
@@ -794,7 +794,9 @@ void ONScripter::openAudio(const SDL_AudioSpec &spec) {
 		uint16_t format = 0;
 		Mix_QuerySpec(&freq, &format, &channels);
 		sendToLog(LogLevel::Info, "Audio: %d Hz %d bit %s %s\n",
-		          freq, format & 0xFF, SDL_AUDIO_ISFLOAT(format) ? "float" : SDL_AUDIO_ISSIGNED(format) ? "sint" : "uint", channels > 1 ? "stereo" : "mono");
+		          freq, format & 0xFF, SDL_AUDIO_ISFLOAT(format) ? "float" : SDL_AUDIO_ISSIGNED(format) ? "sint" :
+		                                                                                                  "uint",
+		          channels > 1 ? "stereo" : "mono");
 		audio_format.format   = format;
 		audio_format.freq     = freq;
 		audio_format.channels = channels;
@@ -811,7 +813,7 @@ ONScripter::ONScripter()
       glyphCache(NUM_GLYPH_CACHE),
       glyphMeasureCache(NUM_GLYPH_CACHE),
       glyphAtlas(GLYPH_ATLAS_W, GLYPH_ATLAS_H) {
-	//first initialize *everything* (static) to base values
+	// first initialize *everything* (static) to base values
 
 	resetFlags();
 	resetFlagsSub();
@@ -826,7 +828,7 @@ ONScripter::ONScripter()
 
 	internal_timer = SDL_GetTicks();
 
-	//since we've made it this far, let's init some dynamic variables
+	// since we've made it this far, let's init some dynamic variables
 	script_h.setStr(&registry_file, REGISTRY_FILE);
 	script_h.setStr(&dll_file, DLL_FILE);
 	readColor(&linkcolor[0], "#FFFF22"); // yellow - link color
@@ -885,7 +887,7 @@ void ONScripter::setUseAppIcons() {
 
 void ONScripter::setPreferredWidth(const char *widthstr) {
 	int width = static_cast<int>(std::strtol(widthstr, nullptr, 0));
-	//minimum preferred window width of 160 (gets ridiculous if smaller)
+	// minimum preferred window width of 160 (gets ridiculous if smaller)
 	if (width > 160)
 		preferred_width = width;
 	else if (width > 0)
@@ -963,7 +965,7 @@ int ONScripter::ownInit() {
 		copystr(tmp_path, default_path.getPath(0), PATH_MAX);
 		// DirPaths guarantees last character to be delimiter
 		tmp_path[std::strlen(tmp_path) - 1] = '\0';
-		size_t delim_pos               = FileIO::getLastDelimiter(tmp_path);
+		size_t delim_pos                    = FileIO::getLastDelimiter(tmp_path);
 		if (delim_pos) {
 			tmp_path[delim_pos] = '\0';
 			if (FileIO::getLastDelimiter(tmp_path))
@@ -1055,7 +1057,7 @@ int ONScripter::ownInit() {
 	// Keeping it as a canvas_width x canvas_height sized surface rather than reducing it to script size eases use of dirty rect.
 	hud_gpu = gpu.createImage(window.canvas_width, window.canvas_height, 4);
 
-	//I wonder if it could be smaller according to setwindow4 sizes
+	// I wonder if it could be smaller according to setwindow4 sizes
 	if (canvasTextWindow) {
 		text_gpu   = gpu.createImage(window.canvas_width, window.canvas_height, 4);
 		window_gpu = gpu.createImage(window.canvas_width, window.canvas_height, 4);
@@ -1066,7 +1068,7 @@ int ONScripter::ownInit() {
 
 	for (auto image : {accumulation_gpu, hud_gpu, text_gpu, window_gpu}) {
 		GPU_GetTarget(image);
-		gpu.clear(image->target); //Fix to avoid bg black,1 usage on bootup
+		gpu.clear(image->target); // Fix to avoid bg black,1 usage on bootup
 	}
 
 	// ----------------------------------------
@@ -1100,7 +1102,7 @@ int ONScripter::ownInit() {
 	}
 	if (fonts.init()) {
 		errorAndExit("Unable to initialize Font System", nullptr, "Init Error", true);
-		return -1; //dummy
+		return -1; // dummy
 	}
 
 	// These are mostly logical dummies
@@ -1189,7 +1191,7 @@ void ONScripter::resetSub() {
 	stopCommand();
 	loopbgmstopCommand();
 	for (bool &ch : channel_preloaded)
-		ch = false; //reset; also ensures that all dwaves stop
+		ch = false; // reset; also ensures that all dwaves stop
 	stopAllDWAVE();
 	script_h.setStr(&loop_bgm_name[1], nullptr);
 
@@ -1209,18 +1211,18 @@ void ONScripter::resetSub() {
 	prnumclearCommand();
 	for (i = 0; i < 2; i++) cursor_info[i].reset();
 
-	//reset spritesets
+	// reset spritesets
 	resetSpritesets();
 
-	//reset camera
+	// reset camera
 	camera.resetMove();
 
-	//Mion: reset textbtn
+	// Mion: reset textbtn
 	deleteTextButtonInfo();
 	readColor(&linkcolor[0], "#FFFF22"); // yellow - link color
 	readColor(&linkcolor[1], "#88FF88"); // cyan - mouseover link color
 
-	//reset breakup
+	// reset breakup
 	if (breakup_cellforms_gpu) {
 		gpu.freeImage(breakup_cellforms_gpu);
 		breakup_cellforms_gpu = nullptr;
@@ -1270,7 +1272,7 @@ void ONScripter::resetFlags() {
 	event_mode                     = IDLE_EVENT_MODE;
 	did_leavetext                  = false;
 	skip_effect                    = false;
-	effectskip_flag                = true; //on by default
+	effectskip_flag                = true; // on by default
 
 	hoveredButtonNumber = -1;
 	hoveringButton      = false;
@@ -1366,7 +1368,7 @@ void ONScripter::resetSentenceFont() {
 	gpu.multiplyAlpha(sentence_font_info.gpu_image);
 	sentence_font_info.blending_mode = BlendModeId::MUL;
 
-	//It is reasonably sane to reset name_font here too
+	// It is reasonably sane to reset name_font here too
 	name_font.reset();
 	auto &namestyle             = name_font.changeStyle();
 	namestyle.font_size         = DEFAULT_FONT_SIZE;
@@ -1389,7 +1391,7 @@ void ONScripter::resetSentenceFont() {
 }
 
 bool ONScripter::doErrorBox(const char *title, const char *errstr, bool /*is_simple*/, bool is_warning) {
-	//returns true if we need to exit
+	// returns true if we need to exit
 	char errtitle[256];
 	std::snprintf(errtitle, 256, "%s: %s", VERSION_STR1, title);
 
@@ -1401,15 +1403,15 @@ bool ONScripter::doErrorBox(const char *title, const char *errstr, bool /*is_sim
 	// get affairs in order
 	if (errorsave) {
 		saveon_flag = internal_saveon_flag = true;
-		//save current game state to save999.dat,
-		//without exiting if I/O Error
+		// save current game state to save999.dat,
+		// without exiting if I/O Error
 		saveSaveFile(999, nullptr, true);
 	}
 
 	if (debug_level > 0)
 		openDebugFolders();
 
-	return true; //should do exit
+	return true; // should do exit
 }
 
 void ONScripter::openDebugFolders() {
@@ -1441,9 +1443,9 @@ void ONScripter::flush(int refresh_mode, GPU_Rect *scene_rect, GPU_Rect *hud_rec
 			// Process events until constant refresh has executed, then return
 			event_mode = IDLE_EVENT_MODE;
 			while (!constant_refresh_executed) {
-				//int old_event_mode = event_mode; //saving is probably unnecessary....
+				// int old_event_mode = event_mode; //saving is probably unnecessary....
 				waitEvent(0);
-				//event_mode = old_event_mode;
+				// event_mode = old_event_mode;
 			}
 		}
 		return; // Ignore this flush. Do not rebuild the scene or erase any dirty rects.
@@ -1492,7 +1494,7 @@ void ONScripter::flush(int refresh_mode, GPU_Rect *scene_rect, GPU_Rect *hud_rec
 		before_dirty_rect_hud.clear();
 	}
 
-	//sendToLog(LogLevel::Info, "exited flush.\n");
+	// sendToLog(LogLevel::Info, "exited flush.\n");
 }
 
 void ONScripter::createScreenshot(GPU_Image *first, GPU_Rect *first_r, GPU_Image *second, GPU_Rect *second_r) {
@@ -1580,7 +1582,7 @@ void ONScripter::flushDirect(GPU_Rect &scene_rect, GPU_Rect &hud_rect, int refre
 }
 
 void ONScripter::combineWithCamera(GPU_Image *scene, GPU_Image *hud, GPU_Target *dst, GPU_Rect &scene_rect, GPU_Rect &hud_rect, int refresh_mode) {
-	//sendToLog(LogLevel::Info, "combineWithCamera called rm %d\n", refresh_mode);
+	// sendToLog(LogLevel::Info, "combineWithCamera called rm %d\n", refresh_mode);
 
 	if (scene != nullptr && hud != nullptr) {
 		refreshSceneTo(scene->target, &scene_rect, refresh_mode);
@@ -1641,16 +1643,16 @@ void ONScripter::mouseOverCheck(int x, int y, bool forced) {
 				bool in_button = true;
 				if (transbtn_flag) {
 					AnimationInfo *anim = nullptr;
-					int alpha = 0;
-					in_button = false;
+					int alpha           = 0;
+					in_button           = false;
 					if (cur_button_link->button_type == ButtonLink::SPRITE_BUTTON ||
-						cur_button_link->button_type == ButtonLink::EX_SPRITE_BUTTON) {
-						anim = &sprite_info[cur_button_link->sprite_no];
+					    cur_button_link->button_type == ButtonLink::EX_SPRITE_BUTTON) {
+						anim  = &sprite_info[cur_button_link->sprite_no];
 						alpha = anim->getPixelAlpha(x - cur_button_link->select_rect.x,
-													y - cur_button_link->select_rect.y);
+						                            y - cur_button_link->select_rect.y);
 					} else if (cur_button_link->anim) {
 						alpha = cur_button_link->anim->getPixelAlpha(x - cur_button_link->select_rect.x,
-																	 y - cur_button_link->select_rect.y);
+						                                             y - cur_button_link->select_rect.y);
 					}
 					if (alpha > TRANSBTN_CUTOFF)
 						in_button = true;
@@ -1679,8 +1681,8 @@ void ONScripter::doHoverButton(bool hovering, int buttonNumber, int buttonLinkIn
 		return;
 	}
 
-	//Normally, all buttons should be placed to hud but nobody disallows doing the opposite
-	//Make sure we update every button we need
+	// Normally, all buttons should be placed to hud but nobody disallows doing the opposite
+	// Make sure we update every button we need
 	GPU_Rect check_src_rect{0, 0, 0, 0};
 	GPU_Rect check_dst_rect{0, 0, 0, 0};
 	updateButtonsToDefaultState(check_src_rect, check_dst_rect);
@@ -1736,7 +1738,7 @@ void ONScripter::doHoverButton(bool hovering, int buttonNumber, int buttonLinkIn
 	hoveringButton              = hovering;
 	hoveredButtonNumber         = hovering ? buttonNumber : -1;
 	previouslyHoveredButtonLink = hovering ? buttonLink : nullptr;
-	//sendToLog(LogLevel::Info, "flush from doHoverButton. hoveredButtonNumber=%i.\n", hoveredButtonNumber);
+	// sendToLog(LogLevel::Info, "flush from doHoverButton. hoveredButtonNumber=%i.\n", hoveredButtonNumber);
 	flush(refreshMode());
 }
 
@@ -1829,9 +1831,9 @@ void ONScripter::executeLabel() {
 						// We assume that no command wants to share its event with the other command, unless it uses a CRAction
 						// Reset event_mode to idle, to avoid any collisions of not freed event_mode (e.g. in clickCommand)
 						event_mode = IDLE_EVENT_MODE;
-						//We must return control to waitEvent here to give the screen a chance to update when it is time
-						//  (Otherwise long script for-loops etc may never give script a chance to waitEvent and hence refresh the screen)
-						//We'll pass nopPreferred so that we come back here immediately unless we really do need to draw
+						// We must return control to waitEvent here to give the screen a chance to update when it is time
+						//   (Otherwise long script for-loops etc may never give script a chance to waitEvent and hence refresh the screen)
+						// We'll pass nopPreferred so that we come back here immediately unless we really do need to draw
 						waitEvent(0, true);
 					}
 				}
@@ -1857,32 +1859,32 @@ void ONScripter::executeLabel() {
 				ret = dlgCtrl.processDialogueEvents();
 			} else if (scriptExecutionPermitted()) {
 
-				//static auto prevEnd = SDL_GetPerformanceCounter();
-				//auto start = SDL_GetPerformanceCounter();
+				// static auto prevEnd = SDL_GetPerformanceCounter();
+				// auto start = SDL_GetPerformanceCounter();
 
 				// Very useful debugging code! :)
 				// Uncomment to use
 				/*{
-					std::ostringstream logStream;
-					logStream << "Since last command: " << (start-prevEnd);
-					if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
-					script_h.debugCommandLog.push_back(logStream.str());
+				    std::ostringstream logStream;
+				    logStream << "Since last command: " << (start-prevEnd);
+				    if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
+				    script_h.debugCommandLog.push_back(logStream.str());
 				}
-				
+
 				{
-					auto st = script_h.getCurrent();
-					auto firstRN0 = strpbrk(st, "\r\n\0");
-					int eol = firstRN0 ? firstRN0 - st : 0;
-					std::string log;
-					log.insert(0, st, eol);
-					//if (script_h.getStringBuffer()) {
-					//	log += "(((";
-					//	log += script_h.getStringBuffer();
-					//	log += ")))";
-					//}
-					if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
-					script_h.debugCommandLog.push_back(log);
-					log.clear();
+				    auto st = script_h.getCurrent();
+				    auto firstRN0 = strpbrk(st, "\r\n\0");
+				    int eol = firstRN0 ? firstRN0 - st : 0;
+				    std::string log;
+				    log.insert(0, st, eol);
+				    //if (script_h.getStringBuffer()) {
+				    //	log += "(((";
+				    //	log += script_h.getStringBuffer();
+				    //	log += ")))";
+				    //}
+				    if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
+				    script_h.debugCommandLog.push_back(log);
+				    log.clear();
 				}*/
 
 				// count script execution time
@@ -1896,7 +1898,7 @@ void ONScripter::executeLabel() {
 				logStream << "Command execution time: " << (end-start);
 				if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
 				script_h.debugCommandLog.push_back(logStream.str());
-				
+
 				prevEnd = end;*/
 			}
 
@@ -1931,11 +1933,7 @@ void ONScripter::executeLabel() {
 }
 
 bool ONScripter::tryEndSuperSkip(bool force) {
-	if (!force && (!(skip_mode & SKIP_SUPERSKIP)
-		|| superSkipData.dst_lbl.empty()
-		|| !equalstr(superSkipData.dst_lbl.c_str() + 1, current_label_info->name)
-		|| script_h.choiceState.acceptChoiceNextIndex !=
-		    static_cast<uint32_t>(script_h.choiceState.acceptChoiceVectorSize))) {
+	if (!force && (!(skip_mode & SKIP_SUPERSKIP) || superSkipData.dst_lbl.empty() || !equalstr(superSkipData.dst_lbl.c_str() + 1, current_label_info->name) || script_h.choiceState.acceptChoiceNextIndex != static_cast<uint32_t>(script_h.choiceState.acceptChoiceVectorSize))) {
 		return false;
 	}
 
@@ -1948,7 +1946,7 @@ bool ONScripter::tryEndSuperSkip(bool force) {
 	// so... need to restore caller state...
 	script_h.swapScriptStateData(superSkipData.callerState);
 	// and then throw away the superskip data?
-	superSkipData = SuperSkipData();
+	superSkipData                               = SuperSkipData();
 	script_h.choiceState.acceptChoiceVectorSize = -1;
 	// Your script function is now required to call sskip_unset to signal to ons that it is OK to update the screen.
 
@@ -2050,7 +2048,7 @@ int ONScripter::parseLine() {
 		profiling = false;
 	}
 
-	//Check against builtin cmds
+	// Check against builtin cmds
 	auto it = func_lut.find(s_buf);
 	if (it != func_lut.end()) {
 		uint64_t start{0};
@@ -2117,7 +2115,7 @@ void ONScripter::processTextButtonInfo() {
 		char *text           = info->prtext;
 		char *text2;
 		Fontinfo f_info = sentence_font;
-		//f_info.clear();
+		// f_info.clear();
 		f_info.off_color = linkcolor[0];
 		f_info.on_color  = linkcolor[1];
 		do {
@@ -2126,7 +2124,7 @@ void ONScripter::processTextButtonInfo() {
 				*text2 = '\0';
 			}
 			ButtonLink *txtbtn = getSelectableSentence(text, &f_info, true, false, false);
-			//sendToLog(LogLevel::Info, "made txtbtn: %d '%s'\n", info->no, text);
+			// sendToLog(LogLevel::Info, "made txtbtn: %d '%s'\n", info->no, text);
 			txtbtn->button_type = ButtonLink::TEXT_BUTTON;
 			txtbtn->no          = info->no;
 			if (!txtbtn_visible)
@@ -2255,8 +2253,8 @@ void ONScripter::newPage(bool next_flag, bool no_flush) {
 	txtbtn_show    = false;
 
 	if (!no_flush) {
-		//According to ONScripter-EN sources and docs, texec does a refresh and modifies the screen. This means, we should commit to do this.
-		//Hope it won't make us deal with other bugs
+		// According to ONScripter-EN sources and docs, texec does a refresh and modifies the screen. This means, we should commit to do this.
+		// Hope it won't make us deal with other bugs
 		commitVisualState();
 		// Previously we were passing a window rect as a hud_rect param of flush, which was not making any sense
 		addTextWindowClip(before_dirty_rect_hud);
@@ -2266,7 +2264,7 @@ void ONScripter::newPage(bool next_flag, bool no_flush) {
 }
 
 AnimationInfo *ONScripter::getSentence(char *buffer, Fontinfo *info, int num_cells, bool /*flush_flag*/, bool nofile_flag, bool skip_whitespace) {
-	//Mion: moved from getSelectableSentence and modified
+	// Mion: moved from getSelectableSentence and modified
 	AnimationInfo *anim = new AnimationInfo();
 
 	anim->trans_mode   = AnimationInfo::TRANS_STRING;
@@ -2300,7 +2298,7 @@ struct ONScripter::ButtonLink *ONScripter::getSelectableSentence(char *buffer, F
 	button_link->show_flag   = true;
 
 	AnimationInfo *anim      = getSentence(buffer, info, 2, flush_flag,
-                                      nofile_flag, skip_whitespace);
+	                                       nofile_flag, skip_whitespace);
 	anim->type               = SPRITE_BUTTONS;
 	button_link->anim        = anim;
 	button_link->select_rect = button_link->image_rect = anim->pos;
@@ -2455,7 +2453,7 @@ void ONScripter::loadEnvData() {
 			script_h.setStr(&default_env_font, DEFAULT_ENV_FONT);
 		if (read32s() == 0)
 			cdaudio_on_flag = false;
-		//read and validate sound volume settings
+		// read and validate sound volume settings
 		for (auto vol : {&voice_volume, &se_volume, &music_volume, &video_volume}) {
 			*vol = DEFAULT_VOLUME - read32s();
 			if (*vol > DEFAULT_VOLUME)
@@ -2471,7 +2469,7 @@ void ONScripter::loadEnvData() {
 		if (savedir)
 			script_h.setSavedir(savedir);
 		else
-			script_h.setStr(&savedir, ""); //prevents changing savedir
+			script_h.setStr(&savedir, ""); // prevents changing savedir
 		automode_time = read32s();
 	} else {
 		script_h.setStr(&default_env_font, DEFAULT_ENV_FONT);
@@ -2482,7 +2480,7 @@ void ONScripter::loadEnvData() {
 	for (int i = 1; i < ONS_MIX_CHANNELS; i++)
 		channelvolumes[i] = se_volume;
 
-	//use preferred automode_time, if set
+	// use preferred automode_time, if set
 	if (preferred_automode_time_set)
 		automode_time = preferred_automode_time;
 }
@@ -2557,7 +2555,7 @@ void ONScripter::requestQuit(ExitType code) {
 }
 
 void ONScripter::cleanImages() {
-	//GPU Cleanup
+	// GPU Cleanup
 
 	for (GPU_Image **varPtr : {&accumulation_gpu, &hud_gpu,
 	                           &text_gpu, &window_gpu, &screenshot_gpu, &draw_gpu, &draw_screen_gpu,
