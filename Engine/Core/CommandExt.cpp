@@ -17,6 +17,7 @@
 #include "Resources/Support/Version.hpp"
 #include "Support/Unicode.hpp"
 #include "Support/FileIO.hpp"
+#include <iostream>
 
 #if defined(IOS) && defined(USE_OBJC)
 #include "Support/Apple/UIKitWrapper.hpp"
@@ -805,6 +806,20 @@ int ONScripter::scrollableSpriteCommand() {
 	sprite_info[sprNo].exists                             = true;
 
 	return RET_CONTINUE;
+}
+
+void onMouseDown(int mouseX, int mouseY) { // W_CUSTOM
+	// Check if the mouse click is within the bounds of the scrollable sprite
+	// (Assuming sprite_info[sprNo] is accessible from this context)
+	if (mouseX >= sprite_info[sprNo].pos.x && mouseX < sprite_info[sprNo].pos.x + sprite_info[sprNo].pos.w &&
+	    mouseY >= sprite_info[sprNo].pos.y && mouseY < sprite_info[sprNo].pos.y + sprite_info[sprNo].pos.h) {
+
+		// Print the scrollableId when the sprite is pressed
+		std::cout << "Scrollable sprite with ID " << scrollableId << " is pressed.\n";
+
+		// Record the starting Y position of the drag
+		sprite_info[sprNo].scrollableInfo.dragStartY = mouseY;
+	}
 }
 
 // scrollable_scroll scrollableId, rows (negative is up, positive is down)
