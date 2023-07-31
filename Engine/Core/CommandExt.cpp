@@ -798,13 +798,11 @@ int ONScripter::scrollableSpriteCommand() {
 	sprite_info[sprNo].num_of_cells = 1;
 	sprite_info[sprNo].visible      = false;
 	sprite_info[sprNo].orig_pos = sprite_info[sprNo].pos = newpos;
-
-	// Aggiungi le seguenti linee per abilitare il trascinamento della scrollbar
+	// sprite_info[sprNo].fill(64,128,32,255);
 	sprite_info[sprNo].scrollableInfo.isSpecialScrollable = true;
 	sprite_info[sprNo].scrollableInfo.elementTreeIndex    = treeNo;
 	sprite_info[sprNo].scrollable.h                       = newpos.h;
 	sprite_info[sprNo].exists                             = true;
-	sprite_info[sprNo].scrollableInfo.scrollOffset        = 0; // Imposta l'offset di scorrimento iniziale a 0
 
 	return RET_CONTINUE;
 }
@@ -816,22 +814,7 @@ int ONScripter::scrollableScrollCommand() {
 	if (!ai.scrollableInfo.isSpecialScrollable)
 		errorAndExit("scrollable_scroll called on something that's not a scrollable");
 	int rows = script_h.readInt();
-
-	// Calcola l'ammontare dello scorrimento
-	const int scrollAmount = rows * ai.scrollableInfo.elementHeight;
-
-	// Aggiorna l'offset di scorrimento
-	ai.scrollableInfo.scrollOffset += scrollAmount;
-
-	// Verifica i limiti del contenuto
-	if (ai.scrollableInfo.scrollOffset < 0)
-		ai.scrollableInfo.scrollOffset = 0;
-	else if (ai.scrollableInfo.scrollOffset > (ai.scrollable.h - ai.scrollableInfo.elementHeight))
-		ai.scrollableInfo.scrollOffset = ai.scrollable.h - ai.scrollableInfo.elementHeight;
-
-	// Sposta effettivamente il contenuto in base all'offset di scorrimento
-	snapScrollableByOffset(&ai, ai.scrollableInfo.scrollOffset);
-
+	snapScrollableByOffset(&ai, rows);
 	return RET_CONTINUE;
 }
 
