@@ -43,9 +43,9 @@ bool FontsController::loadFont(Font &f, size_t i, bool user) {
 
 		if (FileIO::accessFile(tmp, dir, FileType::File, &size)) {
 			size_t len = std::strlen(dir) + std::strlen(tmp) + 1;
-			f.path = std::make_unique<char[]>(len);
+			f.path     = std::make_unique<char[]>(len);
 			std::snprintf(f.path.get(), len, "%s%s", dir, tmp);
-			found  = true;
+			found = true;
 		}
 	}
 
@@ -61,9 +61,9 @@ bool FontsController::loadFont(Font &f, size_t i, bool user) {
 	stream->descriptor.pointer = fp;
 	stream->size               = size;
 	stream->read               = [](FT_Stream stream, unsigned long offset, unsigned char *buffer, unsigned long count) -> unsigned long {
-		auto fp = static_cast<FILE *>(stream->descriptor.pointer);
-		FileIO::seekFile(fp, offset, SEEK_SET);
-		return std::fread(buffer, sizeof(uint8_t), count, fp);
+        auto fp = static_cast<FILE *>(stream->descriptor.pointer);
+        FileIO::seekFile(fp, offset, SEEK_SET);
+        return std::fread(buffer, sizeof(uint8_t), count, fp);
 	};
 	stream->close = [](FT_Stream stream) -> void {
 		std::fclose(static_cast<FILE *>(stream->descriptor.pointer));
@@ -77,19 +77,19 @@ bool FontsController::loadFont(Font &f, size_t i, bool user) {
 	if (FT_Open_Face(freetype, &args, 0, &f.normal_face))
 		return false;
 
-	//Set normal_face as current face
+	// Set normal_face as current face
 	f.face = f.normal_face;
 
-	//Time to load other typefaces
+	// Time to load other typefaces
 	FT_Long num = f.normal_face->num_faces;
-	//sendToLog(LogLevel::Info, "Font %d with path %s has %d typefaces\n", i, fonts[i].path, num);
+	// sendToLog(LogLevel::Info, "Font %d with path %s has %d typefaces\n", i, fonts[i].path, num);
 
 	if (num > 1) {
-		//Start from 1, 0 is default
+		// Start from 1, 0 is default
 		for (FT_Long t = 1; t < num; t++) {
 			FT_Face tmp_font_face;
 			if (FT_New_Face(freetype, f.path.get(), t, &tmp_font_face)) {
-				//sendToLog(LogLevel::Error, "Error at loading typface %d\n", t);
+				// sendToLog(LogLevel::Error, "Error at loading typface %d\n", t);
 				FT_Done_Face(tmp_font_face);
 				continue;
 			}
@@ -97,20 +97,20 @@ bool FontsController::loadFont(Font &f, size_t i, bool user) {
 			if (tmp_font_face->style_flags == (FT_STYLE_FLAG_ITALIC | FT_STYLE_FLAG_BOLD) && !f.hasInternalBoldItalicFace) {
 				f.bold_italic_face          = tmp_font_face;
 				f.hasInternalBoldItalicFace = true;
-				//sendToLog(LogLevel::Info, "bold_italic_face loaded\n");
+				// sendToLog(LogLevel::Info, "bold_italic_face loaded\n");
 				continue;
 			} else if (tmp_font_face->style_flags == FT_STYLE_FLAG_BOLD && !f.hasInternalBoldFace) {
 				f.bold_face           = tmp_font_face;
 				f.hasInternalBoldFace = true;
-				//sendToLog(LogLevel::Info, "bold_face loaded\n");
+				// sendToLog(LogLevel::Info, "bold_face loaded\n");
 				continue;
 			} else if (tmp_font_face->style_flags == FT_STYLE_FLAG_ITALIC && !f.hasInternalItalicFace) {
 				f.italic_face           = tmp_font_face;
 				f.hasInternalItalicFace = true;
-				//sendToLog(LogLevel::Info, "italic_face loaded\n");
+				// sendToLog(LogLevel::Info, "italic_face loaded\n");
 				continue;
 			}
-			//Something unrelated
+			// Something unrelated
 			FT_Done_Face(tmp_font_face);
 		}
 	}
@@ -130,28 +130,28 @@ int FontsController::ownInit() {
 
 	glyphStorageOptimisation = baseSizeMultipliers.empty() && presetSizeMultipliers.empty();
 
-	//sendToLog(LogLevel::Info, "Initialising font system.\n");
+	// sendToLog(LogLevel::Info, "Initialising font system.\n");
 	if (FT_Init_FreeType(&freetype))
 		return -1;
 
 	fonts_number = 0;
 
-	for (size_t i = 0; i < 10; i++, fonts_number++) {
+	for (size_t i = 0; i < (sizeof(fonts) / sizeof(int)); i++, fonts_number++) { // Iterating the entire font array - W_CUSTOM
 		if (!loadFont(fonts[i], i, false)) {
 			if (i == 0)
 				return -1; // default font must be loaded
 			break;
 		}
 
-		//sendToLog(LogLevel::Info, "Path %i: %s\n", i, fonts[i].path);
+		// sendToLog(LogLevel::Info, "Path %i: %s\n", i, fonts[i].path);
 	}
 
-	for (size_t i = 0; i < 10; i++, user_fonts_number++) {
+	for (size_t i = 0; i < (sizeof(user_fonts) / sizeof(int)); i++, user_fonts_number++) { // Iterating the entire font array - W_CUSTOM
 		if (!loadFont(user_fonts[i], i, true)) {
 			break;
 		}
 
-		//sendToLog(LogLevel::Info, "Path %i: %s\n", i, fonts[i].path);
+		// sendToLog(LogLevel::Info, "Path %i: %s\n", i, fonts[i].path);
 	}
 
 	// Now need to take a basedir from default.ttf and use it as a font dir

@@ -79,7 +79,7 @@ bool Fontinfo::aliasFont(FontAlias type, int from, int to) {
 	if (static_cast<size_t>(to) > fonts.fonts_number || to < 0 || !fonts.fonts[to].loaded)
 		return false;
 
-	//sendToLog(LogLevel::Info, "aliasFont called with type %d from %d to %d\n",type,from,to);
+	// sendToLog(LogLevel::Info, "aliasFont called with type %d from %d to %d\n",type,from,to);
 
 	switch (type) {
 		case FontAlias::BoldItalic:
@@ -100,10 +100,10 @@ bool Fontinfo::aliasFont(FontAlias type, int from, int to) {
 }
 
 bool Fontinfo::changeCurrentFont(unsigned int font, int preset_id) {
-	//sendToLog(LogLevel::Info, "changeCurrentFont(%i) called\n", font);
+	// sendToLog(LogLevel::Info, "changeCurrentFont(%i) called\n", font);
 
 	if (font == style().font_number && style().preset_id == preset_id)
-		return true; //let's simply return true
+		return true; // let's simply return true
 
 	if (!fonts.fonts[font].loaded || font > fonts.fonts_number)
 		return false;
@@ -158,7 +158,7 @@ float Fontinfo::y() {
 }
 
 void Fontinfo::clear() {
-	//init here
+	// init here
 	layoutData.xPxLeft                 = 0;
 	layoutData.xPxRight                = 0;
 	layoutData.last_printed_codepoint  = 0;
@@ -175,7 +175,7 @@ void Fontinfo::newLine() {
 }
 
 bool Fontinfo::isNoRoomFor(float margin) {
-	//TODO: implement vertical
+	// TODO: implement vertical
 	return layoutData.xPxLeft + margin > style().wrap_limit;
 }
 
@@ -239,7 +239,7 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 	FT_GlyphSlot glyph = loadGlyph(key->unicode, rv->ftCharIndexCache);
 
 	if (err) {
-		//sendToLog(LogLevel::Warn, "loadGlyph unsuccessful in renderGlyph\n");
+		// sendToLog(LogLevel::Warn, "loadGlyph unsuccessful in renderGlyph\n");
 		return rv;
 	}
 
@@ -248,7 +248,7 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 
 	err = FT_Get_Glyph(glyph, &actual_glyph);
 	if (err) {
-		//sendToLog(LogLevel::Warn, "FT_Get_Glyph unsuccessful in renderGlyph\n");
+		// sendToLog(LogLevel::Warn, "FT_Get_Glyph unsuccessful in renderGlyph\n");
 		return rv;
 	}
 
@@ -257,7 +257,7 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 		FT_Glyph border_glyph;
 		FT_Glyph_Copy(actual_glyph, &border_glyph);
 		// Turn it into bordered version.
-		//sendToLog(LogLevel::Error, "Somehow we are in border for %c\n",key->unicode);
+		// sendToLog(LogLevel::Error, "Somehow we are in border for %c\n",key->unicode);
 		int border_w = key->border_width * fonts.getMultiplier(key->font_number, key->preset_id);
 		drawBorder(&border_glyph, border_w);
 		/* Convert glyph to surface */
@@ -265,8 +265,8 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 		if (border_glyph->format != FT_GLYPH_FORMAT_BITMAP) {
 			err = FT_Glyph_To_Bitmap(&border_glyph, FT_RENDER_MODE_NORMAL, nullptr, 1);
 			if (err) {
-				//sendToLog(LogLevel::Error, "Crashing and burning in renderGlyph! Couldn't convert glyph to bitmap\n");
-				//sendToLog(LogLevel::Error, "Bus number: 0x%X\n", err);
+				// sendToLog(LogLevel::Error, "Crashing and burning in renderGlyph! Couldn't convert glyph to bitmap\n");
+				// sendToLog(LogLevel::Error, "Bus number: 0x%X\n", err);
 			}
 		}
 		bmp_glyph                  = reinterpret_cast<FT_BitmapGlyph>(border_glyph);
@@ -280,7 +280,7 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 	if (actual_glyph->format != FT_GLYPH_FORMAT_BITMAP) {
 		err = FT_Glyph_To_Bitmap(&actual_glyph, FT_RENDER_MODE_NORMAL, nullptr, 1);
 		if (err) {
-			//sendToLog(LogLevel::Error, "Crashing and burning in renderGlyph! Couldn't convert glyph to bitmap\n");
+			// sendToLog(LogLevel::Error, "Crashing and burning in renderGlyph! Couldn't convert glyph to bitmap\n");
 		}
 	}
 	bmp_glyph               = reinterpret_cast<FT_BitmapGlyph>(actual_glyph);
@@ -305,10 +305,10 @@ GlyphValues *Font::renderGlyph(GlyphParams *key, SDL_Color fg, SDL_Color bg) {
 
 	FT_Done_Glyph(actual_glyph);
 
-	//sendToLog(LogLevel::Info, "renderGlyph bitmap w,h:{%d,%d} border_bitmap w,h:{%d,%d}\n", rv.bitmap->w, rv.bitmap->h, rv.border_bitmap->w, rv.border_bitmap->h);
+	// sendToLog(LogLevel::Info, "renderGlyph bitmap w,h:{%d,%d} border_bitmap w,h:{%d,%d}\n", rv.bitmap->w, rv.bitmap->h, rv.border_bitmap->w, rv.border_bitmap->h);
 
 	// glyph->bitmap.buffer ... present? not sure if we remove it....
-	//sendToLog(LogLevel::Info, "Finished creating rv.bitmap\n");
+	// sendToLog(LogLevel::Info, "Finished creating rv.bitmap\n");
 
 	return rv;
 }
@@ -347,20 +347,20 @@ void Font::drawBorder(FT_Glyph *glyph, int border) {
 	FT_Stroker stroker;
 	err = FT_Stroker_New(fonts.freetype, &stroker);
 	if (err) {
-		//sendToLog(LogLevel::Error, "FT_Stroker failed\n");
+		// sendToLog(LogLevel::Error, "FT_Stroker failed\n");
 		FT_Stroker_Done(stroker);
 		return;
 	}
 
 	FT_Stroker_Set(stroker, border, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
 
-	//sendToLog(LogLevel::Info, "FT_Stroker_Set border_width %d\n",border_width);
+	// sendToLog(LogLevel::Info, "FT_Stroker_Set border_width %d\n",border_width);
 
 	// This border extends only outside the glyph.
 	// It is not hollow. The returned glyph contains all the filled pixels of the original glyph plus some more on the outside.
 	// You render the border, and then the original glyph on top afterwards.
 	// Therefore, the border cannot eat into the original glyph (external border).
-	//err = FT_Glyph_StrokeBorder(glyph, stroker, 0, 0);
+	// err = FT_Glyph_StrokeBorder(glyph, stroker, 0, 0);
 
 	// This border extends also inside the glyph.
 	// It is hollow, allowing the original glyph to be visible through it.
@@ -369,7 +369,7 @@ void Font::drawBorder(FT_Glyph *glyph, int border) {
 	err = FT_Glyph_Stroke(glyph, stroker, 0);
 
 	if (err) {
-		//sendToLog(LogLevel::Error, "FT_Glyph_Stroke(Border) failed\n");
+		// sendToLog(LogLevel::Error, "FT_Glyph_Stroke(Border) failed\n");
 	}
 
 	FT_Stroker_Done(stroker);
