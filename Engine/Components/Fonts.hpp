@@ -32,13 +32,16 @@ private:
 	// These functions update the "face" variable to the internal ttf bold/italic/bolditalic face if that exists, otherwise to an alias.
 	// They should be called before each render.
 	void setBold() {
-		face = (hasInternalBoldFace) ? bold_face : (bold_alias != nullptr) ? bold_alias : face;
+		face = (hasInternalBoldFace) ? bold_face : (bold_alias != nullptr) ? bold_alias :
+		                                                                     face;
 	}
 	void setItalic() {
-		face = (hasInternalItalicFace) ? italic_face : (italic_alias != nullptr) ? italic_alias : face;
+		face = (hasInternalItalicFace) ? italic_face : (italic_alias != nullptr) ? italic_alias :
+		                                                                           face;
 	}
 	void setBoldItalic() {
-		face = (hasInternalBoldItalicFace) ? bold_italic_face : (bold_italic_alias != nullptr) ? bold_italic_alias : face;
+		face = (hasInternalBoldItalicFace) ? bold_italic_face : (bold_italic_alias != nullptr) ? bold_italic_alias :
+		                                                                                         face;
 	}
 	void setReset() {
 		face = normal_face;
@@ -49,7 +52,7 @@ private:
 	FT_Face prev_face{nullptr};
 
 public:
-	FT_Face face{nullptr}; //current_face
+	FT_Face face{nullptr}; // current_face
 	FT_Face normal_face{nullptr};
 	FT_Face bold_face{nullptr};
 	FT_Face italic_face{nullptr};
@@ -74,8 +77,8 @@ public:
 	FT_GlyphSlot loadGlyph(uint32_t unicode, unsigned int &charIndex) {
 		charIndex = FT_Get_Char_Index(face, unicode);
 		err       = FT_Load_Glyph(face, charIndex,
-                            FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING); // constant for now
-		//sendToLog(LogLevel::Error, "FT_Load_Glyph error = 0x%X\n",err);
+		                          FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING); // constant for now
+		// sendToLog(LogLevel::Error, "FT_Load_Glyph error = 0x%X\n",err);
 		return face->glyph;
 	}
 
@@ -108,11 +111,11 @@ class FontsController : public BaseController {
 	BaseReader **reader{nullptr};
 
 public:
-	FT_Library freetype{}; //normally private
+	FT_Library freetype{}; // normally private
 	size_t fonts_number{0};
 	size_t user_fonts_number{0};
-	Font fonts[10]{};
-	Font user_fonts[10]{};
+	Font fonts[11]{};      // Previously 10 - W_CUSTOM - Incremented to add more fonts
+	Font user_fonts[11]{}; // Previously 10 - W_CUSTOM - Incremented to add more fonts
 	bool glyphStorageOptimisation{false};
 
 	std::unordered_map<unsigned int, unsigned int> baseFontOverrides;
