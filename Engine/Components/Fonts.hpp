@@ -114,8 +114,8 @@ public:
 	FT_Library freetype{}; // normally private
 	size_t fonts_number{0};
 	size_t user_fonts_number{0};
-	Font fonts[11]{};      // Previously 10 - W_CUSTOM - Incremented to add more fonts
-	Font user_fonts[11]{}; // Previously 10 - W_CUSTOM - Incremented to add more fonts
+	Font fonts[11]{};
+	Font user_fonts[11]{};
 	bool glyphStorageOptimisation{false};
 
 	std::unordered_map<unsigned int, unsigned int> baseFontOverrides;

@@ -17,7 +17,6 @@
 #include "Resources/Support/Version.hpp"
 #include "Support/Unicode.hpp"
 #include "Support/FileIO.hpp"
-#include <iostream>
 
 #if defined(IOS) && defined(USE_OBJC)
 #include "Support/Apple/UIKitWrapper.hpp"
@@ -133,7 +132,7 @@ int ONScripter::lvSetLogCommand() {
 	bool eob = true;
 
 	if (script_h.hasMoreArgs()) {
-		eob = script_h.readInt(); // end of block (1 == end)
+		eob = script_h.readInt(); //end of block (1 == end)
 		if (!eob) {
 			if (!script_h.logState.tmpVoiceGroupStarted) {
 				script_h.logState.tmpVoiceGroupStarted = true;
@@ -156,8 +155,8 @@ int ONScripter::lvSetLogCommand() {
 }
 
 int ONScripter::lvPlayCommand() {
-	int scrollableId = validSprite(script_h.readInt()); // tree sprite number
-	int vol          = script_h.readInt();              // voice volume from config
+	int scrollableId = validSprite(script_h.readInt()); //tree sprite number
+	int vol          = script_h.readInt();              //voice volume from config
 
 	stopLvPlayback();
 
@@ -208,7 +207,7 @@ int ONScripter::verifyFilesCommand() {
 	if (!readIniFile(script_h.readFilePath(), fileInfo)) {
 		script_h.setInt(&script_h.pushed_variable, -1);
 		while (script_h.hasMoreArgs()) script_h.readVariable();
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	auto info = fileInfo.find("info");
@@ -228,12 +227,12 @@ int ONScripter::verifyFilesCommand() {
 
 		if (game != infoNode.end() && hash != infoNode.end() && ver != infoNode.end() && apiver != infoNode.end() &&
 		    date != infoNode.end() && game->second.size() > 0 && hash->second == "size" &&
-		    ver->second == ONS_VERSION && apiver->second == ONS_API) {
+			ver->second == ONS_VERSION && apiver->second == ONS_API) {
 
 			// Try an entire match or a wild-card match.
 			looksFine = game->second.find(script_h.game_identifier) != std::string::npos;
-			if (!looksFine && game->second[game->second.size() - 1] == '*')
-				looksFine = script_h.game_identifier.compare(0, game->second.size() - 1, game->second, 0, game->second.size() - 1) == 0;
+			if (!looksFine && game->second[game->second.size()-1] == '*')
+				looksFine = script_h.game_identifier.compare(0, game->second.size()-1, game->second, 0, game->second.size()-1) == 0;
 			passedDate = date->second;
 		}
 	}
@@ -241,7 +240,7 @@ int ONScripter::verifyFilesCommand() {
 	if (!looksFine) {
 		script_h.setInt(&script_h.pushed_variable, -2);
 		while (script_h.hasMoreArgs()) script_h.readVariable();
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	// This is rather straight-forward, but our thread model needs changes anyway...
@@ -252,7 +251,7 @@ int ONScripter::verifyFilesCommand() {
 		if (passedDate != "ignore" && time(nullptr) > static_cast<time_t>(std::stoull(passedDate)) + 7 * 24 * 3600) {
 			script_h.setInt(&script_h.pushed_variable, -4);
 			while (script_h.hasMoreArgs()) script_h.readVariable();
-			return RET_CONTINUE; // dummy
+			return RET_CONTINUE; //dummy
 		}
 
 		std::vector<std::string> missing, modified;
@@ -393,7 +392,7 @@ int ONScripter::treeSetCommand() {
 
 	if (!foundAssign && rawValues) {
 		errorAndExit("Attempted to use raw arguments with no assignment operator");
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	int result{0};
@@ -541,7 +540,7 @@ int ONScripter::spritesetEnableCommand() {
 		enable = script_h.readInt();
 	spritesets[no].setEnable(enable);
 	spritesets[no].id = no;
-	// sendToLog(LogLevel::Info, "spritesets[%i].enable=%i\n", no, enable);
+	//sendToLog(LogLevel::Info, "spritesets[%i].enable=%i\n", no, enable);
 	dirty_rect_scene.fill(window.canvas_width, window.canvas_height);
 	return RET_CONTINUE;
 }
@@ -799,27 +798,13 @@ int ONScripter::scrollableSpriteCommand() {
 	sprite_info[sprNo].num_of_cells = 1;
 	sprite_info[sprNo].visible      = false;
 	sprite_info[sprNo].orig_pos = sprite_info[sprNo].pos = newpos;
-	// sprite_info[sprNo].fill(64,128,32,255);
+	//sprite_info[sprNo].fill(64,128,32,255);
 	sprite_info[sprNo].scrollableInfo.isSpecialScrollable = true;
 	sprite_info[sprNo].scrollableInfo.elementTreeIndex    = treeNo;
 	sprite_info[sprNo].scrollable.h                       = newpos.h;
 	sprite_info[sprNo].exists                             = true;
 
 	return RET_CONTINUE;
-}
-
-void onMouseDown(int mouseX, int mouseY) { // W_CUSTOM
-	// Check if the mouse click is within the bounds of the scrollable sprite
-	// (Assuming sprite_info[sprNo] is accessible from this context)
-	if (mouseX >= sprite_info[sprNo].pos.x && mouseX < sprite_info[sprNo].pos.x + sprite_info[sprNo].pos.w &&
-	    mouseY >= sprite_info[sprNo].pos.y && mouseY < sprite_info[sprNo].pos.y + sprite_info[sprNo].pos.h) {
-
-		// Print the scrollableId when the sprite is pressed
-		std::cout << "Scrollable sprite with ID " << scrollableId << " is pressed.\n";
-
-		// Record the starting Y position of the drag
-		sprite_info[sprNo].scrollableInfo.dragStartY = mouseY;
-	}
 }
 
 // scrollable_scroll scrollableId, rows (negative is up, positive is down)
@@ -978,11 +963,11 @@ int ONScripter::globalPropertyWaitCommand() {
 	}
 	dynamicProperties.waitOnGlobalProperty(property);
 	/*if (property==GLOBAL_PROPERTY_ONION_ALPHA) {
-	    // additionally wait for cooldown to finish
-	    event_mode = IDLE_EVENT_MODE;
-	    while (onionAlphaCooldown > 10) {
+		// additionally wait for cooldown to finish
+		event_mode = IDLE_EVENT_MODE;
+		while (onionAlphaCooldown > 10) {
 	 waitEvent(0);
-	    }
+		}
 	 }*/
 	return RET_CONTINUE;
 }
@@ -1017,7 +1002,7 @@ int ONScripter::globalPropertyCommand() {
 		override = script_h.readInt() == 1;
 
 	if (value != 0 && duration != 0 && reduce_motion &&
-	    (property == GLOBAL_PROPERTY_QUAKE_X_AMPLITUDE || property == GLOBAL_PROPERTY_QUAKE_Y_AMPLITUDE)) {
+		(property == GLOBAL_PROPERTY_QUAKE_X_AMPLITUDE || property == GLOBAL_PROPERTY_QUAKE_Y_AMPLITUDE)) {
 		dynamicProperties.addGlobalProperty(is_abs, property, value, 0, equation, override);
 		value = 0;
 	}
@@ -1074,7 +1059,7 @@ int ONScripter::superSkipCommand() {
 	} else if (current_label_info->start_address == addr) {
 		tryEndSuperSkip(true);
 	} else {
-		// FIXME: add all the necessary cases
+		//FIXME: add all the necessary cases
 		skip_mode                 = SKIP_NORMAL | SKIP_SUPERSKIP;
 		internal_slowdown_counter = 0;
 		textgosub_clickstr_state  = CLICK_NONE;
@@ -1267,13 +1252,13 @@ int ONScripter::setScaleCenterCommand() {
 	int sprite_num    = script_h.readInt();
 	AnimationInfo &si = sprite2_info[sprite_num];
 
-	// backupState(&si);
+	//backupState(&si);
 	dirtySpriteRect(&si);
 
 	si.has_scale_center = true;
 	si.scale_center.x   = script_h.readInt();
 	si.scale_center.y   = script_h.readInt();
-	// sendToLog(LogLevel::Info, "scale center x,y: %f,%f\n", si.scale_center.x, si.scale_center.y);
+	//sendToLog(LogLevel::Info, "scale center x,y: %f,%f\n", si.scale_center.x, si.scale_center.y);
 
 	UpdateAnimPosXY(&si);
 	si.calcAffineMatrix(window.script_width, window.script_height);
@@ -1295,7 +1280,7 @@ int ONScripter::setHotspotCommand() {
 	si.hotspot.x   = parsefloat(script_h.readStr());
 	si.hotspot.y   = parsefloat(script_h.readStr());
 
-	// sendToLog(LogLevel::Info, "hotspot x,y: %f,%f\n", si.hotspot.x, si.hotspot.y);
+	//sendToLog(LogLevel::Info, "hotspot x,y: %f,%f\n", si.hotspot.x, si.hotspot.y);
 
 	UpdateAnimPosXY(&si);
 	si.calcAffineMatrix(window.script_width, window.script_height);
@@ -1308,12 +1293,12 @@ int ONScripter::setwindowDynamicCommand() {
 	if (script_h.isName("setwindowd_off")) {
 		wndCtrl.usingDynamicTextWindow = false;
 	} else {
-		// sentence_font.is_transparent = false; // bug?
+		//sentence_font.is_transparent = false; // bug?
 		backupState(&sentence_font_info);
 		sentence_font_info.setImageName(script_h.readStr());
 		parseTaggedString(&sentence_font_info);
 		setupAnimationInfo(&sentence_font_info);
-		// sentence_font_info.blending_mode = BlendModeId::NORMAL; // unnecessary?
+		//sentence_font_info.blending_mode = BlendModeId::NORMAL; // unnecessary?
 
 		wndCtrl.usingDynamicTextWindow = true;
 		wndCtrl.setWindow(sentence_font_info.pos);
@@ -1422,7 +1407,7 @@ int ONScripter::setwindow4Command() {
 	style.line_height       = script_h.readInt();
 
 	if (setwindow4)
-		text_display_speed = script_h.readInt(); // using a nouveau parameter now
+		text_display_speed = script_h.readInt(); //using a nouveau parameter now
 
 	style.is_bold      = script_h.readInt();
 	style.is_italic    = script_h.readInt();
@@ -1634,7 +1619,7 @@ int ONScripter::quakeApiCommand() {
 		m.moveType = CameraMove::Type::X;
 		old_api    = true;
 	} else if (script_h.isName("quake")) {
-		// This is what NScripter does at least
+		//This is what NScripter does at least
 		if (std::rand() % 2)
 			m.moveType = CameraMove::Type::X;
 		else
@@ -1676,7 +1661,7 @@ int ONScripter::quakeApiCommand() {
 		}
 	}
 
-	// done
+	//done
 	return RET_CONTINUE;
 }
 
@@ -1856,8 +1841,8 @@ int ONScripter::pastLabelCommand() {
 	LabelInfo *label = script_h.lookupLabel(script_h.readLabel() + 1);
 
 	if (label2) {
-		// past_label2 $res,"*lookup_label","*check1","*check2"(, ..)
-		// Sets $res to the first label before the lookup_label or to ""
+		//past_label2 $res,"*lookup_label","*check1","*check2"(, ..)
+		//Sets $res to the first label before the lookup_label or to ""
 		LabelInfo *next = nullptr;
 		do {
 			next = script_h.lookupLabel(script_h.readLabel() + 1);
@@ -1875,8 +1860,8 @@ int ONScripter::pastLabelCommand() {
 		script_h.setStr(&script_h.getVariableData(script_h.pushed_variable.var_no).str, buf);
 		delete[] buf;
 	} else {
-		// past_label %res,"*label"
-		// Sets %res to 1 if top-level script has gone farther than *label start address
+		//past_label %res,"*label"
+		//Sets %res to 1 if top-level script has gone farther than *label start address
 
 		const char *addr = script_h.getNext();
 
@@ -1894,18 +1879,19 @@ int ONScripter::pastLabelCommand() {
 }
 
 int ONScripter::operateConfigCommand() {
-	// operate_config [u_]read,$dst,"property"
-	// operate_config [u_]write,$val,"property"
-	// operate_config [u_]unset,"property"
-	// operate_config [u_]save
+	//operate_config [u_]read,$dst,"property"
+	//operate_config [u_]write,$val,"property"
+	//operate_config [u_]unset,"property"
+	//operate_config [u_]save
 
 	std::string op = script_h.readName();
 
 	auto &map = op.substr(0, 2) == "u_" ? (static_cast<void>(op.replace(0, 2, "")), user_cfg_options) : ons_cfg_options;
 
 	auto translate = [](std::string propertyName) {
-		std::unordered_map<std::string, std::string> remaps{
-		    {"game_script", "game-script"}};
+		std::unordered_map<std::string, std::string> remaps {
+			{"game_script", "game-script"}
+		};
 		for (auto &remap : remaps)
 			if (remap.first == propertyName)
 				return remap.second;
@@ -1926,7 +1912,7 @@ int ONScripter::operateConfigCommand() {
 	} else if (op == "write") {
 		std::string propertyValue(script_h.readStr());
 		std::string propertyName(translate(script_h.readStr()));
-		// sendToLog(LogLevel::Error, "Attempting to modify property %s with value %s\n",propertyName.c_str(),propertyValue.c_str());
+		//sendToLog(LogLevel::Error, "Attempting to modify property %s with value %s\n",propertyName.c_str(),propertyValue.c_str());
 		map[propertyName] = propertyValue;
 	} else if (op == "unset") {
 		auto it = map.find(translate(script_h.readStr()));
@@ -2039,7 +2025,7 @@ int ONScripter::markReadCommand() {
 	if (!callStack.empty())
 		label = callStack.front().label;
 
-	auto id                          = script_h.getLabelIndex(label);
+	auto id = script_h.getLabelIndex(label);
 	script_h.logState.readLabels[id] = true;
 
 	return RET_CONTINUE;
@@ -2080,7 +2066,7 @@ int ONScripter::gotoCommand() {
 
 int ONScripter::mainLabelCommand() {
 	script_h.readVariable();
-	if (script_h.current_variable.type != VariableInfo::TypeStr) {
+	if(script_h.current_variable.type != VariableInfo::TypeStr) {
 		errorAndExit("main_label requires a $str variable argument to return the label into");
 	}
 
@@ -2113,7 +2099,7 @@ int ONScripter::lookaheadCommand() {
 		return RET_CONTINUE;                 // failed (we were called from the main script?)
 	NestInfo *tmp_nest = &callStack.front(); // first subfunction, next_script field represents our position in the main game script outside all subfunctions
 	if (!tmp_nest->next_script)
-		return RET_CONTINUE;                 // failed (I can't imagine why we'd have no script available but just in case...)
+		return RET_CONTINUE; // failed (I can't imagine why we'd have no script available but just in case...)
 
 	auto &regexp  = regExps[script_h.readInt()];
 	auto matchNum = script_h.readInt();
@@ -2134,8 +2120,8 @@ int ONScripter::lookaheadCommand() {
 			sendToLog(LogLevel::Error, "Regexp sequence matching failed!\n");
 		}
 
-		// sendToLog(LogLevel::Info, "Regexp matched: [%s]\n", result.str().c_str());
-		// sendToLog(LogLevel::Info, "Current location: [%.*s]\n", 500, currentLocation);
+		//sendToLog(LogLevel::Info, "Regexp matched: [%s]\n", result.str().c_str());
+		//sendToLog(LogLevel::Info, "Current location: [%.*s]\n", 500, currentLocation);
 
 		// feed it to the result variable
 		for (int i = 1; i <= matchNum; i++) {
@@ -2167,8 +2153,8 @@ int ONScripter::lookaheadCommand() {
 			sendToLog(LogLevel::Error, "Regexp sequence matching failed: %d!\n", bytesScanned);
 		}
 
-		// sendToLog(LogLevel::Info, "Regexp matched: [%.*s]\n", result[0].len, result[0].ptr);
-		// sendToLog(LogLevel::Info, "Current location: [%.*s]\n", 500, currentLocation);
+		//sendToLog(LogLevel::Info, "Regexp matched: [%.*s]\n", result[0].len, result[0].ptr);
+		//sendToLog(LogLevel::Info, "Current location: [%.*s]\n", 500, currentLocation);
 
 		// feed it to the result variable
 		for (int i = 0; i < matchNum; i++) {
@@ -2350,9 +2336,9 @@ int ONScripter::getChoiceVectorSizeCommand() {
 
 int ONScripter::getLogDataCommand() {
 	// Returns the jump label and choice vector size for a given log entry index.
-	int logEntryIndex = script_h.readInt();
+	int logEntryIndex    = script_h.readInt();
 
-	if (logEntryIndex < 0)
+	if  (logEntryIndex < 0)
 		logEntryIndex = static_cast<int32_t>(script_h.logState.logEntries.size() - 1);
 
 	int choiceVectorSize = script_h.logState.logEntries[logEntryIndex].choiceVectorSize;
@@ -2398,8 +2384,8 @@ int ONScripter::getUniqueLogEntryIndexCommand() {
 }
 
 int ONScripter::getScriptPathCommand() {
-	// Syntax:
-	// getscriptpath $dst,%index[,1] - for basepath
+	//Syntax:
+	//getscriptpath $dst,%index[,1] - for basepath
 
 	script_h.readVariable();
 	script_h.pushVariable();
@@ -2425,8 +2411,8 @@ int ONScripter::getScriptPathCommand() {
 }
 
 int ONScripter::getScriptNumCommand() {
-	// Syntax:
-	// getscriptnum %num
+	//Syntax:
+	//getscriptnum %num
 
 	script_h.readVariable();
 	script_h.setInt(&script_h.current_variable, static_cast<int>(script_list.size()));
@@ -2434,8 +2420,8 @@ int ONScripter::getScriptNumCommand() {
 }
 
 int ONScripter::getRendererNameCommand() {
-	// Syntax:
-	// getrenderername $dst,%index
+	//Syntax:
+	//getrenderername $dst,%index
 
 	script_h.readVariable();
 	script_h.pushVariable();
@@ -2455,8 +2441,8 @@ int ONScripter::getRendererNameCommand() {
 }
 
 int ONScripter::getRendererNumCommand() {
-	// Syntax:
-	// getrenderer %num
+	//Syntax:
+	//getrenderer %num
 
 	script_h.readVariable();
 	script_h.setInt(&script_h.current_variable, static_cast<int>(std::extent<decltype(gpu.renderers)>::value));
@@ -2470,16 +2456,16 @@ int ONScripter::getramCommand() {
 }
 
 int ONScripter::fallCommand() {
-	// Syntax:
-	// fall dims, %id,%w,%h
-	// fall speed, %id[,%speed]
-	// fall amount, %id,%amount
-	// fall wind, %id,%angle
-	// fall base, %id,#colour,%w,%h[,%a]
-	// fall base, %id,"picture"
-	// fall pause,%id,%state
-	// fall blend,%id,"mode"
-	// fall amps,%id,"0.1","0.125","1"
+	//Syntax:
+	//fall dims, %id,%w,%h
+	//fall speed, %id[,%speed]
+	//fall amount, %id,%amount
+	//fall wind, %id,%angle
+	//fall base, %id,#colour,%w,%h[,%a]
+	//fall base, %id,"picture"
+	//fall pause,%id,%state
+	//fall blend,%id,"mode"
+	//fall amps,%id,"0.1","0.125","1"
 
 	bool dims{false}, speed{false}, c_speed{false}, amount{false}, wind{false},
 	    base{false}, pause{false}, blend{false}, amps{false}, cover{false};
@@ -2615,7 +2601,7 @@ int ONScripter::displayScreenshotCommand() {
 
 	if (!screenshot_gpu) {
 		errorAndExit("No screenshot was made to display");
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	backupState(&sprite_info[lsp]);
@@ -2631,7 +2617,7 @@ int ONScripter::displayScreenshotCommand() {
 	UpdateAnimPosXY(&sprite_info[lsp]);
 	sprite_info[lsp].trans = script_h.readInt();
 
-	// Animationinfo (setup)
+	//Animationinfo (setup)
 	sprite_info[lsp].deleteImage();
 	sprite_info[lsp].abs_flag = true;
 
@@ -2672,7 +2658,7 @@ int ONScripter::conditionDialogueCommand() {
 int ONScripter::disposeDialogueCommand() {
 	if (!dlgCtrl.dialogueProcessingState.active) {
 		errorAndExit("Tried to ruin dialogue state from something that is not a dialogue");
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	// Ending dialogue days here; we will have any current scriptState as main and only
@@ -2691,14 +2677,14 @@ int ONScripter::dialogueAddEndsCommand() {
 int ONScripter::dialogueContinueCommand() {
 	if (!dlgCtrl.dialogueProcessingState.active) {
 		errorAndExit("You are not allowed to d_continue outside the scope of d2 command");
-		return RET_CONTINUE; // dummy
+		return RET_CONTINUE; //dummy
 	}
 
 	if (dlgCtrl.suspendDialoguePasses < 0) {
-		// sendToLog(LogLevel::Info, "dialogueContinueCommand dialogue event\n");
+		//sendToLog(LogLevel::Info, "dialogueContinueCommand dialogue event\n");
 		dlgCtrl.events.emplace();
 	}
-	// sendToLog(LogLevel::Info, "d_continue executed\n");
+	//sendToLog(LogLevel::Info, "d_continue executed\n");
 	dlgCtrl.suspendDialoguePasses++;
 	return RET_CONTINUE;
 }
@@ -2706,12 +2692,12 @@ int ONScripter::dialogueContinueCommand() {
 // wait_on_d n, where n is the index of the pipe character to wait on or -1 for TEXT_STATE::END
 int ONScripter::waitOnDialogueCommand() {
 	int index = script_h.readInt();
-	// sendToLog(LogLevel::Info, "wait_on_d %d", index);
+	//sendToLog(LogLevel::Info, "wait_on_d %d", index);
 	if (dlgCtrl.dialogueProcessingState.active) {
 		dlgCtrl.suspendScriptPasses[index]--;
-		// sendToLog(LogLevel::Info, " reduced to %d\n", dlgCtrl.suspendScriptPasses[index]);
+		//sendToLog(LogLevel::Info, " reduced to %d\n", dlgCtrl.suspendScriptPasses[index]);
 	} else {
-		// sendToLog(LogLevel::Info, "\n");
+		//sendToLog(LogLevel::Info, "\n");
 	}
 	return RET_CONTINUE;
 }
@@ -2723,7 +2709,7 @@ int ONScripter::dialogueCommand() {
 	script_h.pushStringBuffer(0);
 
 	if (!dlgCtrl.dialogueProcessingState.active) {
-		while (effect_current) waitEvent(0); // fixes the bug with d26767, is this the ONLY place to account for?
+		while (effect_current) waitEvent(0); //fixes the bug with d26767, is this the ONLY place to account for?
 		commitVisualState();
 		dlgCtrl.dialogue_pos = script_h.getCurrent();
 		dlgCtrl.feedDialogueTextData(script_h.readToEol());
@@ -2835,11 +2821,11 @@ int ONScripter::colorModCommand() {
 	if (script_h.isName("color_mod2"))
 		lsp2 = true;
 
-	// color_mod off,sprite
-	// color_mod sepia,sprite
-	// color_mod nega1,sprite
-	// color_mod nega2,sprite
-	// color_mod sprite,#colour
+	//color_mod off,sprite
+	//color_mod sepia,sprite
+	//color_mod nega1,sprite
+	//color_mod nega2,sprite
+	//color_mod sprite,#colour
 
 	/* Match the string and save it (since it has to be first parameter...) */
 	const char *str_off = "off", *str_sepia = "sepia", *str_nega1 = "nega1", *str_nega2 = "nega2";
@@ -2986,7 +2972,7 @@ int ONScripter::choicesToStringCommand() {
 	size_t end = script_h.choiceState.choiceVector.size();
 	for (size_t i = 0; i < end; i++) {
 		ret += std::to_string(script_h.choiceState.choiceVector[i]);
-		if (i != end - 1) {
+		if (i != end-1) {
 			ret += ",";
 		}
 	}
@@ -2999,7 +2985,7 @@ int ONScripter::choicesFromStringCommand() {
 	std::istringstream choices{std::string(buf)};
 	std::string choice;
 	script_h.choiceState.choiceVector.clear();
-	while (std::getline(choices, choice, ',')) {
+	while(std::getline(choices, choice, ',')) {
 		script_h.choiceState.choiceVector.push_back(std::stoi(choice));
 	}
 	return RET_CONTINUE;
@@ -3285,7 +3271,7 @@ int ONScripter::btnhover_dCommand() {
 }
 
 int ONScripter::btnasyncCommand() {
-	// enable/disable flag
+	//enable/disable flag
 	bool currentState{btnasync_active};
 	bool newState = script_h.readInt();
 
