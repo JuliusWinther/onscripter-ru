@@ -324,7 +324,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		return false;
 	};
 
-	auto processLeft = [](std::string & /* command */, std::string & /* param */, Fontinfo & /* info */) {
+	auto processLeft = [](std::string & /* command */, std::string & /* param */, Fontinfo &info /* info */) {
 		// FIXME: implement
 		info.changeStyle().inlineOverrides.is_aligned_left.set(true); // W_TEMP
 		return false;
@@ -335,7 +335,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		return false;
 	};
 
-	auto processRight = [](std::string & /* command */, std::string & /* param */, Fontinfo & /* info */) {
+	auto processRight = [](std::string & /* command */, std::string & /* param */, Fontinfo &info /* info */) {
 		// FIXME: implement
 		info.changeStyle().inlineOverrides.is_aligned_right.set(true); // W_TEMP
 		return false;
