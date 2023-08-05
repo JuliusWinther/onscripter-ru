@@ -76,8 +76,8 @@ struct NewLineBehavior {
 
 // For information that can change as part of the text layouting process without hitting any {}.
 struct LayoutData {
-	float xPxLeft;  //Real x coordinate (pen position)
-	float xPxRight; // Similar to above, but accounts for the entire final glyph (for rendering rectangles etc) and takes whole-number values
+	float xPxLeft;              // Real x coordinate (pen position)
+	float xPxRight;             // Similar to above, but accounts for the entire final glyph (for rendering rectangles etc) and takes whole-number values
 	uint32_t last_printed_codepoint;
 	unsigned int prevCharIndex; // last ft char index, used for kerning
 	NewLineBehavior newLineBehavior;
@@ -88,12 +88,20 @@ struct LayoutData {
 class Fontinfo {
 public:
 	struct InlineOverrides {
-		cmp::optional<bool> is_centered; //TODO: replace by an alignment enum (should i do this now?)
+		cmp::optional<bool> is_centered;      // TODO: replace by an alignment enum (should i do this now?)
+
+		cmp::optional<bool> is_aligned_left;  // W_TEMP
+		cmp::optional<bool> is_aligned_right; // W_TEMP
+
 		cmp::optional<bool> is_fitted;
 		cmp::optional<int> wrap_limit;
 		cmp::optional<bool> startsNewRun;
 		InlineOverrides &operator|=(const InlineOverrides &o) {
 			is_centered |= o.is_centered;
+
+			is_aligned_left |= o.is_aligned_left;   // W_TEMP
+			is_aligned_right |= o.is_aligned_right; // W_TEMP
+
 			is_fitted |= o.is_fitted;
 			wrap_limit |= o.wrap_limit;
 			startsNewRun |= o.startsNewRun;
@@ -110,14 +118,17 @@ public:
 		bool is_centered{false};
 		bool is_fitted{false};
 
+		bool is_aligned_left{false};  // W_TEMP
+		bool is_aligned_right{false}; // W_TEMP
+
 		bool is_bold{false};
 		bool is_italic{false};
-		bool is_underline{false}; //fixed init
+		bool is_underline{false}; // fixed init
 
 		bool can_loghint{false};
 		bool ignore_text{false};
 
-		bool is_border{false}; //fixed init
+		bool is_border{false}; // fixed init
 		int border_width{0};
 		uchar3 border_color{0, 0, 0};
 
@@ -141,43 +152,47 @@ public:
 
 		TextStyleProperties()                            = default;
 		TextStyleProperties(const TextStyleProperties &) = default;
-		TextStyleProperties &operator                    =(const TextStyleProperties &props) {
-            // Presets are used to combine multiple tag combinations
-            // For example, we can use {p:0:text} instead of {b:{c:FF0000{o:3:text}}} (blue truth/red truth)
-            // Not all the preset values are applied unconditionally.
-            // Some params are preserved and certain others are optionally preserved (-1 value).
+		TextStyleProperties &operator=(const TextStyleProperties &props) {
+			// Presets are used to combine multiple tag combinations
+			// For example, we can use {p:0:text} instead of {b:{c:FF0000{o:3:text}}} (blue truth/red truth)
+			// Not all the preset values are applied unconditionally.
+			// Some params are preserved and certain others are optionally preserved (-1 value).
 
-            font_number = props.font_number;
-            preset_id   = props.preset_id;
-            color       = props.color;
+			font_number = props.font_number;
+			preset_id   = props.preset_id;
+			color       = props.color;
 
-            is_centered  = props.is_centered;
-            is_fitted    = props.is_fitted;
-            is_bold      = props.is_bold;
-            is_italic    = props.is_italic;
-            is_underline = props.is_underline;
-            can_loghint  = props.can_loghint;
-            ignore_text  = props.ignore_text;
-            is_border    = props.is_border;
-            if (props.border_width != -1)
-                border_width = props.border_width;
-            border_color = props.border_color;
-            if (props.shadow_distance[0] != -1)
-                shadow_distance[0] = props.shadow_distance[0];
-            if (props.shadow_distance[1] != -1)
-                shadow_distance[1] = props.shadow_distance[1];
-            shadow_color = props.shadow_color;
-            no_break     = props.no_break;
-            if (props.font_size != -1)
-                font_size = props.font_size;
-            character_spacing = props.character_spacing;
-            if (props.line_height != -1)
-                line_height = props.line_height;
-            if (props.wrap_limit != -1)
-                wrap_limit = props.wrap_limit;
-            inlineOverrides = props.inlineOverrides;
+			is_centered = props.is_centered;
 
-            return *this;
+			is_aligned_left  = props.is_aligned_left;  // W_TEMP
+			is_aligned_right = props.is_aligned_right; // W_TEMP
+
+			is_fitted    = props.is_fitted;
+			is_bold      = props.is_bold;
+			is_italic    = props.is_italic;
+			is_underline = props.is_underline;
+			can_loghint  = props.can_loghint;
+			ignore_text  = props.ignore_text;
+			is_border    = props.is_border;
+			if (props.border_width != -1)
+				border_width = props.border_width;
+			border_color = props.border_color;
+			if (props.shadow_distance[0] != -1)
+				shadow_distance[0] = props.shadow_distance[0];
+			if (props.shadow_distance[1] != -1)
+				shadow_distance[1] = props.shadow_distance[1];
+			shadow_color = props.shadow_color;
+			no_break     = props.no_break;
+			if (props.font_size != -1)
+				font_size = props.font_size;
+			character_spacing = props.character_spacing;
+			if (props.line_height != -1)
+				line_height = props.line_height;
+			if (props.wrap_limit != -1)
+				wrap_limit = props.wrap_limit;
+			inlineOverrides = props.inlineOverrides;
+
+			return *this;
 		}
 	};
 

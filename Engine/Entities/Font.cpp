@@ -146,6 +146,9 @@ void Fontinfo::reset() {
 	changeStyle().is_shadow   = true;
 	is_transparent            = true;
 
+	changeStyle().is_aligned_left  = false; // W_TEMP
+	changeStyle().is_aligned_right = false; // W_TEMP
+
 	layoutData.newLineBehavior.duplicateHyphens = false;
 }
 

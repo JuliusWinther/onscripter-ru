@@ -98,7 +98,7 @@ DialogueController::TEXT_STATE DialogueController::handleNextPart() {
 						int time{0};
 						if (ons.unpackInlineCall(temp.c_str(), time) == 0) // not skippable, wait
 							currentCommand = "wait";
-						else //skippable, delay
+						else                                               // skippable, delay
 							currentCommand = "delay";
 
 						if (!ons.ignored_inline_func_lut.empty() && ons.ignored_inline_func_lut.count(currentCommand.c_str())) {
@@ -125,7 +125,7 @@ DialogueController::TEXT_STATE DialogueController::handleNextPart() {
 				} else {
 					if (!cmdIgnored) {
 						if (codepoint != ']')
-							temp += ','; //more arguments to go
+							temp += ','; // more arguments to go
 						ons.variableQueue.push(temp);
 					}
 					temp.clear();
@@ -172,8 +172,8 @@ int DialogueController::processDialogueEvents() {
 	int ret{ONScripter::RET_NO_READ};
 	while (!events.empty()) {
 		DialogueProcessingEvent &event = events.front();
-		//sendToLog(LogLevel::Info, "Processing dialogue event\n");
-		// check event attributes
+		// sendToLog(LogLevel::Info, "Processing dialogue event\n");
+		//  check event attributes
 		if (event.firstCall)
 			processDialogueInitialization();
 		if (event.loanExecStart) {
@@ -184,14 +184,14 @@ int DialogueController::processDialogueEvents() {
 			executingDialogueInlineCommand = false;
 			ons.inVariableQueueSubroutine  = false;
 			scriptState.disposeDialogue();
-			//sendToLog(LogLevel::Info, "end of inline dialogue command dialogue event\n");
+			// sendToLog(LogLevel::Info, "end of inline dialogue command dialogue event\n");
 			events.emplace();
 		} else {
 			ret = processDialogue();
 		}
 		events.pop();
 	}
-	//return ONScripter::RET_NO_READ;
+	// return ONScripter::RET_NO_READ;
 	if (dialogueProcessingState.active && !continueScriptExecution && !executingDialogueInlineCommand)
 		return ONScripter::RET_NO_READ;
 	return ret;
@@ -209,7 +209,7 @@ void DialogueController::waitForAction() {
 		scriptState.useMainScript();
 	} else {
 		// cannot call startLoanExecution() directly from here; we must RET_CONTINUE first
-		//sendToLog(LogLevel::Info, "loan execution start dialogue event\n");
+		// sendToLog(LogLevel::Info, "loan execution start dialogue event\n");
 		events.emplace_get().loanExecStart = true;
 	}
 }
@@ -268,25 +268,25 @@ void ScriptState::disposeMainscript(bool force) {
 }
 
 int DialogueController::processDialogue() {
-	//sendToLog(LogLevel::Info, "processDialogue\n");
+	// sendToLog(LogLevel::Info, "processDialogue\n");
 	int res{ONScripter::RET_NO_READ};
 	if (!dialogueProcessingState.active)
 		return res;
 
-	//auto currentPos = ons.script_h.getCurrent();
+	// auto currentPos = ons.script_h.getCurrent();
 
 	immediatelyHandleNextPart = false; // sorry, can't think of a better name...
 
 	TEXT_STATE result = handleNextPart();
 	switch (result) {
 		case TEXT_STATE::SYS_CMD:
-			//sendToLog(LogLevel::Info, "sys_cmd dialogue event (may be removed from queue in a moment, or not...)\n");
+			// sendToLog(LogLevel::Info, "sys_cmd dialogue event (may be removed from queue in a moment, or not...)\n");
 			immediatelyHandleNextPart      = true;
 			executingDialogueInlineCommand = true;
 
 			// this line backs stack up
-			//sendToLog(LogLevel::Info, "useDialogue from SYS_CMD\n");
-			scriptState.useDialogue();                  //backup, because string_buffer may be cleared
+			// sendToLog(LogLevel::Info, "useDialogue from SYS_CMD\n");
+			scriptState.useDialogue();                  // backup, because string_buffer may be cleared
 			ons.setVariableQueue(true, currentCommand); // correct isName, readInt, readStr etc.
 
 			/*res = */ ons.evaluateBuiltInCommand(currentCommand.c_str());
@@ -301,14 +301,14 @@ int DialogueController::processDialogue() {
 
 			break;
 		case TEXT_STATE::USER_CMD:
-			//sendToLog(LogLevel::Info, "useDialogue from USER_CMD\n");
+			// sendToLog(LogLevel::Info, "useDialogue from USER_CMD\n");
 			scriptState.useDialogue();
 
 			res = ons.ScriptParser::evaluateCommand(currentCommand.c_str(), false, true);
 
 			executingDialogueInlineCommand = true;
 			ons.inVariableQueueSubroutine  = true;
-			//assert(!ons.callStack.back().dialogueEventOnReturn);
+			// assert(!ons.callStack.back().dialogueEventOnReturn);
 			ons.callStack.back().dialogueEventOnReturn = true;
 			break;
 		case DialogueController::TEXT_STATE::TEXT_CMD:
@@ -317,7 +317,7 @@ int DialogueController::processDialogue() {
 					ons.errorAndExit("Used [*] in a plain (d) dialogue, use d2 command instead");
 				// check if we were already allowed past this * by script...
 				if (suspendDialoguePasses > 0) {
-					//sendToLog(LogLevel::Info, "* (suspendDialoguePasses) dialogue event\n");
+					// sendToLog(LogLevel::Info, "* (suspendDialoguePasses) dialogue event\n");
 					immediatelyHandleNextPart = true;
 				}
 				suspendDialoguePasses--;
@@ -326,12 +326,12 @@ int DialogueController::processDialogue() {
 				if (!continueScriptExecution)
 					ons.errorAndExit("Used [#] in a plain (d) dialogue, use d2 command instead");
 				suspendScriptPasses[suspendScriptIndex++]++;
-				//sendToLog(LogLevel::Info, "# (suspendScriptPasses) dialogue event\n");
+				// sendToLog(LogLevel::Info, "# (suspendScriptPasses) dialogue event\n");
 				immediatelyHandleNextPart = true;
 				break;
 			}
 
-			//sendToLog(LogLevel::Info, "useDialogue from TEXT_CMD\n");
+			// sendToLog(LogLevel::Info, "useDialogue from TEXT_CMD\n");
 			scriptState.useDialogue();
 
 			if (currentCommand == "@") {
@@ -343,8 +343,8 @@ int DialogueController::processDialogue() {
 				if (ons.textgosub_label)
 					res = ONScripter::RET_CONTINUE;
 			} else if (currentCommand == "|") {
-				immediatelyHandleNextPart = true; //will be unset by waitForAction
-				//if (ons.skip_mode & ONScripter::SKIP_SUPERSKIP) break;
+				immediatelyHandleNextPart = true; // will be unset by waitForAction
+				// if (ons.skip_mode & ONScripter::SKIP_SUPERSKIP) break;
 				executingDialogueInlineCommand = true;
 				ons.setVariableQueue(true, currentCommand);
 				/* res = */ ons.waitvoiceCommand();
@@ -353,17 +353,17 @@ int DialogueController::processDialogue() {
 				break;
 			}
 
-			//assert(!ons.callStack.back().dialogueEventOnReturn);
+			// assert(!ons.callStack.back().dialogueEventOnReturn);
 			executingDialogueInlineCommand             = true;
 			ons.callStack.back().dialogueEventOnReturn = true;
-			//ons.callStack.back().next_script = currentPos;
+			// ons.callStack.back().next_script = currentPos;
 			break;
 		case TEXT_STATE::TEXT:
 			ons.displayDialogue();
 			break;
 		case TEXT_STATE::END:
 			// Should be no more needed, set by setDialogueActive(false);
-			//suspendScriptPasses[-1]++;
+			// suspendScriptPasses[-1]++;
 
 			untimeAllDialogueSegments();
 
@@ -379,7 +379,7 @@ int DialogueController::processDialogue() {
 			setDialogueActive(false);
 			if (ons.dialogue_add_ends) {
 				ons.clickNewPage();
-				//if (ons.textgosub_label) res = ONScripter::RET_CONTINUE;
+				// if (ons.textgosub_label) res = ONScripter::RET_CONTINUE;
 			}
 			res = ONScripter::RET_CONTINUE;
 			break;
@@ -425,14 +425,14 @@ void DialogueController::TextRenderingMonitorAction::run() {
 	}
 	if (r) {
 		lastCompletedSegment = dlgCtrl.dialogueRenderState.segmentIndex;
-		//sendToLog(LogLevel::Info, "TextRenderingMonitorAction dialogue event from segment %d\n", lastCompletedSegment);
+		// sendToLog(LogLevel::Info, "TextRenderingMonitorAction dialogue event from segment %d\n", lastCompletedSegment);
 		dlgCtrl.events.emplace();
 	}
 }
 void DialogueController::TextRenderingMonitorAction::onExpired() {
 	ConstantRefreshAction::onExpired();
 	// better at least put a print in
-	//sendToLog(LogLevel::Info, "TextRenderingMonitorAction expired.\n");
+	// sendToLog(LogLevel::Info, "TextRenderingMonitorAction expired.\n");
 }
 
 int DialogueController::TextRenderingMonitorAction::eventMode() {
@@ -458,7 +458,7 @@ void DialogueController::layoutName() {
 }
 
 void DialogueController::layoutDialogue() {
-	//ons.printClock("renderText");
+	// ons.printClock("renderText");
 
 	if (!nameLayouted && !dialogueName.empty())
 		layoutName();
@@ -495,12 +495,12 @@ void DialogueController::layoutDialogue() {
 			textPart.append(dataPartC + pos, prefixLength);
 			std::u16string resultStr;
 			decodeUTF8String(dataPartC + pos, resultStr, prefixLength);
-			//sendToLog(LogLevel::Info, "Part: %s\n", decodeUTF16String(resultStr).c_str());
+			// sendToLog(LogLevel::Info, "Part: %s\n", decodeUTF16String(resultStr).c_str());
 
-			//ons.printClock("rendering part");
+			// ons.printClock("rendering part");
 			if (!(ons.skip_mode & ONScripter::SKIP_SUPERSKIP))
 				layoutSegment(dialogueRenderState, resultStr, fi.get());
-			//ons.printClock("rendered part");
+			// ons.printClock("rendered part");
 		}
 
 		if (bytesScanned < 0)
@@ -517,7 +517,7 @@ void DialogueController::layoutDialogue() {
 			break;
 	}
 	if (ons.skip_mode & ONScripter::SKIP_SUPERSKIP) {
-		//this is not true but it should save us from processing the dialogue multiple times
+		// this is not true but it should save us from processing the dialogue multiple times
 		dialogueProcessingState.layoutDone = true;
 		return;
 	}
@@ -573,12 +573,18 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		DialoguePiece &backPiece  = *line.pieces.back();
 
 		Fontinfo &fi   = backPiece.getPostFontInfo();
-		auto &style    = fi.style(); //don't forget~ (speed)
+		auto &style    = fi.style(); // don't forget~ (speed)
 		bool centered  = line.inlineOverrides.is_centered.get(style.is_centered);
 		bool fitted    = line.inlineOverrides.is_fitted.get(style.is_fitted);
 		int wrap_limit = line.inlineOverrides.wrap_limit.get(style.wrap_limit);
 
-		if (!centered && !fitted)
+		bool alignedLeft  = line.inlineOverrides.is_aligned_left.get(style.is_aligned_left);   // W_TEMP
+		bool alignedRight = line.inlineOverrides.is_aligned_right.get(style.is_aligned_right); // W_TEMP
+
+		/*if (!centered && !fitted)
+		    continue;*/
+		// W_TEMP
+		if (!centered && !alignedLeft && !alignedRight && !fitted)
 			continue;
 
 		// TODO for Chinese support:
@@ -597,6 +603,14 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 			// Make it smaller
 			line.horizontalResize = areaWidth / xWidth;
 			xWidth                = areaWidth;
+		}
+		if (alignedRight) { // W_TEMP
+			// Align to the right
+			line.position.x = areaWidth - xWidth;
+		}
+		if (alignedLeft) { // W_TEMP
+			// Align to the left
+			line.position.x = frontPiece.position.x;
 		}
 		if (centered) {
 			// Move us left or right as appropriate
@@ -621,7 +635,7 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 			}
 			piece.position.y += std::floor(line.position.y - piece.getPreFontInfo().y());
 			/*if (!state.tightlyFitBottomEdge)
-				piece.position.h += line.maxDescender - piece.usedSpaceBelowBaseline;*/
+			    piece.position.h += line.maxDescender - piece.usedSpaceBelowBaseline;*/
 			// we hope that we no longer need this
 		}
 	}
@@ -718,7 +732,7 @@ void DialogueController::prepareForRendering(const char *buf, Fontinfo &f_info, 
 	w = h = 0; // Nothing by default
 	std::u16string text;
 	decodeUTF8String(buf, text);
-	//sendToLog(LogLevel::Info, "Rendering LSP to new image: %s\n", decodeUTF16String(resultStr).c_str());
+	// sendToLog(LogLevel::Info, "Rendering LSP to new image: %s\n", decodeUTF16String(resultStr).c_str());
 	while (f_info.styleStack.size() > 1) f_info.styleStack.pop();
 
 	layoutSegment(state, text, f_info);
@@ -792,7 +806,7 @@ void DialogueController::timeCurrentDialogueSegment() {
 					// special char to indicate it's time to time ruby!
 					DialoguePiece &thisRuby = run.rubyPieces[rubiesTimed];
 					for (auto &rubyGlyph : thisRuby.charRenderBuffer) {
-						//sendToLog(LogLevel::Info, "Timing RUBY glyph %d at %d\n", rubyGlyph.codepoint, usedMs);
+						// sendToLog(LogLevel::Info, "Timing RUBY glyph %d at %d\n", rubyGlyph.codepoint, usedMs);
 						rubyGlyph.fadeStart.setCountdown(usedMs);
 						rubyGlyph.fadeStop.setCountdown(usedMs + fade);
 						rubyGlyph.fadeDuration = fade;
@@ -812,7 +826,7 @@ void DialogueController::timeCurrentDialogueSegment() {
 					usedMs += ons.getCharacterPostDisplayDelay(prevCodepoint == '.' ? u'⅓' : '1', speed);
 				}
 				usedMs += ons.getCharacterPreDisplayDelay(glyph.codepoint, speed);
-				//sendToLog(LogLevel::Info, "Timing glyph %d at %d\n", glyph.codepoint, usedMs);
+				// sendToLog(LogLevel::Info, "Timing glyph %d at %d\n", glyph.codepoint, usedMs);
 				glyph.fadeStart.setCountdown(usedMs);
 				glyph.fadeStop.setCountdown(usedMs + fade);
 				glyph.fadeDuration = fade;
@@ -900,7 +914,7 @@ DialoguePiece DialogueController::layoutPiece(TextRenderingState &state, std::u1
 void DialogueController::layoutRubyPiece(DialoguePiece &mainPiece, DialoguePiece &rubyPiece, size_t rubyStartPosition, float xFinish, bool measure) {
 	auto &preFontInfo = rubyPiece.getPreFontInfo();
 	auto xStart       = preFontInfo.x();
-	//auto xFinish = rubyPiece.getPostFontInfo().x();
+	// auto xFinish = rubyPiece.getPostFontInfo().x();
 	auto y = preFontInfo.y();
 
 	rubyPiece.xPxLeft                    = preFontInfo.layoutData.xPxLeft;
@@ -965,7 +979,7 @@ void DialogueController::renderDialogueToTarget(GPU_Target *dst, GPU_Rect *dstCl
 		if (wndCtrl.usingDynamicTextWindow && nameLayouted) {
 			wndCtrl.updateTextboxExtension(true);
 			nameRenderState.dst.target = dst;
-			//dlgCtrl.nameRenderState.dstClip = // think it can be ignored for debug?
+			// dlgCtrl.nameRenderState.dstClip = // think it can be ignored for debug?
 			nameRenderState.offset = wndCtrl.getPrintableNameBoxRegion();
 			nameRenderState.offset.x += (camera ? ons.camera.center_pos.x : 0);
 			nameRenderState.offset.y += (camera ? ons.camera.center_pos.y : 0);
@@ -975,9 +989,9 @@ void DialogueController::renderDialogueToTarget(GPU_Target *dst, GPU_Rect *dstCl
 		}
 
 		if (dialogueRenderState.segmentIndex != -1) {
-			//GPU_Rect ourClip {0,0,0,0};
+			// GPU_Rect ourClip {0,0,0,0};
 			dialogueRenderState.dst.target = dst;
-			//dialogueRenderState.dstClip = &ourClip;
+			// dialogueRenderState.dstClip = &ourClip;
 			dialogueRenderState.offset                         = offset;
 			dialogueRenderState.shiftSpriteDrawByBorderPadding = false;
 			if (wndCtrl.usingDynamicTextWindow) {
@@ -1002,16 +1016,16 @@ void DialogueController::renderDialogueToTarget(GPU_Target *dst, GPU_Rect *dstCl
 
 void DialogueController::renderPiece(TextRenderingState &state, DialoguePiece &piece) {
 	// Shadow border
-	//ons.printClock("shadow border");
+	// ons.printClock("shadow border");
 	renderAddedChars(state, piece, true, true);
 	// Shadow glyph
-	//ons.printClock("shadow glyph");
+	// ons.printClock("shadow glyph");
 	renderAddedChars(state, piece, false, true);
 	// Regular border
-	//ons.printClock("regular border");
+	// ons.printClock("regular border");
 	renderAddedChars(state, piece, true, false);
 	// Regular glyph
-	//ons.printClock("regular glyph");
+	// ons.printClock("regular glyph");
 	renderAddedChars(state, piece, false, false);
 }
 
@@ -1173,10 +1187,10 @@ bool DialogueController::addFittingChars(DialoguePiece &piece, std::u16string &r
 				} else if (std::find(std::begin(NotLineBegin), std::end(NotLineBegin), this_codepoint) != std::end(NotLineBegin)) {
 					punctuationRepeatCount++;
 				}
-				if (punctuationRepeatCount >= 3 || // if a punctuation repeated 3 or more times, it can safely wrap because they are used for stress
+				if (punctuationRepeatCount >= 3 ||                                                                          // if a punctuation repeated 3 or more times, it can safely wrap because they are used for stress
 				    (isCJKChar(this_codepoint) && isNumberOrEnLetter(pre_codepoint)) ||
-				    (isCJKChar(pre_codepoint) && isNumberOrEnLetter(this_codepoint)) ||           // It's OK to break a line while CJK-EN mixing
-				    (!isNumberOrEnLetter(this_codepoint) && !isNumberOrEnLetter(pre_codepoint) && // no line breaking in an English words and numbers
+				    (isCJKChar(pre_codepoint) && isNumberOrEnLetter(this_codepoint)) ||                                     // It's OK to break a line while CJK-EN mixing
+				    (!isNumberOrEnLetter(this_codepoint) && !isNumberOrEnLetter(pre_codepoint) &&                           // no line breaking in an English words and numbers
 				     std::find(std::begin(NotLineEnd), std::end(NotLineEnd), pre_codepoint) == std::end(NotLineEnd) &&
 				     std::find(std::begin(NotLineBegin), std::end(NotLineBegin), this_codepoint) == std::end(NotLineBegin)) // CJK line breaking rules
 				) {
@@ -1383,13 +1397,13 @@ void DialogueController::renderAddedChars(TextRenderingState &state, DialoguePie
 		x += r.layoutData.prevCharIndex ? fontInfo.my_font()->kerning(r.layoutData.prevCharIndex, glyph->ftCharIndexCache) : 0;
 		x += (*fiIterator).style().character_spacing;
 		x += glyph->advance;
-		//TODO: These 3 lines are code duplication, see addCharToRenderBuffer; extract them into a float Fontinfo::getTotalAdvance(wchar_t codepoint) method.
-		// (maybe there is a better name...)
+		// TODO: These 3 lines are code duplication, see addCharToRenderBuffer; extract them into a float Fontinfo::getTotalAdvance(wchar_t codepoint) method.
+		//  (maybe there is a better name...)
 	}
 }
 
 void DialogueController::setDialogueActive(bool active) {
-	//if (!isEnabled) return;
+	// if (!isEnabled) return;
 
 	if (active)
 		dialogueProcessingState.active = true;

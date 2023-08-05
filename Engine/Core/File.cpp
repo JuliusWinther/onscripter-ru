@@ -57,6 +57,9 @@ void ONScripter::readFontinfo(Fontinfo &fi) {
 	style.is_centered       = read32s();
 	style.is_fitted         = read32s();
 
+	style.is_aligned_left  = read32s(); // W_TEMP
+	style.is_aligned_right = read32s(); // W_TEMP
+
 	style.shadow_distance[0] = read32s();
 	style.shadow_distance[1] = read32s();
 
@@ -108,6 +111,9 @@ void ONScripter::writeFontinfo(Fontinfo &fi) {
 	write32s(style.is_gradient);
 	write32s(style.is_centered);
 	write32s(style.is_fitted);
+
+	write32s(style.is_aligned_left);  // W_TEMP
+	write32s(style.is_aligned_right); // W_TEMP
 
 	write32s(style.shadow_distance[0]);
 	write32s(style.shadow_distance[1]);
@@ -213,7 +219,7 @@ void ONScripter::readAnimationInfo(AnimationInfo &ai) {
 	ai.orig_pos.y = read32s();
 	UpdateAnimPosXY(&ai);
 
-	//Move to a separate function?
+	// Move to a separate function?
 	if (ai.type == SPRITE_SENTENCE_FONT) {
 		ai.orig_pos.w = read32s();
 		ai.orig_pos.h = read32s();
@@ -584,9 +590,9 @@ void ONScripter::readSoundData() {
 }
 
 void ONScripter::writeSoundData() {
-	writeStr(seqmusic_file_name); // MIDI file
-	writeStr(wave_file_name);     // wave, waveloop
-	write32s(current_cd_track);   // play CD
+	writeStr(seqmusic_file_name);     // MIDI file
+	writeStr(wave_file_name);         // wave, waveloop
+	write32s(current_cd_track);       // play CD
 
 	write8s(seqmusic_play_loop_flag); // play, playonce MIDI
 	write8s(wave_play_loop_flag);     // wave, waveloop
@@ -700,12 +706,12 @@ void ONScripter::loadSaveFileData() {
 	auto label = script_h.lookupLabel(str);
 	if (!label) {
 		errorAndExit("Failed to find save label!");
-		return; //dummy
+		return; // dummy
 	}
 	current_label_info = label;
 	current_line       = read32s();
 	int32_t command    = read32s();
-	//sendToLog(LogLevel::Info, "load %d:%d:%d\n", current_label_info->start_line, current_line, command);
+	// sendToLog(LogLevel::Info, "load %d:%d:%d\n", current_label_info->start_line, current_line, command);
 
 	const char *buf = script_h.getAddressByLine(label->start_line + current_line);
 	for (int32_t i = 0; i < command; i++) {
@@ -738,7 +744,7 @@ void ONScripter::loadSaveFileData() {
 		setupAnimationInfo(&btndef_info);
 		SDL_SetSurfaceAlphaMod(btndef_info.image_surface, 0xFF);
 		SDL_SetSurfaceBlendMode(btndef_info.image_surface, SDL_BLENDMODE_NONE);
-		//SDL_SetSurfaceRLE(btndef_info.image_surface, SDL_RLEACCEL);
+		// SDL_SetSurfaceRLE(btndef_info.image_surface, SDL_RLEACCEL);
 	}
 
 	nontransitioningSprites.clear();
@@ -789,7 +795,7 @@ void ONScripter::saveSaveFileData() {
 	writeStr(current_label_info->name);
 	write32s(current_line);
 	const char *buf = script_h.getAddressByLine(current_label_info->start_line + current_line);
-	//sendToLog(LogLevel::Info, "save %d:%d\n", current_label_info->start_line, current_line);
+	// sendToLog(LogLevel::Info, "save %d:%d\n", current_label_info->start_line, current_line);
 
 	int32_t command = 0;
 	if (!dlgCtrl.dialogueProcessingState.active) {
@@ -840,7 +846,7 @@ bool ONScripter::readSaveFileHeader(int no, SaveFileInfo *save_file_info) {
 	char filename[16];
 	std::snprintf(filename, sizeof(filename), "save%d.dat", no);
 	if (loadFileIOBuf(filename)) {
-		//sendToLog(LogLevel::Error, "can't open save file %s\n", filename);
+		// sendToLog(LogLevel::Error, "can't open save file %s\n", filename);
 		return false;
 	}
 
@@ -852,7 +858,7 @@ bool ONScripter::readSaveFileHeader(int no, SaveFileInfo *save_file_info) {
 	int file_version = read8s() * 100;
 	file_version += read8s();
 
-	//sendToLog(LogLevel::Info, "Save file version is %d.%d\n", file_version/100, file_version%100);
+	// sendToLog(LogLevel::Info, "Save file version is %d.%d\n", file_version/100, file_version%100);
 	if (file_version > SAVEFILE_VERSION_MAJOR * 100 + SAVEFILE_VERSION_MINOR) {
 		sendToLog(LogLevel::Error, "Save file is newer than %d.%d, please use the latest ONScripter-RU.\n", SAVEFILE_VERSION_MAJOR, SAVEFILE_VERSION_MINOR);
 		return false;
@@ -1065,7 +1071,7 @@ void ONScripter::loadReadLabels(const char *filename) {
 		return;
 
 	if (loadFileIOBuf(filename)) {
-		//sendToLog(LogLevel::Error, "can't open label file %s\n", filename);
+		// sendToLog(LogLevel::Error, "can't open label file %s\n", filename);
 		return;
 	}
 

@@ -325,24 +325,32 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 	};
 
 	auto processLeft = [](std::string & /* command */, std::string & /* param */, Fontinfo & /* info */) {
-		//FIXME: implement
+		// FIXME: implement
+		info.changeStyle().inlineOverrides.is_aligned_left.set(true); // W_TEMP
 		return false;
 	};
 
 	auto processCentre = [](std::string & /* command */, std::string & /* param */, Fontinfo &info) {
-		info.changeStyle().inlineOverrides.is_centered.set(true); //TODO: replace by some kind of alignment enum.
+		info.changeStyle().inlineOverrides.is_centered.set(true); // TODO: replace by some kind of alignment enum.
 		return false;
 	};
 
 	auto processRight = [](std::string & /* command */, std::string & /* param */, Fontinfo & /* info */) {
-		//FIXME: implement
+		// FIXME: implement
+		info.changeStyle().inlineOverrides.is_aligned_right.set(true); // W_TEMP
 		return false;
 	};
 
 	auto processAlignment = [](std::string & /* command */, std::string &param, Fontinfo &info) {
 		if (param[0] == 'c')
 			info.changeStyle().inlineOverrides.is_centered.set(true);
-		//TODO: support others?
+		// TODO: support others?
+		// W_TEMP
+		if (param[0] == 'l')
+			info.changeStyle().inlineOverrides.is_aligned_left.set(true);
+		if (param[0] == 'r')
+			info.changeStyle().inlineOverrides.is_aligned_right.set(true);
+		// end temp
 		return false;
 	};
 
@@ -592,13 +600,13 @@ const GlyphValues *ONScripter::renderUnicodeGlyph(Font *font, GlyphParams *key) 
 			return uncolored_glyph;
 		}
 		bool should_set = true;
-		glyph           = new GlyphValues(*uncolored_glyph); // so we don't ruin the uncolored one in the cache (prevents trying to recolor an already colored glyph)
+		glyph           = new GlyphValues(*uncolored_glyph);                                                    // so we don't ruin the uncolored one in the cache (prevents trying to recolor an already colored glyph)
 		if (!black_glyph)
 			should_set = colorGlyph(key, glyph, &k.glyph_color, false, use_text_atlas ? &glyphAtlas : nullptr); // Color the glyph
 		if (!black_border && should_set)
 			should_set = colorGlyph(key, glyph, &k.border_color, true, use_text_atlas ? &glyphAtlas : nullptr); // Color the border
 		if (should_set) {
-			glyphCache.set(k, glyph); // Store the colored glyph in the cache so we don't need to color it repeatedly.
+			glyphCache.set(k, glyph);                                                                           // Store the colored glyph in the cache so we don't need to color it repeatedly.
 		} else {
 			delete glyph;
 			resetGlyphCache();
@@ -664,10 +672,10 @@ void ONScripter::enterTextDisplayMode() {
 
 void ONScripter::leaveTextDisplayMode(bool force_leave_flag, bool perform_effect) {
 
-	//sendToLog(LogLevel::Info, "leaveTextDisplayMode(%u)\n", force_leave_flag);
+	// sendToLog(LogLevel::Info, "leaveTextDisplayMode(%u)\n", force_leave_flag);
 
-	//ons-en feature: when in certain skip modes, don't actually leave
-	//text display mode unless forced to (but say you did)
+	// ons-en feature: when in certain skip modes, don't actually leave
+	// text display mode unless forced to (but say you did)
 	if (!force_leave_flag && (skip_mode & (SKIP_NORMAL) || keyState.ctrl)) {
 		did_leavetext = true;
 		return;
@@ -678,7 +686,7 @@ void ONScripter::leaveTextDisplayMode(bool force_leave_flag, bool perform_effect
 	if (!did_leavetext && (display_mode & DISPLAY_MODE_TEXT) &&
 	    (force_leave_flag || (erase_text_window_mode != 0))) {
 
-		//sendToLog(LogLevel::Info, "leaveTextDisplayMode(%u) body\n", force_leave_flag);
+		// sendToLog(LogLevel::Info, "leaveTextDisplayMode(%u) body\n", force_leave_flag);
 
 		addTextWindowClip(dirty_rect_hud);
 
@@ -774,17 +782,17 @@ bool ONScripter::clickWait() {
 
 	flush(refreshMode());
 
-	//Mion: apparently NScr doesn't call textgosub on clickwaits
-	// while in skip mode (but does call it on pagewaits)
-	// ^ We don't care what NScr does, its nonsense causes us bugs :D
+	// Mion: apparently NScr doesn't call textgosub on clickwaits
+	//  while in skip mode (but does call it on pagewaits)
+	//  ^ We don't care what NScr does, its nonsense causes us bugs :D
 	if (((skip_mode & (SKIP_NORMAL)) ||
 	     ((tmp_skip & SKIP_TO_EOL) && clickskippage_flag) ||
 	     keyState.ctrl) &&
 	    !textgosub_label) {
 		skip_mode      = tmp_skip;
 		clickstr_state = CLICK_NONE;
-		//if (textgosub_label && (script_h.getNext()[0] != 0x0a))
-		//    new_line_skip_flag = true;
+		// if (textgosub_label && (script_h.getNext()[0] != 0x0a))
+		//     new_line_skip_flag = true;
 		event_mode = IDLE_EVENT_MODE;
 		waitEvent(0);
 	} else {
@@ -895,7 +903,7 @@ int ONScripter::textCommand() {
 
 		dlgCtrl.dialogueProcessingState.readyToRun = true;
 
-		//sendToLog(LogLevel::Info, "Start of dialogue dialogue event\n");
+		// sendToLog(LogLevel::Info, "Start of dialogue dialogue event\n");
 		dlgCtrl.events.emplace_get().firstCall = true;
 
 		LabelInfo *label = current_label_info;
@@ -913,7 +921,7 @@ int ONScripter::textCommand() {
 
 void ONScripter::displayDialogue() {
 	if (skip_mode) {
-		//sendToLog(LogLevel::Info, "skip-mode display dialogue event\n");
+		// sendToLog(LogLevel::Info, "skip-mode display dialogue event\n");
 		dlgCtrl.events.emplace();
 		for (const auto &a : fetchConstantRefreshActions<DialogueController::TextRenderingMonitorAction>()) {
 			auto act = dynamic_cast<DialogueController::TextRenderingMonitorAction *>(a.get());
@@ -963,7 +971,7 @@ int ONScripter::unpackInlineCall(const char *cmd, int &val) {
 			return 1;
 		default:
 			ons.errorAndExit("This command cannot not be executed from here"); // for !s and friends
-			return -1;                                                         //dummy
+			return -1;                                                         // dummy
 	}
 }
 
