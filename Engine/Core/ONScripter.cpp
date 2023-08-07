@@ -944,7 +944,7 @@ void ONScripter::lookupSavePath() {
 	const char *storage = FileIO::getStorageDir(trycloud);
 
 	script_h.save_path = new char[PATH_MAX];
-	std::snprintf(script_h.save_path, PATH_MAX, "%s%s%c", storage, gameid, DELIMITER);
+	std::snprintf(script_h.save_path, PATH_MAX, "%s%s%c", storage, "Ts", DELIMITER);
 
 	if (!FileIO::makeDir(script_h.save_path)) {
 		ons.errorAndExit("Could not create save directory!");
