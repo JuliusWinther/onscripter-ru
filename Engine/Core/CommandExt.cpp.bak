@@ -2363,7 +2363,7 @@ int ONScripter::getLogDataCommand() {
 
 	return RET_CONTINUE;
 }
-//W_CUSTOM - discord integration
+//W_CUSTOM discord
 #if defined(DISCORD)
 int ONScripter::setDiscordRPCCommand() {
 	std::string state = script_h.readStr();

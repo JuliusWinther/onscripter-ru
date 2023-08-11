@@ -383,10 +383,6 @@ public:
 	int setwindow2Command();
 	int setwindowCommand();
 	int seteffectspeedCommand();
-//W_CUSTOM - discord integration
-#if defined(DISCORD)
-	int setDiscordRPCCommand();
-#endif
 	int setcursorCommand();
 	int selectCommand();
 	int savetimeCommand();
