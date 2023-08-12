@@ -201,15 +201,15 @@ static AVFrame *process(AVFrame *dFrame, AVFrame *&tempFrame) {
 
 const std::unordered_set<int> MediaProcController::HardwareDecoderIFace::hardwareAcceleratedFormats {
 #if defined(LINUX)
-	//AV_PIX_FMT_VDPAU_H264, W_CUSTOM
-	//AV_PIX_FMT_VDPAU_MPEG1,
-	//AV_PIX_FMT_VDPAU_MPEG2,
-	//AV_PIX_FMT_VDPAU_WMV3,
-	//AV_PIX_FMT_VDPAU_VC1,
+	AV_PIX_FMT_VDPAU_H264,
+	AV_PIX_FMT_VDPAU_MPEG1,
+	AV_PIX_FMT_VDPAU_MPEG2,
+	AV_PIX_FMT_VDPAU_WMV3,
+	AV_PIX_FMT_VDPAU_VC1,
 	AV_PIX_FMT_VDPAU,
-	//AV_PIX_FMT_VAAPI_MOCO,
-	//AV_PIX_FMT_VAAPI_IDCT,
-	//AV_PIX_FMT_VAAPI,
+	AV_PIX_FMT_VAAPI_MOCO,
+	AV_PIX_FMT_VAAPI_IDCT,
+	AV_PIX_FMT_VAAPI,
 #elif defined(WIN32)
 	AV_PIX_FMT_DXVA2_VLD,
 	AV_PIX_FMT_D3D11VA_VLD,
