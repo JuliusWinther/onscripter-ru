@@ -498,9 +498,9 @@ fi
 echo -n "Deciding on flags...      "
 
 case "$SYS" in
-Posix)  EXE=     ; OBJ=.o ; LIB=.a ; W32= ;;
-MacOSX) EXE=     ; OBJ=.o ; LIB=.a ; W32= ;;
-MinGW)  EXE=.exe ; OBJ=.o ; LIB=.a ; W32=true ;;
+Posix)  EXE=     ; OBJ=.o ; LIB=.a ; SHAREDLIB=.so; W32= ;;
+MacOSX) EXE=     ; OBJ=.o ; LIB=.a ; SHAREDLIB=.dylib; W32= ;;
+MinGW)  EXE=.exe ; OBJ=.o ; LIB=.a ; SHAREDLIB=.dll; W32=true ;;
 Droid)  EXE=     ; OBJ=.o ; LIB=.a ; W32= ;;
 *)      echo "error"
         echo "Found an unsupported system $SYS!"
