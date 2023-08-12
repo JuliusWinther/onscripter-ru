@@ -17,7 +17,11 @@
 
 # Generate $LINKpackage variable
 genlink() {
-  eval "LINK$1=\"\\\$(EXTLIB)/lib/lib$1$2\\\$(LIBSUFFIX)\""
+  if [ -z $2 ]; then
+    eval "LINK$1=\"\\\$(EXTLIB)/lib/lib$1\\\$(LIBSUFFIX)\""
+  else
+    eval "LINK$1=\"\\\$(EXTLIB)/lib/lib$1$2$3\""
+  fi
 }
 
 # Quick and dirty local header dependency builder.
@@ -983,7 +987,7 @@ LIBS = \$(EXTRAOSLDFLAGS) -L\$(EXTLIB)/lib $LINK_START_GROUP \\
 	$LINKSDL2_mixer $LINKogg $LINKvorbis $LINKvorbisfile \\
 	$LINKSDL2_gpu $LINKepoxy $LINKbz2 \\
 	$LINKavutil $LINKavformat $LINKavcodec $LINKswscale $LINKswresample \\
-	$LINKass $LINKusb $LINKfribidi $LINKharfbuzz $LINKunwind $LINK_END_GROUP
+	$LINKass $LINKusb $LINKfribidi $LINKharfbuzz $LINKunwind $LINKdiscordsdk $LINKdiscord_game_sdk $LINK_END_GROUP
 
 .SUFFIXES:
 .SUFFIXES: $OBJ .cpp .h .c
