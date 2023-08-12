@@ -15,11 +15,11 @@ jobs:
     strategy:
       matrix:
         BUILD_TYPE: ["debug", "release"]
-        DISCORD_INTEGRATION: ["using discord epically", ":Blue_Mad: (not using discord)"]
+        DISCORD_INTEGRATION: ["using discord", ":Blue_Mad: (not using discord)"]
     env:
       dev: ${{ matrix.BUILD_TYPE == 'debug' && '_dev' || '' }}
       cmd: ${{ matrix.BUILD_TYPE == 'release' && '--release-build --strip-binary' || '' }}
-      discord: ${{ matrix.DISCORD_INTEGRATION == 'using discord epically' && '--with-discord' || '' }}
+      discord: ${{ matrix.DISCORD_INTEGRATION == 'using discord' && '--with-discord' || '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
