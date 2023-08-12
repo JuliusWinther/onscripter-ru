@@ -1,13 +1,13 @@
 pkgname=jpeg
-pkgver=9e
+pkgver=9c
 pkgrel=1
-sources=("https://github.com/m3t4f1v3/onscripter-deps-updated/raw/master/archives/${pkgname}src.v${pkgver}.tar.gz") #http://www.ijg.org/files/
-hashes=('4077d6a6a75aeb01884f708919d25934c93305e49f7e3f36db9129320e6f4f3d')
+sources=("https://raw.githubusercontent.com/umineko-project/onscripter-deps/master/archives/jpegsrc.v$pkgver.tar.gz")
+hashes=('650250979303a649e21f87b5ccd02672af1ea6954b911342ea491f351ceb7122')
 
 configopts=(
     '--disable-dependency-tracking'
-    "--libdir=$outdir/lib"
     '--disable-shared'
+    "--libdir=$outdir/lib"
 )
 
 # vim: set syntax=sh:
