@@ -559,10 +559,9 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		if (!line.rubyPieces.empty())
 			previousDescender /= 2;
 
-		DialoguePiece &backPiece = *line.pieces.back();                                                                              // W_TEMP
-		Fontinfo &fi             = backPiece.getPostFontInfo();                                                                      // W_TEMP
-		auto &style              = fi.style();                                                                                       // W_TEMP
-		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.wrap_limit.get(style.interline); // W_TEMP
+		Fontinfo &myFi = line.getPieces().front()->getPreFontInfo();                                                                // W_TEMP
+		auto &style    = fi.style();                                                                                                // W_TEMP
+		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.interline.get(style.interline); // W_TEMP
 		line.position.y   = y;
 		previousDescender = line.maxDescender;
 	}
