@@ -59,6 +59,7 @@ void ONScripter::readFontinfo(Fontinfo &fi) {
 
 	style.is_aligned_left  = read32s(); // W_TEMP
 	style.is_aligned_right = read32s(); // W_TEMP
+	style.interline        = read32s(); // W_TEMP
 
 	style.shadow_distance[0] = read32s();
 	style.shadow_distance[1] = read32s();
@@ -114,6 +115,7 @@ void ONScripter::writeFontinfo(Fontinfo &fi) {
 
 	write32s(style.is_aligned_left);  // W_TEMP
 	write32s(style.is_aligned_right); // W_TEMP
+	write32s(style.interline);        // W_TEMP
 
 	write32s(style.shadow_distance[0]);
 	write32s(style.shadow_distance[1]);
@@ -590,9 +592,9 @@ void ONScripter::readSoundData() {
 }
 
 void ONScripter::writeSoundData() {
-	writeStr(seqmusic_file_name);     // MIDI file
-	writeStr(wave_file_name);         // wave, waveloop
-	write32s(current_cd_track);       // play CD
+	writeStr(seqmusic_file_name); // MIDI file
+	writeStr(wave_file_name);     // wave, waveloop
+	write32s(current_cd_track);   // play CD
 
 	write8s(seqmusic_play_loop_flag); // play, playonce MIDI
 	write8s(wave_play_loop_flag);     // wave, waveloop

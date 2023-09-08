@@ -148,6 +148,7 @@ void Fontinfo::reset() {
 
 	changeStyle().is_aligned_left  = false; // W_TEMP
 	changeStyle().is_aligned_right = false; // W_TEMP
+	changeStyle().interline        = 0;     // W_TEMP
 
 	layoutData.newLineBehavior.duplicateHyphens = false;
 }

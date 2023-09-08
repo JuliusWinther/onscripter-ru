@@ -76,8 +76,8 @@ struct NewLineBehavior {
 
 // For information that can change as part of the text layouting process without hitting any {}.
 struct LayoutData {
-	float xPxLeft;              // Real x coordinate (pen position)
-	float xPxRight;             // Similar to above, but accounts for the entire final glyph (for rendering rectangles etc) and takes whole-number values
+	float xPxLeft;  // Real x coordinate (pen position)
+	float xPxRight; // Similar to above, but accounts for the entire final glyph (for rendering rectangles etc) and takes whole-number values
 	uint32_t last_printed_codepoint;
 	unsigned int prevCharIndex; // last ft char index, used for kerning
 	NewLineBehavior newLineBehavior;
@@ -88,10 +88,11 @@ struct LayoutData {
 class Fontinfo {
 public:
 	struct InlineOverrides {
-		cmp::optional<bool> is_centered;      // TODO: replace by an alignment enum (should i do this now?)
+		cmp::optional<bool> is_centered; // TODO: replace by an alignment enum (should i do this now?)
 
 		cmp::optional<bool> is_aligned_left;  // W_TEMP
 		cmp::optional<bool> is_aligned_right; // W_TEMP
+		cmp::optional<int> interline;         // W_TEMP
 
 		cmp::optional<bool> is_fitted;
 		cmp::optional<int> wrap_limit;
@@ -101,6 +102,7 @@ public:
 
 			is_aligned_left |= o.is_aligned_left;   // W_TEMP
 			is_aligned_right |= o.is_aligned_right; // W_TEMP
+			interline |= o.interline;               // W_TEMP
 
 			is_fitted |= o.is_fitted;
 			wrap_limit |= o.wrap_limit;
@@ -120,6 +122,7 @@ public:
 
 		bool is_aligned_left{false};  // W_TEMP
 		bool is_aligned_right{false}; // W_TEMP
+		bool interline{0};            // W_TEMP
 
 		bool is_bold{false};
 		bool is_italic{false};
@@ -166,6 +169,8 @@ public:
 
 			is_aligned_left  = props.is_aligned_left;  // W_TEMP
 			is_aligned_right = props.is_aligned_right; // W_TEMP
+			if (props.interline != -1)
+				interline = props.interline; // W_TEMP
 
 			is_fitted    = props.is_fitted;
 			is_bold      = props.is_bold;

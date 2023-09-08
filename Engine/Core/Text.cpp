@@ -341,6 +341,11 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		return false;
 	};
 
+	auto processInterline = [](std::string & /* command */, std::string &param, Fontinfo &info) {
+		info.changeStyle().interline = std::stoi(param); // W_TEMP
+		return false;
+	};
+
 	auto processAlignment = [](std::string & /* command */, std::string &param, Fontinfo &info) {
 		if (param[0] == 'c')
 			info.changeStyle().inlineOverrides.is_centered.set(true);
@@ -493,6 +498,8 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		processFuncs["fontsizepercent"] = processFuncs["fontsizepc"] = processFuncs["sizepercent"] = processFuncs["sizepc"] = processFuncs["e"] = processFontSizePercent;
 		processFuncs["characterspacing"] = processFuncs["charspacing"] = processFuncs["m"] = processCharacterSpacing;
 
+		processFuncs["interline"] = processFuncs["il"] = processInterline; // W_TEMP
+
 		processFuncs["ruby"] = processFuncs["h"] = processRuby;
 		processFuncs["loghint"] = processFuncs["l"] = processLoghint;
 
@@ -600,13 +607,13 @@ const GlyphValues *ONScripter::renderUnicodeGlyph(Font *font, GlyphParams *key) 
 			return uncolored_glyph;
 		}
 		bool should_set = true;
-		glyph           = new GlyphValues(*uncolored_glyph);                                                    // so we don't ruin the uncolored one in the cache (prevents trying to recolor an already colored glyph)
+		glyph           = new GlyphValues(*uncolored_glyph); // so we don't ruin the uncolored one in the cache (prevents trying to recolor an already colored glyph)
 		if (!black_glyph)
 			should_set = colorGlyph(key, glyph, &k.glyph_color, false, use_text_atlas ? &glyphAtlas : nullptr); // Color the glyph
 		if (!black_border && should_set)
 			should_set = colorGlyph(key, glyph, &k.border_color, true, use_text_atlas ? &glyphAtlas : nullptr); // Color the border
 		if (should_set) {
-			glyphCache.set(k, glyph);                                                                           // Store the colored glyph in the cache so we don't need to color it repeatedly.
+			glyphCache.set(k, glyph); // Store the colored glyph in the cache so we don't need to color it repeatedly.
 		} else {
 			delete glyph;
 			resetGlyphCache();

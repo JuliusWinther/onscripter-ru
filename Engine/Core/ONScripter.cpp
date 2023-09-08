@@ -1355,6 +1355,7 @@ void ONScripter::resetSentenceFont() {
 
 	style.is_aligned_left  = false; // W_TEMP
 	style.is_aligned_right = false; // W_TEMP
+	style.interline        = 0;     // W_TEMP
 
 	sentence_font.top_xy[0]    = 21;
 	sentence_font.top_xy[1]    = 16; // + sentence_font.font_size;
@@ -1396,6 +1397,7 @@ void ONScripter::resetSentenceFont() {
 
 	namestyle.is_aligned_left  = false; // W_TEMP
 	namestyle.is_aligned_right = false; // W_TEMP
+	namestyle.interline        = 0;     // W_TEMP
 
 	name_font.top_xy[0]           = 21;
 	name_font.top_xy[1]           = 16; // + sentence_font.font_size;

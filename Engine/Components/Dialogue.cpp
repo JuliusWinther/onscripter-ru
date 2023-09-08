@@ -98,7 +98,7 @@ DialogueController::TEXT_STATE DialogueController::handleNextPart() {
 						int time{0};
 						if (ons.unpackInlineCall(temp.c_str(), time) == 0) // not skippable, wait
 							currentCommand = "wait";
-						else                                               // skippable, delay
+						else // skippable, delay
 							currentCommand = "delay";
 
 						if (!ons.ignored_inline_func_lut.empty() && ons.ignored_inline_func_lut.count(currentCommand.c_str())) {
@@ -559,7 +559,7 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		if (!line.rubyPieces.empty())
 			previousDescender /= 2;
 
-		y += (line.maxAscender + previousDescender) * lineHeightMultiplier;
+		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.wrap_limit.get(style.interline); // W_TEMP
 		line.position.y   = y;
 		previousDescender = line.maxDescender;
 	}
@@ -1187,10 +1187,10 @@ bool DialogueController::addFittingChars(DialoguePiece &piece, std::u16string &r
 				} else if (std::find(std::begin(NotLineBegin), std::end(NotLineBegin), this_codepoint) != std::end(NotLineBegin)) {
 					punctuationRepeatCount++;
 				}
-				if (punctuationRepeatCount >= 3 ||                                                                          // if a punctuation repeated 3 or more times, it can safely wrap because they are used for stress
+				if (punctuationRepeatCount >= 3 || // if a punctuation repeated 3 or more times, it can safely wrap because they are used for stress
 				    (isCJKChar(this_codepoint) && isNumberOrEnLetter(pre_codepoint)) ||
-				    (isCJKChar(pre_codepoint) && isNumberOrEnLetter(this_codepoint)) ||                                     // It's OK to break a line while CJK-EN mixing
-				    (!isNumberOrEnLetter(this_codepoint) && !isNumberOrEnLetter(pre_codepoint) &&                           // no line breaking in an English words and numbers
+				    (isCJKChar(pre_codepoint) && isNumberOrEnLetter(this_codepoint)) ||           // It's OK to break a line while CJK-EN mixing
+				    (!isNumberOrEnLetter(this_codepoint) && !isNumberOrEnLetter(pre_codepoint) && // no line breaking in an English words and numbers
 				     std::find(std::begin(NotLineEnd), std::end(NotLineEnd), pre_codepoint) == std::end(NotLineEnd) &&
 				     std::find(std::begin(NotLineBegin), std::end(NotLineBegin), this_codepoint) == std::end(NotLineBegin)) // CJK line breaking rules
 				) {
