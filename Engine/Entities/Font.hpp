@@ -169,8 +169,7 @@ public:
 
 			is_aligned_left  = props.is_aligned_left;  // W_TEMP
 			is_aligned_right = props.is_aligned_right; // W_TEMP
-			if (props.interline != -1)
-				interline = props.interline; // W_TEMP
+			interline        = props.interline;        // W_TEMP
 
 			is_fitted    = props.is_fitted;
 			is_bold      = props.is_bold;
