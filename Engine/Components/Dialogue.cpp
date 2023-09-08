@@ -559,6 +559,8 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		if (!line.rubyPieces.empty())
 			previousDescender /= 2;
 
+		Fontinfo &fi = backPiece.getPostFontInfo();                                                                                  // W_TEMP
+		auto &style  = fi.style();                                                                                                   // W_TEMP
 		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.wrap_limit.get(style.interline); // W_TEMP
 		line.position.y   = y;
 		previousDescender = line.maxDescender;
