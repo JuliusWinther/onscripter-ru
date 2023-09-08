@@ -560,7 +560,7 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 			previousDescender /= 2;
 
 		Fontinfo &myFi = line.getPieces().front()->getPreFontInfo();                                                                // W_TEMP
-		auto &style    = fi.style();                                                                                                // W_TEMP
+		auto &style    = myFi.style();                                                                                              // W_TEMP
 		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.interline.get(style.interline); // W_TEMP
 		line.position.y   = y;
 		previousDescender = line.maxDescender;
