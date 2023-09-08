@@ -342,7 +342,8 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 	};
 
 	auto processInterline = [](std::string & /* command */, std::string &param, Fontinfo &info) {
-		info.changeStyle().interline = std::stoi(param); // W_TEMP
+		int paramInt                 = std::stoi(param);
+		info.changeStyle().interline = paramInt;
 		return false;
 	};
 

@@ -122,7 +122,7 @@ public:
 
 		bool is_aligned_left{false};  // W_TEMP
 		bool is_aligned_right{false}; // W_TEMP
-		bool interline{0};            // W_TEMP
+		int interline{0};             // W_TEMP
 
 		bool is_bold{false};
 		bool is_italic{false};
