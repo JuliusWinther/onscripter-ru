@@ -658,8 +658,8 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 			toAdd.w = spr->scrollable.w;
 		}
 	}
-	// test
-	if (spr->spriteTransforms.breakupFactor > 0 || std::fabs(spr->spriteTransforms.warpAmplitude) > 0) {
+
+	if (spr->spriteTransforms.breakupFactor > 0 || spr->spriteTransforms.blurFactor > 0 || std::fabs(spr->spriteTransforms.warpAmplitude) > 0) {
 		dirty->fill(window.canvas_width, window.canvas_height);
 	}
 
