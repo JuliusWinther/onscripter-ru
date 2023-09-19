@@ -5,6 +5,12 @@ on:
     branches: ["master"]
   pull_request:
     branches: ["master"]
+  workflow_dispatch: # Add manual workflow activation
+    inputs:
+      build_type:
+        description: 'Choose build type (debug or release)'
+        required: true
+        default: 'release'
 
 jobs:
   Windows:
