@@ -29,7 +29,7 @@ void ONScripter::loadImageIntoCache(int id, const std::string &filename_str, boo
 		Lock lock(&imageCache);
 		auto ptr = imageCache.get(filename_str);
 		if (ptr) {
-			//sendToLog(LogLevel::Error, "Tried to double-add a surface refs %d (ptr: %p, this: %p)\n", surface->refcount, ptr->surface, surface);
+			// sendToLog(LogLevel::Error, "Tried to double-add a surface refs %d (ptr: %p, this: %p)\n", surface->refcount, ptr->surface, surface);
 			if (ptr->surface != surface) {
 				sendToLog(LogLevel::Error, "INSANE: different surfaces in loadImageIntoCache\n");
 			}
@@ -53,7 +53,7 @@ void ONScripter::dropCache(int *id, const std::string &filename_str) {
 }
 
 GPU_Image *ONScripter::loadGpuImage(const char *file_name, bool allow_rgb) {
-	//This function is unable to handle archives
+	// This function is unable to handle archives
 
 	if (!file_name) {
 		sendToLog(LogLevel::Error, "loadGpuImage: Incorrect file_name was passed!\n");
@@ -84,7 +84,7 @@ GPU_Image *ONScripter::loadGpuImage(const char *file_name, bool allow_rgb) {
 SDL_Surface *ONScripter::loadImage(const char *filename, bool *has_alpha, bool allow_rgb) {
 	// This function assumes we never load the same image with a different AnimationInfo::trans_mode
 
-	//sendToLog(LogLevel::Info, "loadImage (%s)\n", filename);
+	// sendToLog(LogLevel::Info, "loadImage (%s)\n", filename);
 
 	if (!filename)
 		return nullptr;
@@ -112,7 +112,7 @@ SDL_Surface *ONScripter::loadImage(const char *filename, bool *has_alpha, bool a
 	else if (filename[0] != '*') // layers begin with *
 		tmp = createSurfaceFromFile(filename);
 	if (tmp == nullptr) {
-		//sendToLog(LogLevel::Info, "returning from loadImage [2]\n");
+		// sendToLog(LogLevel::Info, "returning from loadImage [2]\n");
 		return nullptr;
 	}
 
@@ -125,7 +125,7 @@ SDL_Surface *ONScripter::loadImage(const char *filename, bool *has_alpha, bool a
 			has_colorkey = true;
 
 			if (tmp->format->palette) {
-				//palette will be converted to RGBA, so don't do colorkey check
+				// palette will be converted to RGBA, so don't do colorkey check
 				has_colorkey = false;
 			}
 			*has_alpha = true;
@@ -208,9 +208,9 @@ SDL_Surface *ONScripter::loadImage(const char *filename, bool *has_alpha, bool a
 		}
 	}
 
-	//sendToLog(LogLevel::Info, "returning from loadImage [3]\n");
+	// sendToLog(LogLevel::Info, "returning from loadImage [3]\n");
 
-	//printClock("loadImage ends");
+	// printClock("loadImage ends");
 	return ret;
 }
 
@@ -282,7 +282,7 @@ SDL_Surface *ONScripter::createSurfaceFromFile(const char *filename) {
 	}
 
 	if (length == 0) {
-		//don't complain about missing cursors
+		// don't complain about missing cursors
 		if (!equalstr(filename, "uoncur.bmp") &&
 		    !equalstr(filename, "uoffcur.bmp") &&
 		    !equalstr(filename, "doncur.bmp") &&
@@ -354,16 +354,16 @@ void ONScripter::effectBlendToCombinedImage(GPU_Image *mask_gpu, int trans_mode,
 	// v   note: we pass nullptr to effectblendgpu -- the whole src and dst are blitted onto prescreen
 
 	/*sendToLog(LogLevel::Info, "src dr scene %f x %f ; hud %f x %f ; dst dr scene %f x %f ; hud %f x %f ; rfmodesrc %d ; dst %d\n",
-		src_dr_scene.bounding_box_script.w,
-		src_dr_scene.bounding_box_script.h,
-		src_dr_hud.bounding_box_script.w,
-		src_dr_hud.bounding_box_script.h,
-		dst_dr_scene.bounding_box_script.w,
-		dst_dr_scene.bounding_box_script.h,
-		dst_dr_hud.bounding_box_script.w,
-		dst_dr_hud.bounding_box_script.h,
-		refresh_mode_src,
-		refresh_mode_dst
+	    src_dr_scene.bounding_box_script.w,
+	    src_dr_scene.bounding_box_script.h,
+	    src_dr_hud.bounding_box_script.w,
+	    src_dr_hud.bounding_box_script.h,
+	    dst_dr_scene.bounding_box_script.w,
+	    dst_dr_scene.bounding_box_script.h,
+	    dst_dr_hud.bounding_box_script.w,
+	    dst_dr_hud.bounding_box_script.h,
+	    refresh_mode_src,
+	    refresh_mode_dst
 	);*/
 
 	effectBlendGPU(mask_gpu, trans_mode, mask_value, nullptr, combined_effect_src_gpu, combined_effect_dst_gpu, image);
@@ -381,7 +381,7 @@ void ONScripter::effectBlendGPU(GPU_Image *mask_gpu, int trans_mode,
 	if (!clip)
 		clip = &fullclip;
 
-	//sendToLog(LogLevel::Info, "effectBlendGPU clip %d %d %d %d\n", clip->x, clip->y, clip->w, clip->h);
+	// sendToLog(LogLevel::Info, "effectBlendGPU clip %d %d %d %d\n", clip->x, clip->y, clip->w, clip->h);
 
 	if (trans_mode == ALPHA_BLEND_CONST) {
 		gpu.setShaderProgram("blendByMask.frag");
@@ -493,7 +493,7 @@ bool ONScripter::colorGlyph(const GlyphParams *key, GlyphValues *glyph, SDL_Colo
 		if (atlas && target == atlas->atlas->target)
 			gpu.simulateRead(atlas->atlas);
 	} else {
-		//Don't take alpha into account
+		// Don't take alpha into account
 		if (color->r == 0 && color->b == 0 && color->g == 0) {
 			if (!tmp) {
 				gpu.multiplyAlpha(src_img, dst_rect.get());
@@ -554,7 +554,7 @@ void ONScripter::makeNegaTarget(GPU_Target *target, GPU_Rect clip) {
 
 	gpu.setShaderVar("modificationType", 5);
 
-	//Switch to canvas coordinate system
+	// Switch to canvas coordinate system
 	clip.x += camera.center_pos.x;
 	clip.y += camera.center_pos.y;
 
@@ -574,7 +574,7 @@ void ONScripter::makeMonochromeTarget(GPU_Target *target, GPU_Rect clip, bool be
 	gpu.setShaderVar("modificationType", 4);
 	gpu.setShaderVar("greyscaleHue", monocro_color[before_scene]);
 
-	//Switch to canvas coordinate system
+	// Switch to canvas coordinate system
 	clip.x += camera.center_pos.x;
 	clip.y += camera.center_pos.y;
 
@@ -588,7 +588,7 @@ void ONScripter::makeBlurTarget(GPU_Target *target, GPU_Rect clip, bool before_s
 		return;
 	}
 
-	//Switch to canvas coordinate system
+	// Switch to canvas coordinate system
 	clip.x += camera.center_pos.x;
 	clip.y += camera.center_pos.y;
 
@@ -603,7 +603,7 @@ void ONScripter::makeWarpedTarget(GPU_Target *target, GPU_Rect clip, bool /*befo
 		return;
 	}
 
-	//Switch to canvas coordinate system
+	// Switch to canvas coordinate system
 	clip.x += camera.center_pos.x;
 	clip.y += camera.center_pos.y;
 
@@ -613,7 +613,7 @@ void ONScripter::makeWarpedTarget(GPU_Target *target, GPU_Rect clip, bool /*befo
 	gpu.copyGPUImage(toDraw.image, nullptr, &clip, target);
 }
 
-//Adds to correct dirty rect by z level
+// Adds to correct dirty rect by z level
 void ONScripter::dirtyRectForZLevel(int num, GPU_Rect &rect) {
 	DirtyRect *dirty = (num <= z_order_hud) ? &before_dirty_rect_hud : &before_dirty_rect_scene;
 	dirty->add(rect);
@@ -638,7 +638,7 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 		bool parentIsLsp2        = spr->parentImage.lsp2;
 		AnimationInfo *parentSpr = parentIsLsp2 ? (before ? (sprite2_info[spr->parentImage.no].old_ai ? sprite2_info[spr->parentImage.no].old_ai : &sprite2_info[spr->parentImage.no]) : &sprite2_info[spr->parentImage.no]) :
 		                                          (before ? (sprite_info[spr->parentImage.no].old_ai ? sprite_info[spr->parentImage.no].old_ai : &sprite_info[spr->parentImage.no]) : &sprite_info[spr->parentImage.no]);
-		toAdd = parentIsLsp2 ? parentSpr->bounding_rect : parentSpr->pos;
+		toAdd                    = parentIsLsp2 ? parentSpr->bounding_rect : parentSpr->pos;
 		toAdd.x += parentSpr->camera.pos.x;
 		toAdd.y += parentSpr->camera.pos.y;
 		if (parentSpr->scrollable.h > 0) {
@@ -659,7 +659,7 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 		}
 	}
 
-	if (spr->spriteTransforms.breakupFactor > 0 || spr->spriteTransforms.blurFactor > 0 || std::fabs(spr->spriteTransforms.warpAmplitude) > 0) {
+	if (spr->spriteTransforms.breakupFactor > 0 || std::fabs(spr->spriteTransforms.warpAmplitude) > 0) {
 		dirty->fill(window.canvas_width, window.canvas_height);
 	}
 
@@ -669,7 +669,7 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 		SpritesetInfo *cleanSet{nullptr};
 		// Sets 1+
 		if (z_order_spritesets.count(1) && num <= z_order_spritesets[1]) {
-			//Belongs to a spriteset, we need to tell that spriteset about this
+			// Belongs to a spriteset, we need to tell that spriteset about this
 			int spriteset = 1;
 			while (z_order_spritesets.count(spriteset + 1) && num <= z_order_spritesets[spriteset + 1]) {
 				spriteset++;
@@ -682,8 +682,8 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 		}
 
 		if (cleanSet) {
-			//TODO: If the spriteset isNullTransform, or has pos and nothing else that might change the dirty rect like blur,
-			// then simply adjust the dirty rect we add above instead of updating the whole screen
+			// TODO: If the spriteset isNullTransform, or has pos and nothing else that might change the dirty rect like blur,
+			//  then simply adjust the dirty rect we add above instead of updating the whole screen
 			if (before)
 				before_dirty_rect_scene.fill(window.canvas_width, window.canvas_height);
 			else
@@ -838,11 +838,11 @@ void ONScripter::refreshSceneTo(GPU_Target *target, GPU_Rect *passed_script_clip
 			drawToGPUTarget(target, tc, rm, &script_clip_dst);
 	}
 
-	//Spritesets
+	// Spritesets
 	for (int spritesetNo = 0;; spritesetNo++) {
 		int startZ = spritesetNo == 0 ? z_order_ld : z_order_spritesets[spritesetNo];
 		int endZ   = (z_order_spritesets.count(spritesetNo + 1) == 1) ? z_order_spritesets[spritesetNo + 1] : z_order_hud;
-		//sendToLog(LogLevel::Info, "(in refresh:) spritesets[%i].enable=%i\n", spritesetNo, spritesets[spritesetNo].enable);
+		// sendToLog(LogLevel::Info, "(in refresh:) spritesets[%i].enable=%i\n", spritesetNo, spritesets[spritesetNo].enable);
 		if (spritesetNo == 0 || spritesets[spritesetNo].isEnabled(rm & REFRESH_BEFORESCENE_MODE)) { // spriteset 0 is always active (?)
 			if (spritesets[spritesetNo].isNullTransform()) {
 				if (spritesetNo != 0)
@@ -869,7 +869,7 @@ void ONScripter::refreshSceneTo(GPU_Target *target, GPU_Rect *passed_script_clip
 			break;
 	}
 
-	//Apply nega in the end of normal rebuild
+	// Apply nega in the end of normal rebuild
 	bool before = rm & REFRESH_BEFORESCENE_MODE;
 
 	if (nega_mode[before] == 1)
@@ -883,17 +883,17 @@ void ONScripter::refreshSceneTo(GPU_Target *target, GPU_Rect *passed_script_clip
 	if (std::fabs(warpAmplitude) > 0)
 		makeWarpedTarget(target, script_clip_dst, before);
 
-	//sendToLog(LogLevel::Info, "enddraw\n");
+	// sendToLog(LogLevel::Info, "enddraw\n");
 }
 
 void ONScripter::refreshHudTo(GPU_Target *target, GPU_Rect *passed_script_clip_dst, int refresh_mode) {
 
-	/* a) make sure textwindow renders properly and according to its position. 
-Including leaveTextMode and enterTextMode (all the sprites that should be 
+	/* a) make sure textwindow renders properly and according to its position.
+Including leaveTextMode and enterTextMode (all the sprites that should be
 above textwindow are indeed above textwindow while it transitions or text renders)
 
-b) text is always rendered on the top of any sprites excluding buttons, 
-this can lead to a possible glitch, but dammit, who is the mad man to 
+b) text is always rendered on the top of any sprites excluding buttons,
+this can lead to a possible glitch, but dammit, who is the mad man to
 use buttons & text this way */
 
 	int &rm = refresh_mode; // We'll be passing this around a lot, let's make it short
@@ -931,12 +931,12 @@ use buttons & text this way */
 	canvas_clip_dst.x += camera.center_pos.x;
 	canvas_clip_dst.y += camera.center_pos.y;
 
-	//hud has no background, so we have to set a clip rect and clear it before we can draw onto it.
+	// hud has no background, so we have to set a clip rect and clear it before we can draw onto it.
 	GPU_SetClipRect(target, canvas_clip_dst);
 	gpu.clear(target);
 	GPU_UnsetClip(target);
 
-	//canvas_clip_dst is used for text only which doesn't occupy the whole canvas
+	// canvas_clip_dst is used for text only which doesn't occupy the whole canvas
 	GPU_Rect middle_of_canvas{camera.center_pos.x, camera.center_pos.y, static_cast<float>(window.script_width), static_cast<float>(window.script_height)};
 	doClipping(&canvas_clip_dst, &middle_of_canvas);
 
@@ -1061,7 +1061,7 @@ void ONScripter::loadBreakupCellforms() {
 	const InternalResource *breakup_cellforms_res = getResource("breakup-cellforms.png");
 	if (breakup_cellforms_res) {
 		SDL_RWops *rwcells               = SDL_RWFromConstMem(breakup_cellforms_res->buffer,
-                                                static_cast<int>(breakup_cellforms_res->size));
+		                                                      static_cast<int>(breakup_cellforms_res->size));
 		SDL_Surface *breakup_cellforms_s = IMG_Load_RW(rwcells, 0);
 		breakup_cellforms_gpu            = gpu.copyImageFromSurface(breakup_cellforms_s);
 		SDL_FreeSurface(breakup_cellforms_s);
