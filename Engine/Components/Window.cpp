@@ -33,6 +33,24 @@ int WindowController::ownInit() {
 	HDC screen = GetDC(NULL);
 	dpi        = GetDeviceCaps(screen, LOGPIXELSX);
 	ReleaseDC(NULL, screen);
+
+	// Detect and print the scaling factor setting
+	int scalingSetting = -1;
+	int regValue       = 0;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Control Panel\\Desktop", 0, KEY_QUERY_VALUE, &regKey) == ERROR_SUCCESS) {
+		DWORD dataSize = sizeof(DWORD);
+		if (RegQueryValueEx(regKey, L"LogPixels", nullptr, nullptr, reinterpret_cast<LPBYTE>(&regValue), &dataSize) == ERROR_SUCCESS) {
+			scalingSetting = regValue;
+		}
+		RegCloseKey(regKey);
+	}
+
+	// Print the scaling setting to the console
+	if (scalingSetting == 96) {
+		printf("Detected scaling setting: 100%% (96 DPI)\n");
+	} else {
+		printf("Detected scaling setting: %d DPI\n", scalingSetting);
+	}
 #endif
 
 	// Adjust script_width and script_height based on the DPI scaling factor
