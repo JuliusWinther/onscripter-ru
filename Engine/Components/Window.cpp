@@ -26,16 +26,6 @@
 WindowController window;
 
 int WindowController::ownInit() {
-
-#ifdef WIN32
-	// Retrieve the DPI scaling factor for the application's window
-	UINT dpi = GetDpiForWindow(window);
-
-	// Adjust script_width and script_height based on the DPI scaling factor
-	script_width  = static_cast<int>(script_width * (dpi / 96.0));
-	script_height = static_cast<int>(script_height * (dpi / 96.0));
-#endif
-
 	auto system_offset_x_str = ons.ons_cfg_options.find("system-offset-x");
 	if (system_offset_x_str != ons.ons_cfg_options.end())
 		system_offset_x = std::stoi(system_offset_x_str->second);
