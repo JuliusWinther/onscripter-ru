@@ -25,6 +25,22 @@
 
 WindowController window;
 
+#ifdef _WIN32 // Check if the code is being compiled for Windows
+bool SetAppDpiAwareness() {
+	typedef BOOL(WINAPI * SetProcessDpiAwarenessFunc)(PROCESS_DPI_AWARENESS);
+	HMODULE shcore = LoadLibrary(L"Shcore.dll");
+	if (shcore) {
+		SetProcessDpiAwarenessFunc setProcessDpiAwareness = (SetProcessDpiAwarenessFunc)GetProcAddress(shcore, "SetProcessDpiAwareness");
+		if (setProcessDpiAwareness) {
+			if (setProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE) == S_OK) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+#endif
+
 int WindowController::ownInit() {
 	auto system_offset_x_str = ons.ons_cfg_options.find("system-offset-x");
 	if (system_offset_x_str != ons.ons_cfg_options.end())
@@ -182,20 +198,7 @@ bool WindowController::updateDisplayData(bool getpos) {
 	displayData.displays.resize(displays);
 	displayData.displaysByArea.resize(displays);
 
-	// Detect the DPI scaling factor for your application window
-	float dpiScalingFactor = 1.0f; // Default to 100%
-	SDL_DisplayMode dm;
-	if (SDL_GetDesktopDisplayMode(0, &dm) == 0) {
-		dpiScalingFactor = static_cast<float>(dm.w) / static_cast<float>(screen_width);
-	}
-
-	GPU_Rect windowRegion{
-	    static_cast<float>(window_x) * dpiScalingFactor,
-	    static_cast<float>(window_y) * dpiScalingFactor,
-	    static_cast<float>(screen_width) * dpiScalingFactor,
-	    static_cast<float>(screen_height) * dpiScalingFactor};
-
-	// GPU_Rect windowRegion{static_cast<float>(window_x), static_cast<float>(window_y), static_cast<float>(screen_width), static_cast<float>(screen_height)};
+	GPU_Rect windowRegion{static_cast<float>(window_x), static_cast<float>(window_y), static_cast<float>(screen_width), static_cast<float>(screen_height)};
 
 	for (int d = 0; d < displays; d++) {
 		SDL_DisplayMode video_mode;
@@ -372,6 +375,11 @@ bool WindowController::earlySetMode() {
 		fullscreen_mode = false;
 		return changeMode(true, true, 1);
 	}
+
+	// Enable DPI awareness for Windows
+#ifdef _WIN32
+	SetAppDpiAwareness();
+#endif
 
 	// Unsure if true is needed, but just to make sure
 	updateDisplayData(true);
