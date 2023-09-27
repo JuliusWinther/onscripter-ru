@@ -182,7 +182,20 @@ bool WindowController::updateDisplayData(bool getpos) {
 	displayData.displays.resize(displays);
 	displayData.displaysByArea.resize(displays);
 
-	GPU_Rect windowRegion{static_cast<float>(window_x), static_cast<float>(window_y), static_cast<float>(screen_width), static_cast<float>(screen_height)};
+	// Detect the DPI scaling factor for your application window
+	float dpiScalingFactor = 1.0f; // Default to 100%
+	SDL_DisplayMode dm;
+	if (SDL_GetDesktopDisplayMode(0, &dm) == 0) {
+		dpiScalingFactor = static_cast<float>(dm.w) / static_cast<float>(screen_width);
+	}
+
+	GPU_Rect windowRegion{
+	    static_cast<float>(window_x) * dpiScalingFactor,
+	    static_cast<float>(window_y) * dpiScalingFactor,
+	    static_cast<float>(screen_width) * dpiScalingFactor,
+	    static_cast<float>(screen_height) * dpiScalingFactor};
+
+	// GPU_Rect windowRegion{static_cast<float>(window_x), static_cast<float>(window_y), static_cast<float>(screen_width), static_cast<float>(screen_height)};
 
 	for (int d = 0; d < displays; d++) {
 		SDL_DisplayMode video_mode;
