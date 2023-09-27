@@ -27,35 +27,14 @@ WindowController window;
 
 int WindowController::ownInit() {
 
-	// Retrieve the DPI scaling factor from Windows
-	int dpi = 96; // Default DPI for 100% scaling
 #ifdef WIN32
-	HDC screen = GetDC(NULL);
-	dpi        = GetDeviceCaps(screen, LOGPIXELSX);
-	ReleaseDC(NULL, screen);
-
-	// Detect and print the scaling factor setting
-	int scalingSetting = -1;
-	int regValue       = 0;
-	if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Control Panel\\Desktop", 0, KEY_QUERY_VALUE, &regKey) == ERROR_SUCCESS) {
-		DWORD dataSize = sizeof(DWORD);
-		if (RegQueryValueEx(regKey, L"LogPixels", nullptr, nullptr, reinterpret_cast<LPBYTE>(&regValue), &dataSize) == ERROR_SUCCESS) {
-			scalingSetting = regValue;
-		}
-		RegCloseKey(regKey);
-	}
-
-	// Print the scaling setting to the console
-	if (scalingSetting == 96) {
-		printf("Detected scaling setting: 100%% (96 DPI)\n");
-	} else {
-		printf("Detected scaling setting: %d DPI\n", scalingSetting);
-	}
-#endif
+	// Retrieve the DPI scaling factor for the application's window
+	UINT dpi = GetDpiForWindow(window);
 
 	// Adjust script_width and script_height based on the DPI scaling factor
 	script_width  = static_cast<int>(script_width * (dpi / 96.0));
 	script_height = static_cast<int>(script_height * (dpi / 96.0));
+#endif
 
 	auto system_offset_x_str = ons.ons_cfg_options.find("system-offset-x");
 	if (system_offset_x_str != ons.ons_cfg_options.end())
