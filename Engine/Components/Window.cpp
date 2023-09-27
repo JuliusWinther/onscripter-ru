@@ -98,7 +98,7 @@ void WindowController::setIcon(SDL_Surface *icon) {
 	}
 
 #ifdef WIN32
-	//use the (first) Windows icon resource
+	// use the (first) Windows icon resource
 	const HANDLE wicon[2]{
 	    LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(ONSCRICON), IMAGE_ICON,
 	              GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0),
@@ -198,8 +198,8 @@ bool WindowController::updateDisplayData(bool getpos) {
 		GPU_Rect displayRegion{static_cast<float>(r.x), static_cast<float>(r.y), static_cast<float>(r.w), static_cast<float>(r.h)};
 		GPU_Rect visibleWindowRegion = windowRegion;
 		int area                     = doClipping(&visibleWindowRegion, &displayRegion) ? 0 :
-		                                                              static_cast<int>(visibleWindowRegion.w) * static_cast<int>(visibleWindowRegion.h);
-		display.visibleArea = area;
+		                                                                                  static_cast<int>(visibleWindowRegion.w) * static_cast<int>(visibleWindowRegion.h);
+		display.visibleArea          = area;
 
 		// Build the vector for later sorted-iteration (we want to try the displays in order of amount of window visible on screen)
 		displayData.displaysByArea[d] = &display;
@@ -223,7 +223,7 @@ bool WindowController::updateDisplayData(bool getpos) {
 			}
 			// The fullscreen display is the first to satisfy these conditions.
 		}
-		//sendToLog(LogLevel::Info, "Display %u: %u x %u (visible area %u)\n", display->id, display->native_width, display->native_height, display->visibleArea);
+		sendToLog(LogLevel::Info, "Display %u: %u x %u (visible area %u)\n", display->id, display->native_width, display->native_height, display->visibleArea);
 	}
 
 	if (scaled_flag) {
@@ -261,7 +261,7 @@ bool WindowController::updateDisplayData(bool getpos) {
 
 		return true;
 	}
-	//Don't bother extra scaling when window is bigger than screen (default ONS behaviour)
+	// Don't bother extra scaling when window is bigger than screen (default ONS behaviour)
 	return false;
 }
 
@@ -297,13 +297,13 @@ bool WindowController::changeMode(bool perform, bool correct, int mode) {
 
 			int mouse_x, mouse_y;
 			SDL_GetMouseState(&mouse_x, &mouse_y);
-			//Fullscreen set
+			// Fullscreen set
 			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-			//We need to correct a shifted mouse
-			//sendToLog(LogLevel::Info, "Going to fullscreen. Before: %u, %u\n", mouse_x, mouse_y);
+			// We need to correct a shifted mouse
+			// sendToLog(LogLevel::Info, "Going to fullscreen. Before: %u, %u\n", mouse_x, mouse_y);
 			mouse_x = (mouse_x * fullscreen_width / windowed_screen_width) + ((screen_width / static_cast<float>(script_width)) * fullscript_offset_x);
 			mouse_y = (mouse_y * fullscreen_height / windowed_screen_height) + ((screen_height / static_cast<float>(script_height)) * fullscript_offset_y);
-			//sendToLog(LogLevel::Info, "Going to fullscreen. After: %u, %u\n", mouse_x, mouse_y);
+			// sendToLog(LogLevel::Info, "Going to fullscreen. After: %u, %u\n", mouse_x, mouse_y);
 			SDL_WarpMouseInWindow(window, mouse_x, mouse_y);
 			ons.screen_target = GPU_GetContextTarget();
 			fullscreen_mode   = true;
@@ -326,11 +326,11 @@ bool WindowController::changeMode(bool perform, bool correct, int mode) {
 
 			int mouse_x, mouse_y;
 			SDL_GetMouseState(&mouse_x, &mouse_y);
-			//We need to correct a shifted mouse
-			//sendToLog(LogLevel::Info, "Going to windowed. Before: %u, %u\n", mouse_x, mouse_y);
+			// We need to correct a shifted mouse
+			// sendToLog(LogLevel::Info, "Going to windowed. Before: %u, %u\n", mouse_x, mouse_y);
 			mouse_x = ((mouse_x - (screen_width / static_cast<float>(script_width)) * fullscript_offset_x) * windowed_screen_width / fullscreen_width);
 			mouse_y = ((mouse_y - (screen_height / static_cast<float>(script_height)) * fullscript_offset_y) * windowed_screen_height / fullscreen_height);
-			//sendToLog(LogLevel::Info, "Going to windowed. After: %u, %u\n", mouse_x, mouse_y);
+			// sendToLog(LogLevel::Info, "Going to windowed. After: %u, %u\n", mouse_x, mouse_y);
 
 			GPU_SetWindowResolution(screen_width, screen_height);
 			gpu.setVirtualResolution(script_width, script_height);
