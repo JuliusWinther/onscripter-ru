@@ -8,12 +8,15 @@ on:
   workflow_dispatch: # Add manual workflow activation
     inputs:
       build_type:
-        description: "Choose build type (debug or release)"
+        description: 'Choose build type (debug or release)'
         required: true
-        default: "release"
+        default: 'release'
 
 jobs:
   Windows:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -33,13 +36,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y binutils-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 yasm python3-pip
           pip3 install meson ninja
-          sudo apt-get install -y wine-development
       - name: Env setup
         run: |
           BUILD=$(($(git rev-list --count --first-parent HEAD)+3500))
           echo "BUILD=${BUILD}" >> "$GITHUB_ENV"
           echo "Build number ${BUILD}"
           mkdir -p ciout
+          
       - name: Configure
         env:
           CC: i686-w64-mingw32-gcc
@@ -53,9 +56,7 @@ jobs:
         run: |
           make clean
           make -j$(nproc)
-          mv DerivedData/MinGW-i686/onscripter-ru.exe ciout ; cp -r Resources/Windows/dlls ciout/dlls
-          wine mt.exe -manifest onscripter-ru.exe.manifest -outputresource:ciout/onscripter-ru.exe;1
-          cd ciout
+          mv DerivedData/MinGW-i686/onscripter-ru.exe ciout ; cp -r Resources/Windows/dlls ciout/dlls ; cd ciout
           zip -qry onscripter-ru_win_r${BUILD}${{env.dev}}${{env.discord}}.zip onscripter-ru.exe dlls
       - name: Upload files
         uses: ncipollo/release-action@v1
