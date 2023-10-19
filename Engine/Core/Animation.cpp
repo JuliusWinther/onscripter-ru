@@ -700,7 +700,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 		if (si.divider)
 			gpu.copyGPUImage(si.divider->oldNew(refresh_mode)->gpu_image, nullptr, &localClip, target, info->pos.x + camera.center_pos.x, info->pos.y + yBot);
 
-		sendToLog(LogLevel::Info, "scroll_y: %u - %f - %f - %f - %f - %f - %f\n", scroll_y, yTop, yBot, elemRect.y, elemRect.h, info->pos.h, h);
+		sendToLog(LogLevel::Info, "scroll_y: %u - %f - %f - %f - %f - %f - %f\n", scroll_y, yTop, yBot, elemRect.y, elemRect.h, info->pos.h, si.elementHeight);
 	}
 	// all elements drawn
 	// return
