@@ -27,7 +27,7 @@ int ONScripter::proceedAnimation() {
 		}
 	}
 
-//Mion - ogapee2009
+// Mion - ogapee2009
 #ifdef USE_LUA
 	if (lua_handler.is_animatable && !script_h.isExternalScript()) {
 		if (lua_handler.remaining_time == 0) {
@@ -103,7 +103,7 @@ int ONScripter::estimateNextDuration(AnimationInfo *anim, GPU_Rect & /*rect*/, i
 			}
 		} else if (anim->layer_no >= 0) {
 			auto handler = getLayer<Layer>(anim->layer_no, false);
-			//sendToLog(LogLevel::Info, "About to update AI %p, anim->clock.time() %d\n", anim, anim->clock.time());
+			// sendToLog(LogLevel::Info, "About to update AI %p, anim->clock.time() %d\n", anim, anim->clock.time());
 			if (handler->update(old_ai))
 				dirtySpriteRect(anim, old_ai);
 			anim->clock.setCountdownNanos(anim->getDurationNanos(anim->current_cell));
@@ -128,7 +128,7 @@ void ONScripter::advanceAIclocks(uint64_t ns) {
 		advanceSpecificAIclocks(ns, i, 1);
 	}
 
-//Mion - ogapee2009
+// Mion - ogapee2009
 #ifdef USE_LUA
 	if (lua_handler.is_animatable && !script_h.isExternalScript())
 		lua_handler.remaining_time -= (ns / 1000000);
@@ -138,20 +138,20 @@ void ONScripter::advanceAIclocks(uint64_t ns) {
 // Can put this in AI if you want
 void ONScripter::advanceSpecificAIclocks(uint64_t ns, int i, int type, bool old_ai) {
 	AnimationInfo *ai = type == 0 ? &sprite_info[i] :
-	                                type > 0 ? &sprite2_info[i] :
-	                                           &tachi_info[i];
+	                    type > 0  ? &sprite2_info[i] :
+	                                &tachi_info[i];
 
 	if (old_ai) {
 		if (!ai->old_ai) {
 			errorAndExit("Asked to advance clocks for a non-existent old_ai");
-			return; //dummy
+			return; // dummy
 		}
 		ai = ai->old_ai;
 	}
 
 	if (ai->visible && ai->is_animatable) {
 		ai->clock.tickNanos(ns);
-		//sendToLog(LogLevel::Info, "Advanced clock for AI %p, anim->clock.time() %i, remaining() %i, expired() %i\n", anim, anim->clock.time(), anim->clock.remaining(), anim->clock.expired());
+		// sendToLog(LogLevel::Info, "Advanced clock for AI %p, anim->clock.time() %i, remaining() %i, expired() %i\n", anim, anim->clock.time(), anim->clock.remaining(), anim->clock.expired());
 	}
 
 	// update sprite camera positions
@@ -213,11 +213,11 @@ void ONScripter::setupAnimationInfo(AnimationInfo *anim, Fontinfo *info) {
 		GPU_Rect clip{0, 0, 0, 0};
 		state.dstClip = &clip;
 
-		//TODO: make this configurable? vertical cells for buttons are less likely to exceed the texture limit
+		// TODO: make this configurable? vertical cells for buttons are less likely to exceed the texture limit
 		anim->vertical_cells = true;
 
 		for (int i = 0; i < anim->num_of_cells; i++) {
-			//TODO: anim->skip_whitespace?
+			// TODO: anim->skip_whitespace?
 
 			if (i == 0) {
 				dlgCtrl.prepareForRendering(anim->file_name, f_info, state, w, h);
@@ -258,9 +258,9 @@ void ONScripter::setupAnimationInfo(AnimationInfo *anim, Fontinfo *info) {
 			dlgCtrl.render(state);
 		}
 	} else if (anim->trans_mode == AnimationInfo::TRANS_LAYER) {
-		//pos w&h already screen-size
+		// pos w&h already screen-size
 		anim->calculateImage(anim->pos.w, anim->pos.h);
-		//anim->fill(0, 0, 0, 0);
+		// anim->fill(0, 0, 0, 0);
 	} else {
 		async.loadImage(anim);
 		// Wait in loop (like crEffect) until we are loaded
@@ -288,7 +288,7 @@ void ONScripter::postSetupAnimationInfo(AnimationInfo *anim) {
 		if (anim->visible)
 			dirtySpriteRect(anim);
 		if (anim->layer_no < 0)
-			anim->is_animatable = false; //extended sprites don't animate unless they display layers
+			anim->is_animatable = false; // extended sprites don't animate unless they display layers
 	}
 }
 
@@ -322,7 +322,7 @@ bool ONScripter::treatAsSameImage(const AnimationInfo &anim1, const AnimationInf
 		return true;
 
 	if ((anim1.trans_mode != anim2.trans_mode) ||
-	    //assume layers aren't identical
+	    // assume layers aren't identical
 	    (anim1.trans_mode == AnimationInfo::TRANS_LAYER) ||
 	    (anim1.is_animatable != anim2.is_animatable) ||
 	    (anim1.num_of_cells != anim2.num_of_cells) ||
@@ -344,7 +344,7 @@ bool ONScripter::treatAsSameImage(const AnimationInfo &anim1, const AnimationInf
 				return false;
 		}
 	}
-	//by this point, they most likely create the same images
+	// by this point, they most likely create the same images
 	return true;
 }
 
@@ -368,12 +368,12 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 	anim->num_of_cells = 1;
 	anim->current_cell = 0;
 	anim->trans_mode   = trans_mode;
-	//use COPY as default trans_mode for masks
+	// use COPY as default trans_mode for masks
 	if (is_mask)
 		anim->trans_mode = AnimationInfo::TRANS_COPY;
 
 	if (buffer[0] == '*') {
-		//Mion: it's a layer!
+		// Mion: it's a layer!
 
 		anim->trans_mode = AnimationInfo::TRANS_LAYER;
 		buffer++;
@@ -433,7 +433,7 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 				script_h.pushCurrent(buffer);
 				anim->font_size_xy[0] = script_h.readInt();
 				anim->font_size_xy[1] = script_h.readInt();
-				//IMPORTED: from ONS (pitch param is optional)
+				// IMPORTED: from ONS (pitch param is optional)
 				if (script_h.hasMoreArgs()) {
 					script_h.readInt(); // dummy read for pitch
 					if (script_h.hasMoreArgs()) {
@@ -469,14 +469,14 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 		} else if (buffer[0] == '!') {
 			anim->trans_mode = AnimationInfo::TRANS_PALETTE;
 			buffer++;
-			getNumberFromBuffer(&buffer); //palette number, which is now dead
+			getNumberFromBuffer(&buffer); // palette number, which is now dead
 		}
 
 		if (anim->trans_mode != AnimationInfo::TRANS_STRING)
 			while (buffer[0] != '/' && buffer[0] != ';' && buffer[0] != '\0') buffer++;
 	}
 
-	//IMPORTED: from ONS
+	// IMPORTED: from ONS
 	if (buffer[0] == '/' && anim->trans_mode != AnimationInfo::TRANS_STRING) {
 		buffer++;
 		anim->num_of_cells = getNumberFromBuffer(&buffer);
@@ -501,7 +501,7 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 				for (i = 1; i < anim->num_of_cells; i++)
 					anim->duration_list[i] = anim->duration_list[0];
 			}
-			//anim->remaining_time = anim->duration_list[0];
+			// anim->remaining_time = anim->duration_list[0];
 
 			buffer++;
 			anim->loop_mode = *buffer++ - '0'; // 3...no animation
@@ -545,7 +545,7 @@ void ONScripter::drawSpritesetToGPUTarget(GPU_Target *target, SpritesetInfo *spr
 		myClip.y += camera.center_pos.y;
 	}
 
-	//This is a D.S.T. clip
+	// This is a D.S.T. clip
 	/*myClip.x += spriteset->pos.x;
 	myClip.y += spriteset->pos.y;*/
 
@@ -600,7 +600,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 
 	// We might have scrolled since last draw, so we've got to update the mouse cursor position...
 	// This breaks mouseover for some buttons sometimes somehow and is not needed anymore (because we check in dynprop.apply()
-	//refreshButtonHoverState();
+	// refreshButtonHoverState();
 
 	GPU_Rect canvasPos = info->pos;
 	canvasPos.x += camera.center_pos.x;
@@ -613,7 +613,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 	StringTree &tree                  = dataTrees[si.elementTreeIndex];
 	int scroll_y                      = info->scrollable.y;
 
-	//sendToLog(LogLevel::Info, "Hovered: %d\n", si.hoveredElement);
+	// sendToLog(LogLevel::Info, "Hovered: %d\n", si.hoveredElement);
 
 	auto first = getScrollableElementsVisibleAt(&si, tree, scroll_y);
 	for (auto it = first; it != tree.insertionOrder.end(); ++it) {
@@ -650,12 +650,12 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 
 		// DEBUG: Draw debug highlight
 		/*if (si.hoveredElement == elementIndex) {
-            GPU_FlushBlitBuffer();
-            GPU_Rect rect { info->pos.x+xLeft, info->pos.y+yTop, elemRect.w, elemRect.h };
-            GPU_SetClipRect(target, rect);
-            GPU_ClearRGBA(target, 255, 0, 0, 255);
-            GPU_SetClipRect(target, localClip);
-        }*/
+		    GPU_FlushBlitBuffer();
+		    GPU_Rect rect { info->pos.x+xLeft, info->pos.y+yTop, elemRect.w, elemRect.h };
+		    GPU_SetClipRect(target, rect);
+		    GPU_ClearRGBA(target, 255, 0, 0, 255);
+		    GPU_SetClipRect(target, localClip);
+		}*/
 
 		// Draw element background if any
 		if (spriteBg) {
@@ -675,10 +675,12 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 		if (elem.has("text") || elem.has("log")) {
 			Fontinfo fi = sentence_font;
 			fi.clear();
-			int marginLeft = elem.has("textmarginwidth") ? std::stoi(elem["textmarginwidth"].value) :
-			                                               elem.has("textmarginleft") ? std::stoi(elem["textmarginleft"].value) : si.textMarginLeft;
-			int marginRight = elem.has("textmarginwidth") ? std::stoi(elem["textmarginwidth"].value) :
-			                                                elem.has("textmarginright") ? std::stoi(elem["textmarginright"].value) : si.textMarginRight;
+			int marginLeft               = elem.has("textmarginwidth") ? std::stoi(elem["textmarginwidth"].value) :
+			                               elem.has("textmarginleft")  ? std::stoi(elem["textmarginleft"].value) :
+			                                                             si.textMarginLeft;
+			int marginRight              = elem.has("textmarginwidth") ? std::stoi(elem["textmarginwidth"].value) :
+			                               elem.has("textmarginright") ? std::stoi(elem["textmarginright"].value) :
+			                                                             si.textMarginRight;
 			int marginTop                = elem.has("textmargintop") ? std::stoi(elem["textmargintop"].value) : si.textMarginTop;
 			fi.top_xy[0]                 = info->pos.x + xLeft + marginLeft;
 			fi.top_xy[1]                 = info->pos.y + yTop + marginTop;
@@ -699,7 +701,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			gpu.copyGPUImage(si.divider->oldNew(refresh_mode)->gpu_image, nullptr, &localClip, target, info->pos.x + camera.center_pos.x, info->pos.y + yBot);
 	}
 
-	//sendToLog(LogLevel::Info, "scroll_y: %u\n", scroll_y);
+	sendToLog(LogLevel::Info, "scroll_y: %u\n", scroll_y);
 	// all elements drawn
 	// return
 	GPU_UnsetClip(target);
@@ -737,9 +739,9 @@ void ONScripter::layoutSpecialScrollable(AnimationInfo *info) {
 		}
 
 		height    = t.has("height") ? std::stoi(t["height"].value) : si.elementHeight;
-		int width = t.has("width") ? std::stoi(t["width"].value) :
-		                             si.elementWidth ? si.elementWidth :
-		                                               info->pos.w;
+		int width = t.has("width")  ? std::stoi(t["width"].value) :
+		            si.elementWidth ? si.elementWidth :
+		                              info->pos.w;
 		if (currentColumn > 0)
 			t["x"].value = std::to_string(currentX);
 		t["y"].value = std::to_string(currentY);
@@ -748,10 +750,12 @@ void ONScripter::layoutSpecialScrollable(AnimationInfo *info) {
 
 		if (height == 0) {
 			// autocalculate height
-			int marginLeft = t.has("textmarginwidth") ? std::stoi(t["textmarginwidth"].value) :
-			                                            t.has("textmarginleft") ? std::stoi(t["textmarginleft"].value) : si.textMarginLeft;
+			int marginLeft  = t.has("textmarginwidth") ? std::stoi(t["textmarginwidth"].value) :
+			                  t.has("textmarginleft")  ? std::stoi(t["textmarginleft"].value) :
+			                                             si.textMarginLeft;
 			int marginRight = t.has("textmarginwidth") ? std::stoi(t["textmarginwidth"].value) :
-			                                             t.has("textmarginright") ? std::stoi(t["textmarginright"].value) : si.textMarginRight;
+			                  t.has("textmarginright") ? std::stoi(t["textmarginright"].value) :
+			                                             si.textMarginRight;
 			calculateDynamicElementHeight(t, width - (marginLeft + marginRight), si.tightlyFit);
 			height = std::stoi(t["height"].value);
 		}
@@ -768,7 +772,7 @@ void ONScripter::layoutSpecialScrollable(AnimationInfo *info) {
 		}
 	}
 	si.totalHeight = currentY + si.lastMargin + height;
-	//tree.accept(StringTreePrinter());
+	// tree.accept(StringTreePrinter());
 }
 
 void ONScripter::calculateDynamicElementHeight(StringTree &element, int width, int tightlyFit) {
@@ -814,7 +818,7 @@ void ONScripter::changeScrollableHoveredElement(AnimationInfo *info, Direction d
 
 	// This fixes a bug in lookback when one hovers the last element and presses down key
 	// Same thing done below
-	long maxId = si.layoutedElements - 1; //tree.insertionOrder.size() - 1;
+	long maxId = si.layoutedElements - 1; // tree.insertionOrder.size() - 1;
 	if (lastVisibleElemId == -1)
 		lastVisibleElemId = maxId;
 
@@ -849,15 +853,15 @@ void ONScripter::changeScrollableHoveredElement(AnimationInfo *info, Direction d
 
 		if (elemRect.y + dividerH < info->scrollable.y + si.firstMargin) {
 			snapScrollableToElement(info, si.hoveredElement, AnimationInfo::ScrollSnap::TOP);
-			//sendToLog(LogLevel::Info, "Snapping up to %d\n", si.hoveredElement);
+			// sendToLog(LogLevel::Info, "Snapping up to %d\n", si.hoveredElement);
 		}
 		if (elemRect.y + elemRect.h + dividerH > info->scrollable.y + info->pos.h - si.lastMargin) {
 			snapScrollableToElement(info, si.hoveredElement, AnimationInfo::ScrollSnap::BOTTOM);
-			//sendToLog(LogLevel::Info, "Snapping down to %d\n", si.hoveredElement);
-		} //FIXME: the use of info->scrollable.y here will probably create issues since it's being animated
+			// sendToLog(LogLevel::Info, "Snapping down to %d\n", si.hoveredElement);
+		} // FIXME: the use of info->scrollable.y here will probably create issues since it's being animated
 
 	} else {
-		//CHECKME: do these snaps need a condition?
+		// CHECKME: do these snaps need a condition?
 		if (d == Direction::UP || d == Direction::LEFT) {
 			si.hoveredElement = lastVisibleElemId;
 			snapScrollableToElement(info, si.hoveredElement, AnimationInfo::ScrollSnap::BOTTOM);
@@ -875,7 +879,7 @@ void ONScripter::snapScrollableByOffset(AnimationInfo *info, int rowsDownwards) 
 		sendToLog(LogLevel::Error, "!? Asked to scroll a scrollable by 0 elements\n");
 	AnimationInfo::ScrollableInfo &si = info->scrollableInfo;
 	StringTree &tree                  = dataTrees[si.elementTreeIndex];
-	long maxId                        = si.layoutedElements - 1; //tree.insertionOrder.size() - 1;
+	long maxId                        = si.layoutedElements - 1; // tree.insertionOrder.size() - 1;
 	bool alreadySnappedCorrectlyDown  = (rowsDownwards > 0 && si.snapType == AnimationInfo::ScrollSnap::BOTTOM);
 	bool alreadySnappedCorrectlyUp    = (rowsDownwards < 0 && si.snapType == AnimationInfo::ScrollSnap::TOP);
 	if (!alreadySnappedCorrectlyDown && !alreadySnappedCorrectlyUp) {
@@ -933,7 +937,7 @@ void ONScripter::snapScrollableToElement(AnimationInfo *info, long elementId, An
 		dynamicProperties.addSpriteProperty(info, num, lsp2, true, SPRITE_PROPERTY_SCROLLABLE_Y, dstYTop, 100, 1, true);
 	else
 		dynamicProperties.addSpriteProperty(info, num, lsp2, true, SPRITE_PROPERTY_SCROLLABLE_Y, dstYTop);
-	//sendToLog(LogLevel::Info, "Setting dynamic property with destination %f (current pos %f)\n", dstYTop, info->scrollable.y);
+	// sendToLog(LogLevel::Info, "Setting dynamic property with destination %f (current pos %f)\n", dstYTop, info->scrollable.y);
 }
 
 // returns iterator to si->insertionOrder
@@ -977,7 +981,7 @@ void ONScripter::setRectForScrollableElement(StringTree *elem, GPU_Rect &rect) {
 
 // Script coords with scroll already taken into account, so y can be 0 to infinity.
 void ONScripter::mouseOverSpecialScrollable(int aiSpriteNo, int x, int y) {
-	//sendToLog(LogLevel::Info, "moused over with coords %d, %d\n", x, y);
+	// sendToLog(LogLevel::Info, "moused over with coords %d, %d\n", x, y);
 	AnimationInfo *ai                 = &sprite_info[aiSpriteNo];
 	AnimationInfo::ScrollableInfo *si = &ai->scrollableInfo;
 	StringTree &tree                  = dataTrees[si->elementTreeIndex];
@@ -1103,7 +1107,7 @@ void ONScripter::drawBigImage(GPU_Target *target, AnimationInfo *info, int /*ref
 		// Now we have a max possible area we can display on the canvas image starting from the top-left of a sprite_transformation_image
 	} else {
 		ons.errorAndExit("Big images cannot be zoomed out!");
-		return; //dummy
+		return; // dummy
 	}
 
 	if (doClipping(&targetClip, &bounding_rect)) {
@@ -1214,8 +1218,8 @@ void ONScripter::drawToGPUTarget(GPU_Target *target, AnimationInfo *info, int re
 	 |  ---------------   |
 	 |        canvas_w/h  |
 	 ----------------------
-		instead of to the top left corner of the canvas.
-		(The alternative is to switch everything to using centered coordinates or change all the positions in our script...) */
+	    instead of to the top left corner of the canvas.
+	    (The alternative is to switch everything to using centered coordinates or change all the positions in our script...) */
 	coord_x += camera.center_pos.x;
 	coord_y += camera.center_pos.y;
 
@@ -1360,10 +1364,10 @@ void ONScripter::drawToGPUTarget(GPU_Target *target, AnimationInfo *info, int re
 		float scale_y      = (info->flip & FLIP_VERTICALLY ? -1 : 1) * (info->scale_y ? info->scale_y / 100.0 : 1);
 
 		if (breakupID.type == BreakupType::SPRITE_TIGHTFIT) {
-			//TODO:
-			// * remove - half w/h, breakUpImage should work with centred coordinates
-			// * add scale factor with flip support
-			// * add clips
+			// TODO:
+			//  * remove - half w/h, breakUpImage should work with centred coordinates
+			//  * add scale factor with flip support
+			//  * add clips
 			gpu.breakUpImage(breakupID, src, &clip_rect, dst, info->spriteTransforms.breakupFactor,
 			                 info->spriteTransforms.breakupDirectionFlagset, nullptr, coord_x - info->pos.w / 2,
 			                 coord_y - info->pos.h / 2);
@@ -1383,7 +1387,7 @@ void ONScripter::drawToGPUTarget(GPU_Target *target, AnimationInfo *info, int re
 			if (allowDirectCopy)
 				GPU_SetBlending(src, false);
 			gpu.copyGPUImage(src, &clip_rect, dst_clip, dst, coord_x, coord_y, scale_x, scale_y,
-			                 //ONScripter uses right-to-left angling system and sdl-gpu prefers left-to-right. I prefer sdl-gpu, but we are to follow the standards.
+			                 // ONScripter uses right-to-left angling system and sdl-gpu prefers left-to-right. I prefer sdl-gpu, but we are to follow the standards.
 			                 -info->rot, centre_coordinates);
 			if (allowDirectCopy)
 				GPU_SetBlending(src, true);
@@ -1434,7 +1438,7 @@ void ONScripter::drawToGPUTarget(GPU_Target *target, AnimationInfo *info, int re
 			GPUTransformableCanvasImage tmp(src);
 			float secs = info->spriteTransforms.warpClock.time() / 1000.0;
 			toDraw     = gpu.getWarpedImage(tmp, secs, info->spriteTransforms.warpAmplitude, info->spriteTransforms.warpWaveLength,
-                                        info->spriteTransforms.warpSpeed);
+			                                info->spriteTransforms.warpSpeed);
 			src        = toDraw.image;
 			// We (have) set a larger clip for this in dirtySpriteRect to ensure we are called with a large enough clip
 		}
@@ -1460,11 +1464,11 @@ void ONScripter::drawToGPUTarget(GPU_Target *target, AnimationInfo *info, int re
 }
 
 void ONScripter::commitVisualState() {
-	//sendToLog(LogLevel::Info, "commitVisualState\n");
+	// sendToLog(LogLevel::Info, "commitVisualState\n");
 	for (auto i : queueAnimationInfo) {
-		//So that we don't break the new AIs by continuing to run wrong timed property changes
+		// So that we don't break the new AIs by continuing to run wrong timed property changes
 		if (i->old_ai && i->distinguish_from_old_ai) {
-			//sendToLog(LogLevel::Info, "Terminating sprite properties\n");
+			// sendToLog(LogLevel::Info, "Terminating sprite properties\n");
 			dynamicProperties.terminateSpriteProperties(i);
 		}
 		i->commitState();
@@ -1545,7 +1549,7 @@ void ONScripter::stopCursorAnimation(int click) {
 
 void ONScripter::buildGPUImage(AnimationInfo &ai) {
 	if (!ai.image_surface) {
-		//sendToLog(LogLevel::Error, "No image_surface in buildGPUImage\n");
+		// sendToLog(LogLevel::Error, "No image_surface in buildGPUImage\n");
 		return;
 	}
 
@@ -1561,7 +1565,7 @@ void ONScripter::buildGPUImage(AnimationInfo &ai) {
 		return;
 	}
 
-	//sendToLog(LogLevel::Info, "Creating gpu image in buildGPUImage (%d,%d)@%d\n",ai.image_surface->w, ai.image_surface->h, ai.image_surface->format->BytesPerPixel);
+	// sendToLog(LogLevel::Info, "Creating gpu image in buildGPUImage (%d,%d)@%d\n",ai.image_surface->w, ai.image_surface->h, ai.image_surface->format->BytesPerPixel);
 
 	if (ai.is_big_image) {
 		ai.big_image = std::make_shared<GPUBigImage>(ai.image_surface);
