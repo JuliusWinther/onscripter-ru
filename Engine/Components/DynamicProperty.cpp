@@ -401,9 +401,9 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 						// W_TEMP2
 						// AnimationInfo *curAi = ai;
 						// dynamicProperties.addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
-						AnimationInfo *newAnim    = new AnimationInfo(); // Initialize new AnimationInfo as needed
-						int targetSpriteNo        = curAi->scrollableInfo.scrollbar->id;
-						ButtonLink *currentButton = &root_button_link;
+						AnimationInfo *newAnim        = new AnimationInfo(); // Initialize new AnimationInfo as needed
+						int targetSpriteNo            = curAi->scrollableInfo.scrollbar->id;
+						ons.ButtonLink *currentButton = &root_button_link;
 						while (currentButton) {
 							if ((currentButton->sprite_no == targetSpriteNo) &&
 							    (currentButton->button_type == ButtonLink::SPRITE_BUTTON || currentButton->button_type == ButtonLink::EX_SPRITE_BUTTON)) {
