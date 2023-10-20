@@ -2204,7 +2204,7 @@ int ONScripter::getspsizeCommand() {
 	if (!sprite.scrollableInfo.isSpecialScrollable) { // W_TEMP
 		script_h.setInt(&script_h.current_variable, sprite.orig_pos.h);
 	} else {
-		AnimationInfo::ScrollableInfo &si = sprite->scrollableInfo;
+		AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;
 		script_h.setInt(&script_h.current_variable, si.totalHeight);
 	}
 	if (script_h.hasMoreArgs()) {
