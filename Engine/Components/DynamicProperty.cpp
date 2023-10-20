@@ -395,27 +395,14 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 						bool lsp2 = false;
 						int num   = ons.getAIno(curAi->scrollableInfo.scrollbar, false, lsp2);
 						ons.dirtySpriteRect(num, lsp2);
-						curAi->scrollableInfo.scrollbar->orig_pos.y = curAi->scrollableInfo.scrollbarTop +
-						                                              (curAi->scrollable.y / (curAi->scrollableInfo.totalHeight - curAi->scrollable.h)) * curAi->scrollableInfo.scrollbarHeight;
+						// orig_pos.y
+						curAi->scrollableInfo.scrollbar->pos.y = curAi->scrollableInfo.scrollbarTop +
+						                                         (curAi->scrollable.y / (curAi->scrollableInfo.totalHeight - curAi->scrollable.h)) * curAi->scrollableInfo.scrollbarHeight;
 
 						// W_TEMP2
 						// AnimationInfo *curAi = ai;
-						// dynamicProperties.addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
-						AnimationInfo *newAnim        = new AnimationInfo(); // Initialize new AnimationInfo as needed
-						int targetSpriteNo            = curAi->scrollableInfo.scrollbar->id;
-						ons.ButtonLink *currentButton = &root_button_link;
-						while (currentButton) {
-							if ((currentButton->sprite_no == targetSpriteNo) &&
-							    (currentButton->button_type == ButtonLink::SPRITE_BUTTON || currentButton->button_type == ButtonLink::EX_SPRITE_BUTTON)) {
-								// Found the button with the matching sprite_no
-								currentButton->anim = newAnim; // Update the *anim pointer
-								break;                         // Exit the loop since we've made the change
-							}
-							currentButton = currentButton->next; // Move to the next button in the list
-						}
-						dynamicProperties.addSpriteProperty(newAnim, targetSpriteNo, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
-
-						ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
+						dynamicProperties.addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						// ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
 						ons.dirtySpriteRect(num, lsp2);
 					}
 				} else {
