@@ -659,6 +659,9 @@ void ONScripter::dirtySpriteRect(int num, bool lsp2, bool before) {
 		}
 	}
 
+	// W_TEMP
+	sendToLog(LogLevel::Info, "TEST: %f - %f\n", toAdd.h, scrollable.h);
+
 	if (spr->spriteTransforms.breakupFactor > 0 || spr->spriteTransforms.blurFactor > 0 || std::fabs(spr->spriteTransforms.warpAmplitude) > 0) {
 		dirty->fill(window.canvas_width, window.canvas_height);
 	}

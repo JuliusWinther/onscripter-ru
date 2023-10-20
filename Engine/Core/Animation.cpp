@@ -893,9 +893,6 @@ void ONScripter::snapScrollableByOffset(AnimationInfo *info, int rowsDownwards) 
 			float h = si.elementHeight;
 			GPU_Rect elemRect{0, 0, w, h};
 			setRectForScrollableElement(&tree[*it], elemRect);
-			// W_TEMP
-			sendToLog(LogLevel::Info, "scroll_y: %u - %f - %u - %f - %f\n", elemRect.y, info->scrollable.y, h);
-
 			if (elemRect.y - info->scrollable.y >= info->pos.h - si.lastMargin) {
 				// we're off the bottom of the visible area, break
 				lastVisibleElemId = elemId - 1;
