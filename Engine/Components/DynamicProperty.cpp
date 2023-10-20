@@ -394,7 +394,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 					if (curAi->scrollableInfo.scrollbar) {
 						bool lsp2 = false;
 						int num   = ons.getAIno(curAi->scrollableInfo.scrollbar, false, lsp2);
-						ons.dirtySpriteRect(curAi->scrollableInfo.scrollbar->id, lsp2);
+						ons.dirtySpriteRect(num, lsp2);
 						curAi->scrollableInfo.scrollbar->orig_pos.y = curAi->scrollableInfo.scrollbarTop +
 						                                              (curAi->scrollable.y / (curAi->scrollableInfo.totalHeight - curAi->scrollable.h)) * curAi->scrollableInfo.scrollbarHeight;
 
