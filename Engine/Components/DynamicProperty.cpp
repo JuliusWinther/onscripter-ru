@@ -400,9 +400,9 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 
 						// W_TEMP2
 						// AnimationInfo *curAi = ai;
-						dynamicProperties.addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
-						// ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
-						ons.dirtySpriteRect(curAi->scrollableInfo.scrollbar->id, lsp2);
+						addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
+						ons.dirtySpriteRect(num, lsp2);
 					}
 				} else {
 					int maxW = curAi->pos.w;
