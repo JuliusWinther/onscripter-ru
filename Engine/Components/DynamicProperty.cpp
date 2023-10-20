@@ -400,7 +400,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 
 						// W_TEMP2
 						// AnimationInfo *curAi = ai;
-						// addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						// dynamicProperties.addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
 						AnimationInfo *newAnim    = new AnimationInfo(); // Initialize new AnimationInfo as needed
 						int targetSpriteNo        = curAi->scrollableInfo.scrollbar->id;
 						ButtonLink *currentButton = &root_button_link;
@@ -413,7 +413,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 							}
 							currentButton = currentButton->next; // Move to the next button in the list
 						}
-						addSpriteProperty(newAnim, targetSpriteNo, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						dynamicProperties.addSpriteProperty(newAnim, targetSpriteNo, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
 
 						ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
 						ons.dirtySpriteRect(num, lsp2);
