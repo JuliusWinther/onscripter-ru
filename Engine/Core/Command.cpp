@@ -109,7 +109,7 @@ int ONScripter::waittimerCommand() {
 
 	WaitTimerAction *action{WaitTimerAction::create()};
 
-	//sendToLog(LogLevel::Info, "Starting a timer set to %d\n", count);
+	// sendToLog(LogLevel::Info, "Starting a timer set to %d\n", count);
 	action->event_mode = WAIT_WAITTIMER_MODE;
 	action->clock.setCountdown(count);
 
@@ -119,7 +119,7 @@ int ONScripter::waittimerCommand() {
 }
 
 int ONScripter::waitCommand() {
-	//using insani's skippable wait concept (modified)
+	// using insani's skippable wait concept (modified)
 	bool skippable          = !static_cast<bool>(script_h.isName("wait2"));
 	bool entirely_skippable = script_h.isName("waits");
 
@@ -129,7 +129,7 @@ int ONScripter::waitCommand() {
 
 	if (skippable) {
 		if ((skip_mode & (SKIP_NORMAL | SKIP_TO_WAIT)) || keyState.ctrl) {
-			//Mion: instead of skipping entirely, let's do a shortened wait (safer)
+			// Mion: instead of skipping entirely, let's do a shortened wait (safer)
 			if (count > 100) {
 				count = count / 10;
 			} else if (count > 10) {
@@ -502,7 +502,7 @@ int ONScripter::strspCommand() {
 
 int ONScripter::stopCommand() {
 	wavestopCommand();
-	//NScr doesn't stop loopbgm w/this cmd
+	// NScr doesn't stop loopbgm w/this cmd
 	return mp3stopCommand();
 }
 
@@ -530,7 +530,7 @@ int ONScripter::sp_rgb_gradationCommand() {
 
 	SDL_Surface *surface = si->image_surface;
 	if (surface == nullptr)
-		return RET_CONTINUE; //FIXME: alloc image instead?
+		return RET_CONTINUE; // FIXME: alloc image instead?
 
 	SDL_PixelFormat *fmt = surface->format;
 
@@ -754,7 +754,7 @@ int ONScripter::setwindow3Command() {
 	setwindowCore();
 
 	display_mode = DISPLAY_MODE_NORMAL;
-	commitVisualState(); //might be a bug...
+	commitVisualState(); // might be a bug...
 	flush(refreshMode(), nullptr, &sentence_font_info.pos);
 
 	return RET_CONTINUE;
@@ -794,7 +794,7 @@ int ONScripter::setwindow2Command() {
 		setupAnimationInfo(&sentence_font_info);
 		sentence_font_info.blending_mode = BlendModeId::NORMAL;
 
-		//Extra name param
+		// Extra name param
 		if (script_h.hasMoreArgs()) {
 			GPU_Image *image = loadGpuImage(script_h.readFilePath());
 			if (image) {
@@ -819,7 +819,7 @@ int ONScripter::setwindowCommand() {
 	lookbackflushCommand();
 	page_enter_status = 0;
 	display_mode      = DISPLAY_MODE_NORMAL;
-	commitVisualState(); //might be a bug
+	commitVisualState(); // might be a bug
 	flush(refreshMode(), nullptr, &sentence_font_info.pos);
 
 	return RET_CONTINUE;
@@ -856,7 +856,7 @@ int ONScripter::setcursorCommand() {
 int ONScripter::selectCommand() {
 	if (isWaitingForUserInput() || isWaitingForUserInterrupt()) {
 		errorAndExit("Cannot run this command at the moment");
-		return RET_CONTINUE; //dummy
+		return RET_CONTINUE; // dummy
 	}
 
 	enterTextDisplayMode();
@@ -900,21 +900,21 @@ int ONScripter::selectCommand() {
 			// Text part
 			SelectLink *slink = new SelectLink();
 			script_h.setStr(&slink->text, buf);
-			//sendToLog(LogLevel::Info, "Select text %s\n", slink->text);
+			// sendToLog(LogLevel::Info, "Select text %s\n", slink->text);
 
 			// Label part
 			if (select_mode != SELECT_NUM_MODE) {
 				script_h.readLabel();
 				script_h.setStr(&slink->label, script_h.getStringBuffer() + 1);
-				//sendToLog(LogLevel::Info, "Select label %s\n", slink->label);
+				// sendToLog(LogLevel::Info, "Select label %s\n", slink->label);
 			}
 			last_select_link->next = slink;
 			last_select_link       = last_select_link->next;
 
 			comma_flag = (script_h.hasMoreArgs());
-			//sendToLog(LogLevel::Info, "2 comma %d %c %x\n", comma_flag, script_h.getCurrent()[0], script_h.getCurrent()[0]);
+			// sendToLog(LogLevel::Info, "2 comma %d %c %x\n", comma_flag, script_h.getCurrent()[0], script_h.getCurrent()[0]);
 		} else if (script_h.getNext()[0] == 0x0a) {
-			//sendToLog(LogLevel::Info, "comma %d\n", comma_flag);
+			// sendToLog(LogLevel::Info, "comma %d\n", comma_flag);
 			const char *buf = script_h.getNext() + 1; // consume eol
 			while (*buf == ' ' || *buf == '\t') buf++;
 
@@ -936,15 +936,15 @@ int ONScripter::selectCommand() {
 
 			if (!comma_flag && !comma2_flag) {
 				select_label_info.next_script = buf;
-				//sendToLog(LogLevel::Info, "select: stop at the end of line\n");
+				// sendToLog(LogLevel::Info, "select: stop at the end of line\n");
 				break;
 			}
 
-			//sendToLog(LogLevel::Info, "continue\n");
+			// sendToLog(LogLevel::Info, "continue\n");
 			comma_flag = true;
 		} else { // if select ends at the middle of the line
 			select_label_info.next_script = script_h.getNext();
-			//sendToLog(LogLevel::Info, "select: stop at the middle of the line\n");
+			// sendToLog(LogLevel::Info, "select: stop at the middle of the line\n");
 			break;
 		}
 	}
@@ -1160,9 +1160,9 @@ int ONScripter::resettimerCommand() {
 }
 
 int ONScripter::resetCommand() {
-	//clear out the event queue
-	//there still is a chance of some event sneaking in,
-	//but that was the same in the original implementation.
+	// clear out the event queue
+	// there still is a chance of some event sneaking in,
+	// but that was the same in the original implementation.
 	updateEventQueue();
 	if (takeEventsOut(SDL_QUIT))
 		endCommand();
@@ -1170,7 +1170,7 @@ int ONScripter::resetCommand() {
 
 	int effect             = window_effect.effect;
 	int duration           = window_effect.duration;
-	window_effect.effect   = 1; //don't use window effect during a reset
+	window_effect.effect   = 1; // don't use window effect during a reset
 	window_effect.duration = 0;
 	resetSub();
 	window_effect.effect   = effect;
@@ -1317,7 +1317,7 @@ int ONScripter::playCommand() {
 }
 
 int ONScripter::ofscopyCommand() {
-	//gpu.copyGPUImage(gpu.copyImageFromTarget(screen_target), nullptr, nullptr, accumulation_gpu->target);
+	// gpu.copyGPUImage(gpu.copyImageFromTarget(screen_target), nullptr, nullptr, accumulation_gpu->target);
 
 	return RET_CONTINUE;
 }
@@ -1338,7 +1338,7 @@ int ONScripter::mvCommand() {
 
 	script_h.setStr(&music_file_name, buf);
 
-	//don't bother with playback or fadeins if there's no audio
+	// don't bother with playback or fadeins if there's no audio
 	if (!audio_open_flag)
 		return RET_CONTINUE;
 
@@ -1407,7 +1407,7 @@ int ONScripter::mp3stopCommand() {
 	return RET_CONTINUE;
 }
 
-//Mion: integrating mp3fadeout as it's supposed to work.
+// Mion: integrating mp3fadeout as it's supposed to work.
 int ONScripter::mp3fadeoutCommand() {
 	errorAndExit("mp3fadeout: use bgm properties");
 
@@ -1443,7 +1443,7 @@ int ONScripter::mp3Command() {
 		int tmp = music_volume;
 		script_h.setStr(&music_file_name, buf);
 
-		//don't bother with playback or fadeins if there's no audio
+		// don't bother with playback or fadeins if there's no audio
 		if (!audio_open_flag)
 			return RET_CONTINUE;
 
@@ -1466,13 +1466,13 @@ int ONScripter::movieCommand() {
 	if (script_h.isName("stopvideo") || loadNew) {
 		if (video_layer < 0) {
 			errorAndCont("no video layer found");
-			//Cleanup
+			// Cleanup
 			script_h.readToEol();
 			return RET_CONTINUE;
 		}
 
 		// Firstly stop any playback
-		//TODO: request last frame here
+		// TODO: request last frame here
 		auto layer = getLayer<MediaLayer>(video_layer);
 
 		while (layer && layer->isPlaying(!loadNew)) {
@@ -1481,7 +1481,7 @@ int ONScripter::movieCommand() {
 		}
 
 		if (layer && loadNew) {
-			//PARAMS: filename, click, no_loop, alpha=0, audio=1, subtitles=0, sub_file=""
+			// PARAMS: filename, click, no_loop, alpha=0, audio=1, subtitles=0, sub_file=""
 
 			std::string vidfile(script_h.readFilePath());
 
@@ -1689,7 +1689,7 @@ int ONScripter::lsp2Command() {
 
 int ONScripter::lspCommand() {
 
-	//printClock("lspCommand start");
+	// printClock("lspCommand start");
 
 	leaveTextDisplayMode();
 
@@ -1713,10 +1713,10 @@ int ONScripter::lspCommand() {
 	bool is_reuseable = true;
 	if ((sprite_info[no].trans_mode == AnimationInfo::TRANS_STRING) ||
 	    (sprite_info[no].trans_mode == AnimationInfo::TRANS_LAYER)) {
-		//let's see if the same sprite has been loaded recently, for reuse,
-		//but don't bother for string sprites, since they can get messed up
-		//if the image_name contains a string variable, or for layers,
-		//since they aren't meant to be static images
+		// let's see if the same sprite has been loaded recently, for reuse,
+		// but don't bother for string sprites, since they can get messed up
+		// if the image_name contains a string variable, or for layers,
+		// since they aren't meant to be static images
 		is_reuseable = false;
 	}
 
@@ -1753,7 +1753,7 @@ int ONScripter::lspCommand() {
 	setupAnimationInfo(&sprite_info[no], nullptr);
 
 	if (is_reuseable) {
-		//only save the index of reuseable sprites
+		// only save the index of reuseable sprites
 		last_loaded_sprite_ind                     = (1 + last_loaded_sprite_ind) % SPRITE_NUM_LAST_LOADS;
 		last_loaded_sprite[last_loaded_sprite_ind] = no;
 	}
@@ -1761,7 +1761,7 @@ int ONScripter::lspCommand() {
 	if (sprite_info[no].visible)
 		dirtySpriteRect(no, false);
 
-	//printClock("lspCommand end");
+	// printClock("lspCommand end");
 
 	return RET_CONTINUE;
 }
@@ -1952,7 +1952,7 @@ int ONScripter::ldCommand() {
 
 		if (tachi_info[no].gpu_image) {
 			tachi_info[no].visible = true;
-			//start with "orig_pos" at the center-bottom, for easier scaling
+			// start with "orig_pos" at the center-bottom, for easier scaling
 			tachi_info[no].orig_pos.x = humanpos[no];
 			tachi_info[no].orig_pos.y = underline_value + 1;
 			UpdateAnimPosXY(&tachi_info[no]);
@@ -1974,7 +1974,7 @@ int ONScripter::layermessageCommand() {
 	const char *message = script_h.readStr();
 
 	getLayer<Layer>(no)->message(message, getret_int);
-	//sendToLog(LogLevel::Info, "layermessage returned: '%s', %d\n", getret_str, getret_int);
+	// sendToLog(LogLevel::Info, "layermessage returned: '%s', %d\n", getret_str, getret_int);
 
 	return RET_CONTINUE;
 }
@@ -2201,7 +2201,12 @@ int ONScripter::getspsizeCommand() {
 	script_h.readVariable();
 	script_h.setInt(&script_h.current_variable, sprite.orig_pos.w);
 	script_h.readVariable();
-	script_h.setInt(&script_h.current_variable, sprite.orig_pos.h);
+	if (!sprite.scrollableInfo.isSpecialScrollable) { // W_TEMP
+		script_h.setInt(&script_h.current_variable, sprite.orig_pos.h);
+	} else {
+		AnimationInfo::ScrollableInfo &si = sprite->scrollableInfo;
+		script_h.setInt(&script_h.current_variable, si.totalHeight);
+	}
 	if (script_h.hasMoreArgs()) {
 		script_h.readVariable();
 		script_h.setInt(&script_h.current_variable, sprite.num_of_cells);
@@ -2292,7 +2297,7 @@ int ONScripter::getsavestrCommand() {
 		script_h.setStr(&script_h.getVariableData(var_no).str, info.descr.get());
 	else
 		script_h.setStr(&script_h.getVariableData(var_no).str, "");
-	//sendToLog(LogLevel::Info, "getsavestr: got '%s'\n", script_h.getVariableData(var_no).str);
+	// sendToLog(LogLevel::Info, "getsavestr: got '%s'\n", script_h.getVariableData(var_no).str);
 
 	return RET_CONTINUE;
 }
@@ -2350,8 +2355,8 @@ int ONScripter::getregCommand() {
 	}
 
 	sendToLog(LogLevel::Info, "  The key is not found.\n");
-	//Is unchanged value the way they performed error checking? :x
-	//script_h.setStr(&script_h.getVariableData(no).str, "");
+	// Is unchanged value the way they performed error checking? :x
+	// script_h.setStr(&script_h.getVariableData(no).str, "");
 
 	return RET_CONTINUE;
 }
@@ -2465,8 +2470,8 @@ int ONScripter::getcselstrCommand() {
 		link = link->next;
 	}
 	if (!link) {
-		//NScr doesn't exit if getcselstr accesses a non-existent select link,
-		//so just give a warning and set the string to null
+		// NScr doesn't exit if getcselstr accesses a non-existent select link,
+		// so just give a warning and set the string to null
 		std::snprintf(script_h.errbuf, MAX_ERRBUF_LEN,
 		              "getcselstr: no select link at index %d (max index is %d)",
 		              csel_no, counter - 1);
@@ -2885,7 +2890,7 @@ int ONScripter::delayCommand() {
 	int count          = script_h.readInt();
 	int requestedCount = count;
 
-	//Mion: use a shorter delay during skip mode
+	// Mion: use a shorter delay during skip mode
 	if ((skip_mode & (SKIP_NORMAL | SKIP_TO_WAIT)) || keyState.ctrl) {
 		count = 0;
 	}
@@ -2910,7 +2915,7 @@ int ONScripter::delayCommand() {
 }
 
 int ONScripter::defineresetCommand() {
-	//clear out the event queue
+	// clear out the event queue
 	updateEventQueue();
 	if (takeEventsOut(SDL_QUIT))
 		endCommand();
@@ -2991,7 +2996,7 @@ int ONScripter::cselgotoCommand() {
 		              "cselgoto: no select link at index %d (max index is %d)",
 		              csel_no, counter - 1);
 		errorAndExit(script_h.errbuf);
-		return RET_CONTINUE; //dummy
+		return RET_CONTINUE; // dummy
 	}
 
 	setCurrentLabel(link->label);
@@ -3020,7 +3025,7 @@ int ONScripter::cselbtnCommand() {
 	if (link == nullptr || link->text == nullptr || *link->text == '\0')
 		return RET_CONTINUE;
 
-	//csel_info.setLineArea(std::strlen(link->text)/2+1);
+	// csel_info.setLineArea(std::strlen(link->text)/2+1);
 	csel_info.clear();
 	ButtonLink *button = getSelectableSentence(link->text, &csel_info);
 	root_button_link.insert(button);
@@ -3033,14 +3038,14 @@ int ONScripter::cselbtnCommand() {
 int ONScripter::clickCommand() {
 	if (isWaitingForUserInput() || isWaitingForUserInterrupt()) {
 		errorAndExit("Cannot run this command at the moment");
-		return RET_CONTINUE; //dummy
+		return RET_CONTINUE; // dummy
 	}
 
 	bool lrclick_flag = false;
 	if (script_h.isName("lrclick"))
 		lrclick_flag = true;
 
-	//Mion: NScr doesn't stop skip-to-choice mode for a "click" command
+	// Mion: NScr doesn't stop skip-to-choice mode for a "click" command
 	if (skip_mode & SKIP_NORMAL)
 		return RET_CONTINUE;
 
@@ -3216,7 +3221,7 @@ int ONScripter::captionCommand() {
 int ONScripter::btnwaitCommand() {
 	if (!btnasync_active && isWaitingForUserInput()) {
 		errorAndExit("Cannot run this command at the moment");
-		return RET_CONTINUE; //dummy
+		return RET_CONTINUE; // dummy
 	}
 
 	internal_slowdown_counter = 0;
@@ -3243,7 +3248,7 @@ int ONScripter::btnwaitCommand() {
 	current_button_state.reset();
 	last_keypress = SDL_NUM_SCANCODES;
 
-	uint32_t button_timer_start = SDL_GetTicks(); //set here so btnwait is correct
+	uint32_t button_timer_start = SDL_GetTicks(); // set here so btnwait is correct
 
 	if (skip_flag && textbtn_flag) {
 		current_button_state.set(0);
@@ -3262,7 +3267,7 @@ int ONScripter::btnwaitCommand() {
 
 	// Set all buttons to visible.
 	ButtonLink *p_button_link = root_button_link.next;
-	if(btnasync_active && !btnasync_draw_required) {
+	if (btnasync_active && !btnasync_draw_required) {
 		// Resetting the button visibility in this case will cause button draw failure.
 		// Once refreshButtonHoverState starts modifying the visual state of the buttons,
 		// and the "hoveringButton" flags start being set, from that point forward,
@@ -3293,13 +3298,13 @@ int ONScripter::btnwaitCommand() {
 		}
 		// Set buttons to default state as specified by exbtn_d. Moved after visibility set in case the default state sets some buttons invisible. Hopefully this will not cause problems.
 		if (is_exbtn_enabled && exbtn_d_button_link.exbtn_ctl) {
-			//should not be canvas, right?
+			// should not be canvas, right?
 			GPU_Rect check_src_rect{0, 0, static_cast<float>(window.script_width), static_cast<float>(window.script_height)};
 			decodeExbtnControl(exbtn_d_button_link.exbtn_ctl, &check_src_rect);
 		}
 		refreshButtonHoverState();
 		commitVisualState();
-		flush(refreshMode()); //don't wait for CR here, it resets our event_mode and breaks automode by setting current_button_state earlier
+		flush(refreshMode()); // don't wait for CR here, it resets our event_mode and breaks automode by setting current_button_state earlier
 		btnasync_draw_required = false;
 	}
 
@@ -3397,7 +3402,7 @@ void ONScripter::btnwaitCommandHandleResult(uint32_t button_timer_start, Variabl
 	btnwait_time = SDL_GetTicks() - button_timer_start;
 
 	script_h.setInt(resultVar, buttonState.button);
-	//sendToLog(LogLevel::Info, "btnwait return value: %d\n", buttonValue);
+	// sendToLog(LogLevel::Info, "btnwait return value: %d\n", buttonValue);
 
 	if (buttonState.button >= 1 && del_flag) {
 		btndef_info.remove();
@@ -3411,9 +3416,9 @@ void ONScripter::btnwaitCommandHandleResult(uint32_t button_timer_start, Variabl
 		ButtonLink *cur_button_link = p_button_link;
 		while (cur_button_link) {
 			cur_button_link->show_flag = false;
-			//It feels suspicious that rects weren't dirtied here... I'll put it in for now.
+			// It feels suspicious that rects weren't dirtied here... I'll put it in for now.
 			dirty_rect_hud.add(cur_button_link->image_rect);
-			cur_button_link            = cur_button_link->same;
+			cur_button_link = cur_button_link->same;
 		}
 		p_button_link = p_button_link->next;
 	}
@@ -3439,7 +3444,7 @@ int ONScripter::btndownCommand() {
 int ONScripter::btndefCommand() {
 	if (isWaitingForUserInput()) {
 		errorAndExit("Cannot run this command at the moment");
-		return RET_CONTINUE; //dummy
+		return RET_CONTINUE; // dummy
 	}
 
 	if (script_h.compareString("clear")) {
@@ -3452,11 +3457,11 @@ int ONScripter::btndefCommand() {
 		if (buf[0] != '\0') {
 			btndef_info.setImageName(buf);
 			parseTaggedString(&btndef_info);
-			//btndef_info.trans_mode = AnimationInfo::TRANS_COPY;
+			// btndef_info.trans_mode = AnimationInfo::TRANS_COPY;
 			setupAnimationInfo(&btndef_info);
-			//SDL_SetSurfaceAlphaMod(btndef_info.image_surface, 0xFF);
-			//SDL_SetSurfaceBlendMode(btndef_info.image_surface, SDL_BLENDMODE_NONE);
-			//SDL_SetSurfaceRLE(btndef_info.image_surface, SDL_RLEACCEL);
+			// SDL_SetSurfaceAlphaMod(btndef_info.image_surface, 0xFF);
+			// SDL_SetSurfaceBlendMode(btndef_info.image_surface, SDL_BLENDMODE_NONE);
+			// SDL_SetSurfaceRLE(btndef_info.image_surface, SDL_RLEACCEL);
 		}
 	}
 
@@ -3557,54 +3562,54 @@ int ONScripter::bltCommand() {
 	if (dw == 0 || dh == 0 || sw == 0 || sh == 0)
 		return RET_CONTINUE;
 
-	//if (sw == dw && sw > 0 && sh == dh && sh > 0) {
+	// if (sw == dw && sw > 0 && sh == dh && sh > 0) {
 
 	GPU_Rect src_rect{static_cast<float>(sx), static_cast<float>(sy), static_cast<float>(sw), static_cast<float>(sh)};
-	//SDL_Rect dst_rect {(short)dx,(short)dy,(uint16_t)dw,(uint16_t)dh};
+	// SDL_Rect dst_rect {(short)dx,(short)dy,(uint16_t)dw,(uint16_t)dh};
 
 	gpu.copyGPUImage(btndef_info.gpu_image, &src_rect, nullptr, screen_target);
 	dirty_rect_scene.clear();
 	dirty_rect_hud.clear();
 	/*} else {
-        ONSBuf *dst_buf = (ONSBuf*)accumulation_surface->pixels;
-        ONSBuf *src_buf = (ONSBuf*)btndef_info.image_surface->pixels;
-        int dst_width = accumulation_surface->pitch / 4;
-        int src_width = btndef_info.image_surface->pitch / 4;
+	    ONSBuf *dst_buf = (ONSBuf*)accumulation_surface->pixels;
+	    ONSBuf *src_buf = (ONSBuf*)btndef_info.image_surface->pixels;
+	    int dst_width = accumulation_surface->pitch / 4;
+	    int src_width = btndef_info.image_surface->pitch / 4;
 
-        int start_y = dy, end_y = dy+dh;
-        if (dh < 0) {
-            start_y = dy+dh;
-            end_y = dy;
-        }
-        if (start_y < 0) start_y = 0;
-        if (end_y > screen_height) end_y = screen_height;
+	    int start_y = dy, end_y = dy+dh;
+	    if (dh < 0) {
+	        start_y = dy+dh;
+	        end_y = dy;
+	    }
+	    if (start_y < 0) start_y = 0;
+	    if (end_y > screen_height) end_y = screen_height;
 
-        int start_x = dx, end_x = dx+dw;
-        if (dw < 0) {
-            start_x = dx+dw;
-            end_x = dx;
-        }
-        if (start_x < 0) start_x = 0;
-        if (end_x >= screen_width) end_x = screen_width;
+	    int start_x = dx, end_x = dx+dw;
+	    if (dw < 0) {
+	        start_x = dx+dw;
+	        end_x = dx;
+	    }
+	    if (start_x < 0) start_x = 0;
+	    if (end_x >= screen_width) end_x = screen_width;
 
-        dst_buf += start_y*dst_width;
-        for (int i=start_y ; i<end_y ; i++) {
-            int y = sy+sh*(i-dy)/dh;
-            for (int j=start_x ; j<end_x ; j++) {
+	    dst_buf += start_y*dst_width;
+	    for (int i=start_y ; i<end_y ; i++) {
+	        int y = sy+sh*(i-dy)/dh;
+	        for (int j=start_x ; j<end_x ; j++) {
 
-                int x = sx+sw*(j-dx)/dw;
-                if (x<0 || x>=btndef_info.image_surface->w ||
-                    y<0 || y>=btndef_info.image_surface->h)
-                    *(dst_buf+j) = 0;
-                else
-                    *(dst_buf+j) = *(src_buf+y*src_width+x);
-            }
-            dst_buf += dst_width;
-        }
+	            int x = sx+sw*(j-dx)/dw;
+	            if (x<0 || x>=btndef_info.image_surface->w ||
+	                y<0 || y>=btndef_info.image_surface->h)
+	                *(dst_buf+j) = 0;
+	            else
+	                *(dst_buf+j) = *(src_buf+y*src_width+x);
+	        }
+	        dst_buf += dst_width;
+	    }
 
-        SDL_Rect dst_rect {(short)start_x, (short)start_y, (uint16_t)(end_x-start_x), (uint16_t)(end_y-start_y)};
-        flushDirect((SDL_Rect&)dst_rect, REFRESH_NONE_MODE);
-    }*/
+	    SDL_Rect dst_rect {(short)start_x, (short)start_y, (uint16_t)(end_x-start_x), (uint16_t)(end_y-start_y)};
+	    flushDirect((SDL_Rect&)dst_rect, REFRESH_NONE_MODE);
+	}*/
 
 	return RET_CONTINUE;
 }
@@ -3633,8 +3638,8 @@ int ONScripter::bgcopyCommand() {
 int ONScripter::bgCommand() {
 	backupState(&bg_info);
 
-	//Mion: prefer removing textwindow for bg change effects even during skip;
-	//but don't remove text window if erasetextwindow == 0
+	// Mion: prefer removing textwindow for bg change effects even during skip;
+	// but don't remove text window if erasetextwindow == 0
 	leaveTextDisplayMode((erase_text_window_mode != 0));
 
 	const char *buf;
@@ -3736,8 +3741,8 @@ int ONScripter::automode_timeCommand() {
 	automode_time = script_h.readInt();
 
 	if (preferred_automode_time_set && (current_mode == DEFINE_MODE)) {
-		//if cmd is the define block, and a preferred automode time was set,
-		//use the preferred time instead
+		// if cmd is the define block, and a preferred automode time was set,
+		// use the preferred time instead
 		sendToLog(LogLevel::Warn, "automode_time: overriding time of %d with user-preferred time %d\n",
 		          automode_time, preferred_automode_time);
 		automode_time = preferred_automode_time;
