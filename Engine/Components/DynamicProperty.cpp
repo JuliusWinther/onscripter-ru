@@ -399,7 +399,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 						                                              (curAi->scrollable.y / (curAi->scrollableInfo.totalHeight - curAi->scrollable.h)) * curAi->scrollableInfo.scrollbarHeight;
 
 						// W_TEMP2
-						dynamicProperties.addSpriteProperty(curAi, sprite_number, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						dynamicProperties.addSpriteProperty(curAi, num, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
 						// ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
 						ons.dirtySpriteRect(num, lsp2);
 					}
