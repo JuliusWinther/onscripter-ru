@@ -130,8 +130,8 @@ void DynamicPropertyController::addCustomProperty(void *_ptr, bool _is_abs, int 
 			DynamicCustomProperty existing = cp.front();
 			existing.apply();
 			if (!_is_abs)
-				_value += existing.getRemainingValue(); //implicit double to int
-			cp.clear();                                 //e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
+				_value += existing.getRemainingValue(); // implicit double to int
+			cp.clear();                                 // e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
 		}
 	}
 	DynamicCustomProperty cp = DynamicCustomProperty(this, _ptr, _is_abs, _property, _value, _duration, _motion_equation);
@@ -149,8 +149,8 @@ void DynamicPropertyController::addSpriteProperty(AnimationInfo *_ai, int _sprit
 			DynamicSpriteProperty existing = sps.front();
 			existing.apply();
 			if (!_is_abs)
-				_value += existing.getRemainingValue(); //implicit double to int
-			sps.clear();                                //e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
+				_value += existing.getRemainingValue(); // implicit double to int
+			sps.clear();                                // e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
 		}
 	}
 	// Note: Strictly not conforming to PS3. 0 duration properties are meant to stack and execute when they reach the head of the queue.
@@ -180,8 +180,8 @@ void DynamicPropertyController::addGlobalProperty(bool _is_abs, int _property, i
 			DynamicGlobalProperty existing = gps.front();
 			existing.apply();
 			if (!_is_abs)
-				_value += existing.getRemainingValue(); //implicit double to int
-			gps.clear();                                //e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
+				_value += existing.getRemainingValue(); // implicit double to int
+			gps.clear();                                // e.g. halfway through a 0->100 prop we override with a +100, new prop will be 50->150
 		}
 	}
 	DynamicGlobalProperty gp = DynamicGlobalProperty(this, _is_abs, _property, _value, _duration, _motion_equation);
@@ -246,16 +246,16 @@ void DynamicPropertyController::terminateSpritesetProperties(SpritesetInfo *si) 
 
 void DynamicPropertyController::waitOnCustomProperty(void *ptr, int property, int event_mode_addons) {
 	auto pair = std::make_pair(ptr, property);
-	//sendToLog(LogLevel::Info, "Going to wait on properties\n");
+	// sendToLog(LogLevel::Info, "Going to wait on properties\n");
 	waitOnPropertyGeneric(customProperties[pair], event_mode_addons);
-	//sendToLog(LogLevel::Info, "Wait on properties done\n");
+	// sendToLog(LogLevel::Info, "Wait on properties done\n");
 }
 
 void DynamicPropertyController::waitOnSpriteProperty(AnimationInfo *ai, int property, int event_mode_addons) {
 	auto pair = std::make_pair(ai, property);
-	//sendToLog(LogLevel::Info, "Going to wait on properties\n");
+	// sendToLog(LogLevel::Info, "Going to wait on properties\n");
 	waitOnPropertyGeneric(spriteProperties[pair], event_mode_addons);
-	//sendToLog(LogLevel::Info, "Wait on properties done\n");
+	// sendToLog(LogLevel::Info, "Wait on properties done\n");
 }
 
 void DynamicPropertyController::waitOnGlobalProperty(int property, int event_mode_addons) {
@@ -326,7 +326,7 @@ double DynamicPropertyController::DynamicSpriteProperty::getValue() {
 
 void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 
-	//FIXME: This may be insufficient.
+	// FIXME: This may be insufficient.
 	if (ons.effect_current) {
 		ons.backupState(ai);
 	}
@@ -343,7 +343,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 			ons.dirtySpriteRect(sprite_number, false, true);
 	}
 
-	//sendToLog(LogLevel::Info, "property %d value %f old_ai %u distinguish %u\n",property,value,ai->old_ai!=nullptr,ai->distinguish_from_old_ai);
+	// sendToLog(LogLevel::Info, "property %d value %f old_ai %u distinguish %u\n",property,value,ai->old_ai!=nullptr,ai->distinguish_from_old_ai);
 	AnimationInfo *curAi = ai;
 	if (ai->old_ai && ai->distinguish_from_old_ai && !for_distinguished_new_ai)
 		curAi = ai->old_ai; // only update old ai if it will be a 'different' sprite post-commit
@@ -397,7 +397,11 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 						ons.dirtySpriteRect(num, lsp2);
 						curAi->scrollableInfo.scrollbar->orig_pos.y = curAi->scrollableInfo.scrollbarTop +
 						                                              (curAi->scrollable.y / (curAi->scrollableInfo.totalHeight - curAi->scrollable.h)) * curAi->scrollableInfo.scrollbarHeight;
-						ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
+
+						// W_TEMP
+						// dynamicProperties.addSpriteProperty(sprite, sprite_num, is_lsp2, is_abs, property, value, duration, equation);
+
+						// ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
 						ons.dirtySpriteRect(num, lsp2);
 					}
 				} else {
@@ -420,7 +424,7 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 			case SPRITE_PROPERTY_Z_ORDER:
 				curAi->has_z_order_override = true;
 				curAi->z_order_override     = value;
-				//sendToLog(LogLevel::Info, "order %d (%d)\n", curAi->id, value);
+				// sendToLog(LogLevel::Info, "order %d (%d)\n", curAi->id, value);
 				break;
 			default: // LSP2 properties:
 				switch (property) {
@@ -525,7 +529,7 @@ void DynamicPropertyController::DynamicGlobalProperty::setValue(double value) {
 		ons.setVolume(ch, ons.validVolume(value), ons.volume_on_flag);
 	}
 	/* May be missing required flush?
-     * ons.flush(ONScripter::REFRESH_NORMAL_MODE, nullptr, nullptr, false, false, false); */
+	 * ons.flush(ONScripter::REFRESH_NORMAL_MODE, nullptr, nullptr, false, false, false); */
 }
 
 double DynamicPropertyController::DynamicSpritesetProperty::getValue() {
@@ -569,7 +573,7 @@ void DynamicPropertyController::DynamicSpritesetProperty::setValue(double value)
 		case SPRITESET_PROPERTY_SCALE_Y: ons.spritesets[spriteset_number].scale_y = value; break;
 		case SPRITESET_PROPERTY_ROTATION_ANGLE: ons.spritesets[spriteset_number].rot = value; break;
 	}
-	//We may be in REFRESH_BEFORESCENE_MODE (addSpritesetProperty), but non-0-duration properties imply both before/after changes.
+	// We may be in REFRESH_BEFORESCENE_MODE (addSpritesetProperty), but non-0-duration properties imply both before/after changes.
 	ons.dirty_rect_scene.fill(window.canvas_width, window.canvas_height);
 	ons.before_dirty_rect_scene.fill(window.canvas_width, window.canvas_height);
 	ons.flush(REFRESH_NORMAL_MODE, nullptr, nullptr, false, false, false);
@@ -579,7 +583,7 @@ void DynamicPropertyController::DynamicProperty::apply() {
 	if (clock.time() == 0) {
 		begin();
 	}
-	//sendToLog(LogLevel::Info, "apply property for %i/%i of the way through %i -> %i\n", counter, duration, start_value, end_value);
+	// sendToLog(LogLevel::Info, "apply property for %i/%i of the way through %i -> %i\n", counter, duration, start_value, end_value);
 	setValue(getInterpolatedValue());
 }
 
@@ -592,7 +596,7 @@ void DynamicPropertyController::DynamicProperty::begin() {
 		// passed duration is in fact degrees per second; let's make it into an actual duration
 		duration = std::abs((1000) * (end_value - start_value) / static_cast<double>(duration)); // ms = (ms/sec)*(deg) / (deg/sec)
 	}
-	if(motion_equation == MOTION_EQUATION_COSINE_WAVE) {
+	if (motion_equation == MOTION_EQUATION_COSINE_WAVE) {
 		endless = true;
 	}
 	clock.tick(1); // Tiny hack; prevent begin from being executed more than once by immediately advancing 1ms. Creates a very slight timing error.
@@ -602,7 +606,7 @@ void DynamicPropertyController::DynamicProperty::begin() {
 }
 
 double DynamicPropertyController::DynamicProperty::getInterpolatedValue() {
-	//sendToLog(LogLevel::Info, "getInterpolatedValue for %i/%i of the way through %i -> %i\n", counter, duration, start_value, end_value);
+	// sendToLog(LogLevel::Info, "getInterpolatedValue for %i/%i of the way through %i -> %i\n", counter, duration, start_value, end_value);
 	if (!endless && clock.time() >= duration)
 		return end_value;
 	if (clock.time() == 0)
@@ -618,11 +622,11 @@ double DynamicPropertyController::DynamicProperty::getInterpolatedValue() {
 			new_t = 1 - (alpha_f * (1 - t) + (3 - 2 * alpha_f) * std::pow((1 - t), 2) + (alpha_f - 2) * std::pow((1 - t), 3));
 			break;
 		case MOTION_EQUATION_SLOWDOWN:
-			//this equation f(t) is the cubic polynomial satisfying f(0)=0, f(1)=1, f'(0)=alpha_f, f'(1)=0
+			// this equation f(t) is the cubic polynomial satisfying f(0)=0, f(1)=1, f'(0)=alpha_f, f'(1)=0
 			new_t = alpha_f * t + (3 - 2 * alpha_f) * std::pow(t, 2) + (alpha_f - 2) * std::pow(t, 3);
 			break;
 		case MOTION_EQUATION_COSINE_WAVE:
-			new_t = 0.5 - (std::cos(2*M_PI*t)) / 2;
+			new_t = 0.5 - (std::cos(2 * M_PI * t)) / 2;
 			break;
 		case MOTION_EQUATION_LINEAR:
 		case MOTION_EQUATION_CONSTANT_ROTATE_SPEED:
