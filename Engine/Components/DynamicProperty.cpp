@@ -400,7 +400,21 @@ void DynamicPropertyController::DynamicSpriteProperty::setValue(double value) {
 
 						// W_TEMP2
 						// AnimationInfo *curAi = ai;
-						addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						// addSpriteProperty(curAi->scrollableInfo.scrollbar, curAi->scrollableInfo.scrollbar->id, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+						AnimationInfo *newAnim    = new AnimationInfo(); // Initialize new AnimationInfo as needed
+						int targetSpriteNo        = curAi->scrollableInfo.scrollbar->id;
+						ButtonLink *currentButton = &root_button_link;
+						while (currentButton) {
+							if ((currentButton->sprite_no == targetSpriteNo) &&
+							    (currentButton->button_type == ButtonLink::SPRITE_BUTTON || currentButton->button_type == ButtonLink::EX_SPRITE_BUTTON)) {
+								// Found the button with the matching sprite_no
+								currentButton->anim = newAnim; // Update the *anim pointer
+								break;                         // Exit the loop since we've made the change
+							}
+							currentButton = currentButton->next; // Move to the next button in the list
+						}
+						addSpriteProperty(newAnim, targetSpriteNo, lsp2, true, 2, curAi->scrollableInfo.scrollbar->orig_pos.y);
+
 						ons.UpdateAnimPosXY(curAi->scrollableInfo.scrollbar);
 						ons.dirtySpriteRect(num, lsp2);
 					}
