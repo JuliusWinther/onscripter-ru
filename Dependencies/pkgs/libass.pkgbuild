@@ -6,14 +6,10 @@ depends=('harfbuzz' 'fribidi')
 sources=(
     #W_CUSTOM
     "https://raw.githubusercontent.com/JuliusWinther/concerto-deps/master/archives/$pkgname-$pkgver.tar.xz"
-    'libass-unicode-font-path-win.patch'
-    'libass-unicode-fontdir-path-win.patch'
 )
 
 hashes=(
     'f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784' #W_CUSTOM
-    '71e38cb4c8ec7e4bc62af64f0c5a6576e7cf2fc750ca43bac725198f2c214fa0'
-    '45988f43b494f4e512b5a3d0b23906edc8ff2a8a8d0b6717656080c5be7c5cbf'
 )
 
 configopts=(
