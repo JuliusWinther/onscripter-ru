@@ -6,7 +6,7 @@ diff -rupN a/configure b/configure
    test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
  
 -$as_echo "#define CONFIG_ICONV 1" >>confdefs.h
-+$as_echo "Ignoring iconv"
++$as_echo "Ignoring ivonv"
  
  fi
  
