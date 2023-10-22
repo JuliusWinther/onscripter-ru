@@ -1,10 +1,11 @@
 pkgname=libass
-pkgver=0.14.0
+pkgver=0.17.1
 pkgrel=1
 depends=('harfbuzz' 'fribidi')
 
 sources=(
-    "https://raw.githubusercontent.com/umineko-project/onscripter-deps/master/archives/$pkgname-$pkgver.tar.xz"
+    #W_CUSTOM
+    "https://raw.githubusercontent.com/JuliusWinther/concerto-deps/master/archives/$pkgname-$pkgver.tar.xz"
     'libass-ignore-iconv.patch'
     'libass-unicode-font-path-win.patch'
     'libass-unicode-fontdir-path-win.patch'

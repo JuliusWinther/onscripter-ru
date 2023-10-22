@@ -90,9 +90,9 @@ public:
 	struct InlineOverrides {
 		cmp::optional<bool> is_centered; // TODO: replace by an alignment enum (should i do this now?)
 
-		cmp::optional<bool> is_aligned_left;  // W_TEMP
-		cmp::optional<bool> is_aligned_right; // W_TEMP
-		cmp::optional<int> interline;         // W_TEMP
+		cmp::optional<bool> is_aligned_left;  // W_CUSTOM
+		cmp::optional<bool> is_aligned_right; // W_CUSTOM
+		cmp::optional<int> interline;         // W_CUSTOM
 
 		cmp::optional<bool> is_fitted;
 		cmp::optional<int> wrap_limit;
@@ -100,9 +100,9 @@ public:
 		InlineOverrides &operator|=(const InlineOverrides &o) {
 			is_centered |= o.is_centered;
 
-			is_aligned_left |= o.is_aligned_left;   // W_TEMP
-			is_aligned_right |= o.is_aligned_right; // W_TEMP
-			interline |= o.interline;               // W_TEMP
+			is_aligned_left |= o.is_aligned_left;   // W_CUSTOM
+			is_aligned_right |= o.is_aligned_right; // W_CUSTOM
+			interline |= o.interline;               // W_CUSTOM
 
 			is_fitted |= o.is_fitted;
 			wrap_limit |= o.wrap_limit;
@@ -120,9 +120,9 @@ public:
 		bool is_centered{false};
 		bool is_fitted{false};
 
-		bool is_aligned_left{false};  // W_TEMP
-		bool is_aligned_right{false}; // W_TEMP
-		int interline{0};             // W_TEMP
+		bool is_aligned_left{false};  // W_CUSTOM
+		bool is_aligned_right{false}; // W_CUSTOM
+		int interline{0};             // W_CUSTOM
 
 		bool is_bold{false};
 		bool is_italic{false};
@@ -167,9 +167,9 @@ public:
 
 			is_centered = props.is_centered;
 
-			is_aligned_left  = props.is_aligned_left;  // W_TEMP
-			is_aligned_right = props.is_aligned_right; // W_TEMP
-			interline        = props.interline;        // W_TEMP
+			is_aligned_left  = props.is_aligned_left;  // W_CUSTOM
+			is_aligned_right = props.is_aligned_right; // W_CUSTOM
+			interline        = props.interline;        // W_CUSTOM
 
 			is_fitted    = props.is_fitted;
 			is_bold      = props.is_bold;

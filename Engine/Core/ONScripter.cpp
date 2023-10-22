@@ -951,7 +951,7 @@ void ONScripter::lookupSavePath() {
 	const char *storage = FileIO::getStorageDir(trycloud);
 
 	script_h.save_path = new char[PATH_MAX];
-	std::snprintf(script_h.save_path, PATH_MAX, "%s%s%c", storage, "UminekoPS3fication", DELIMITER); // W_TEMP
+	std::snprintf(script_h.save_path, PATH_MAX, "%s%s%c", storage, "UminekoPS3fication", DELIMITER); // W_CUSTOM
 
 	if (!FileIO::makeDir(script_h.save_path)) {
 		ons.errorAndExit("Could not create save directory!");
@@ -1353,9 +1353,9 @@ void ONScripter::resetSentenceFont() {
 	style.is_centered       = false;
 	style.is_fitted         = false;
 
-	style.is_aligned_left  = false; // W_TEMP
-	style.is_aligned_right = false; // W_TEMP
-	style.interline        = 0;     // W_TEMP
+	style.is_aligned_left  = false; // W_CUSTOM
+	style.is_aligned_right = false; // W_CUSTOM
+	style.interline        = 0;     // W_CUSTOM
 
 	sentence_font.top_xy[0]    = 21;
 	sentence_font.top_xy[1]    = 16; // + sentence_font.font_size;
@@ -1395,9 +1395,9 @@ void ONScripter::resetSentenceFont() {
 	namestyle.is_centered       = false;
 	namestyle.is_fitted         = false;
 
-	namestyle.is_aligned_left  = false; // W_TEMP
-	namestyle.is_aligned_right = false; // W_TEMP
-	namestyle.interline        = 0;     // W_TEMP
+	namestyle.is_aligned_left  = false; // W_CUSTOM
+	namestyle.is_aligned_right = false; // W_CUSTOM
+	namestyle.interline        = 0;     // W_CUSTOM
 
 	name_font.top_xy[0]           = 21;
 	name_font.top_xy[1]           = 16; // + sentence_font.font_size;

@@ -2201,7 +2201,7 @@ int ONScripter::getspsizeCommand() {
 	script_h.readVariable();
 	script_h.setInt(&script_h.current_variable, sprite.orig_pos.w);
 	script_h.readVariable();
-	if (!sprite.scrollableInfo.isSpecialScrollable) { // W_TEMP
+	if (!sprite.scrollableInfo.isSpecialScrollable) { // W_CUSTOM
 		script_h.setInt(&script_h.current_variable, sprite.orig_pos.h);
 	} else {
 		AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;

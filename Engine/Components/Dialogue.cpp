@@ -559,9 +559,9 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		if (!line.rubyPieces.empty())
 			previousDescender /= 2;
 
-		Fontinfo &myFi = line.getPieces().front()->getPreFontInfo();                                                                // W_TEMP
-		auto &style    = myFi.style();                                                                                              // W_TEMP
-		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.interline.get(style.interline); // W_TEMP
+		Fontinfo &myFi = line.getPieces().front()->getPreFontInfo();                                                                // W_CUSTOM
+		auto &style    = myFi.style();                                                                                              // W_CUSTOM
+		y += ((line.maxAscender + previousDescender) * lineHeightMultiplier) + line.inlineOverrides.interline.get(style.interline); // W_CUSTOM
 		line.position.y   = y;
 		previousDescender = line.maxDescender;
 	}
@@ -580,12 +580,12 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 		bool fitted    = line.inlineOverrides.is_fitted.get(style.is_fitted);
 		int wrap_limit = line.inlineOverrides.wrap_limit.get(style.wrap_limit);
 
-		bool alignedLeft  = line.inlineOverrides.is_aligned_left.get(style.is_aligned_left);   // W_TEMP
-		bool alignedRight = line.inlineOverrides.is_aligned_right.get(style.is_aligned_right); // W_TEMP
+		bool alignedLeft  = line.inlineOverrides.is_aligned_left.get(style.is_aligned_left);   // W_CUSTOM
+		bool alignedRight = line.inlineOverrides.is_aligned_right.get(style.is_aligned_right); // W_CUSTOM
 
 		/*if (!centered && !fitted)
 		    continue;*/
-		// W_TEMP
+		// W_CUSTOM
 		if (!centered && !alignedLeft && !alignedRight && !fitted)
 			continue;
 
@@ -606,11 +606,11 @@ void DialogueController::layoutLines(TextRenderingState &state) {
 			line.horizontalResize = areaWidth / xWidth;
 			xWidth                = areaWidth;
 		}
-		if (alignedRight) { // W_TEMP
+		if (alignedRight) { // W_CUSTOM
 			// Align to the right
 			line.position.x = areaWidth - xWidth;
 		}
-		if (alignedLeft) { // W_TEMP
+		if (alignedLeft) { // W_CUSTOM
 			// Align to the left
 			line.position.x = frontPiece.position.x;
 		}

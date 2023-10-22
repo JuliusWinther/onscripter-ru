@@ -57,9 +57,9 @@ void ONScripter::readFontinfo(Fontinfo &fi) {
 	style.is_centered       = read32s();
 	style.is_fitted         = read32s();
 
-	style.is_aligned_left  = read32s(); // W_TEMP
-	style.is_aligned_right = read32s(); // W_TEMP
-	style.interline        = read32s(); // W_TEMP
+	style.is_aligned_left  = read32s(); // W_CUSTOM
+	style.is_aligned_right = read32s(); // W_CUSTOM
+	style.interline        = read32s(); // W_CUSTOM
 
 	style.shadow_distance[0] = read32s();
 	style.shadow_distance[1] = read32s();
@@ -113,9 +113,9 @@ void ONScripter::writeFontinfo(Fontinfo &fi) {
 	write32s(style.is_centered);
 	write32s(style.is_fitted);
 
-	write32s(style.is_aligned_left);  // W_TEMP
-	write32s(style.is_aligned_right); // W_TEMP
-	write32s(style.interline);        // W_TEMP
+	write32s(style.is_aligned_left);  // W_CUSTOM
+	write32s(style.is_aligned_right); // W_CUSTOM
+	write32s(style.interline);        // W_CUSTOM
 
 	write32s(style.shadow_distance[0]);
 	write32s(style.shadow_distance[1]);

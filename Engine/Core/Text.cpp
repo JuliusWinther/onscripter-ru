@@ -326,7 +326,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 
 	auto processLeft = [](std::string & /* command */, std::string & /* param */, Fontinfo &info /* info */) {
 		// FIXME: implement
-		info.changeStyle().inlineOverrides.is_aligned_left.set(true); // W_TEMP
+		info.changeStyle().inlineOverrides.is_aligned_left.set(true); // W_CUSTOM
 		return false;
 	};
 
@@ -337,7 +337,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 
 	auto processRight = [](std::string & /* command */, std::string & /* param */, Fontinfo &info /* info */) {
 		// FIXME: implement
-		info.changeStyle().inlineOverrides.is_aligned_right.set(true); // W_TEMP
+		info.changeStyle().inlineOverrides.is_aligned_right.set(true); // W_CUSTOM
 		return false;
 	};
 
@@ -351,7 +351,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		if (param[0] == 'c')
 			info.changeStyle().inlineOverrides.is_centered.set(true);
 		// TODO: support others?
-		// W_TEMP
+		// W_CUSTOM
 		if (param[0] == 'l')
 			info.changeStyle().inlineOverrides.is_aligned_left.set(true);
 		if (param[0] == 'r')
@@ -499,7 +499,7 @@ bool ONScripter::executeInlineTextCommand(std::string &command, std::string &par
 		processFuncs["fontsizepercent"] = processFuncs["fontsizepc"] = processFuncs["sizepercent"] = processFuncs["sizepc"] = processFuncs["e"] = processFontSizePercent;
 		processFuncs["characterspacing"] = processFuncs["charspacing"] = processFuncs["m"] = processCharacterSpacing;
 
-		processFuncs["interline"] = processFuncs["il"] = processInterline; // W_TEMP
+		processFuncs["interline"] = processFuncs["il"] = processInterline; // W_CUSTOM
 
 		processFuncs["ruby"] = processFuncs["h"] = processRuby;
 		processFuncs["loghint"] = processFuncs["l"] = processLoghint;
