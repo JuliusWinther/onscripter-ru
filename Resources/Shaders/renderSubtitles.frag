@@ -1,6 +1,6 @@
 #version 120
 
-#define NTEXTURES 8 /* Maximum amount of textures */
+#define NTEXTURES 255 /* Maximum amount of textures */
 #define IMG_W 2048.0
 #define IMG_H 256.0
 
