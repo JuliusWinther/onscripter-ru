@@ -1,3 +1,18 @@
+#version 120
+
+#define NTEXTURES 16 /* Maximum amount of textures */
+#define IMG_W 2048.0
+#define IMG_H 256.0
+
+uniform int ntextures; /* Number of sub textures we're drawing */
+uniform sampler2D subTex; /* Subtitle textures, only alpha for each pixel */
+uniform vec2 subDims[NTEXTURES]; /* Dimensions of sub textures */
+uniform vec2 subCoords[NTEXTURES]; /* Absolute coords of sub textures */
+uniform vec4 subColors[NTEXTURES]; /* RGB colors of sub textures */
+uniform vec2 dstDims; /* Absolute dimensions of the target image */
+
+varying vec2 texCoord;
+
 void main() {
     vec4 res = vec4(0.0);
     vec2 texCoordAbs = dstDims * texCoord.st;
