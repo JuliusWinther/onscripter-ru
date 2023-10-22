@@ -58,14 +58,14 @@ cflags="-I$outdir/include/fribidi"
 prebuild() {
     pushd "$pkgname-$pkgver" &>/dev/null
     
-    apply_patch "${sources[1]}"
+    #apply_patch "${sources[1]}"
 
     # libass provides no API to configure file i/o, and thus does not support unicode filenames.
     # This patch enforces utf-8 path support for ass_set_fonts on Windows.
-    if [ "$(getTarget)" == "win32" ]; then
-        apply_patch "${sources[2]}"
-        apply_patch "${sources[3]}"
-    fi
+    #if [ "$(getTarget)" == "win32" ]; then
+    #    apply_patch "${sources[2]}"
+    #    apply_patch "${sources[3]}"
+    #fi
 }
 
 postbuild() {
