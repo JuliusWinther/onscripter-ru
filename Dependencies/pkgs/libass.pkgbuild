@@ -1,15 +1,20 @@
 pkgname=libass
-pkgver=0.17.1
+pkgver=0.14.0
 pkgrel=1
 depends=('harfbuzz' 'fribidi')
 
 sources=(
-    #W_CUSTOM
-    "https://raw.githubusercontent.com/JuliusWinther/concerto-deps/master/archives/$pkgname-$pkgver.tar.xz"
+    "https://raw.githubusercontent.com/umineko-project/onscripter-deps/master/archives/$pkgname-$pkgver.tar.xz"
+    'libass-ignore-iconv.patch'
+    'libass-unicode-font-path-win.patch'
+    'libass-unicode-fontdir-path-win.patch'
 )
 
 hashes=(
-    'f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784' #W_CUSTOM
+    '881f2382af48aead75b7a0e02e65d88c5ebd369fe46bc77d9270a94aa8fd38a2'
+    '2482308db0690ec34248cc12d5a7ca3d9e9c7cb8db4273e61a205637d7dfc6fd'
+    '71e38cb4c8ec7e4bc62af64f0c5a6576e7cf2fc750ca43bac725198f2c214fa0'
+    '45988f43b494f4e512b5a3d0b23906edc8ff2a8a8d0b6717656080c5be7c5cbf'
 )
 
 configopts=(
@@ -58,14 +63,14 @@ cflags="-I$outdir/include/fribidi"
 prebuild() {
     pushd "$pkgname-$pkgver" &>/dev/null
     
-    #apply_patch "${sources[1]}"
+    apply_patch "${sources[1]}"
 
     # libass provides no API to configure file i/o, and thus does not support unicode filenames.
     # This patch enforces utf-8 path support for ass_set_fonts on Windows.
-    #if [ "$(getTarget)" == "win32" ]; then
-    #    apply_patch "${sources[2]}"
-    #    apply_patch "${sources[3]}"
-    #fi
+    if [ "$(getTarget)" == "win32" ]; then
+        apply_patch "${sources[2]}"
+        apply_patch "${sources[3]}"
+    fi
 }
 
 postbuild() {
