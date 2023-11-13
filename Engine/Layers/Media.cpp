@@ -193,11 +193,6 @@ void MediaLayer::videoResume() { // W_TEMP
 
 bool MediaLayer::update(bool old) {
 
-	if (isPaused) { // W_TEMP
-		// Do nothing or handle frame dropping logic here
-		return true;
-	}
-
 	// Not much to do here, although I doubt this can happen
 	if (!sprite)
 		return true;
@@ -236,8 +231,10 @@ bool MediaLayer::update(bool old) {
 	if (!mediaClock.hasCountdown())
 		mediaClock.addCountdownNanos(nanosPerFrame);
 	while (mediaClock.expired()) {
-		mediaClock.addCountdownNanos(nanosPerFrame);
-		framesToAdvance++;
+		if (!isPaused) {
+			mediaClock.addCountdownNanos(nanosPerFrame);
+			framesToAdvance++;
+		}
 	}
 
 	// sendToLog(LogLevel::Info, "framesToAdvance: %i\n", framesToAdvance);
