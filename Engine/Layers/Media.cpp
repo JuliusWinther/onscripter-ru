@@ -269,13 +269,14 @@ bool MediaLayer::update(bool old) {
 			}
 
 			// sendToLog(LogLevel::Info, "Updated frame number %d\n", thisFrame->frameNumber);
-			if (isPaused) {
-				framesToAdvance--;
-				return true;
-			}
+
 			// Now we are done; give back the surface for later use
 			media.giveImageBack(thisVideoFrame->surface);
 		}
+	}
+	if (isPaused) {
+		framesToAdvance--;
+		return true;
 	}
 	return true;
 }
