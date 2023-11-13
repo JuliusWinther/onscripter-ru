@@ -231,10 +231,8 @@ bool MediaLayer::update(bool old) {
 	if (!mediaClock.hasCountdown())
 		mediaClock.addCountdownNanos(nanosPerFrame);
 	while (mediaClock.expired()) {
-		if (!isPaused) {
-			mediaClock.addCountdownNanos(nanosPerFrame);
-			framesToAdvance++;
-		}
+		mediaClock.addCountdownNanos(nanosPerFrame);
+		framesToAdvance++;
 	}
 
 	// sendToLog(LogLevel::Info, "framesToAdvance: %i\n", framesToAdvance);
@@ -271,7 +269,10 @@ bool MediaLayer::update(bool old) {
 			}
 
 			// sendToLog(LogLevel::Info, "Updated frame number %d\n", thisFrame->frameNumber);
-
+			if (isPaused) {
+				framesToAdvance--;
+				return true;
+			}
 			// Now we are done; give back the surface for later use
 			media.giveImageBack(thisVideoFrame->surface);
 		}
