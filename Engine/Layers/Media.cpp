@@ -226,13 +226,15 @@ bool MediaLayer::update(bool old) {
 
 	// sendToLog(LogLevel::Info, "mediaClock: %llu, yesobjectClock: %llu, objectClockLap: %llu\n", mediaClock.timeNanos(), object->clock.timeNanos(), objectClockLap);
 	mediaClock.tickNanos(objectClockLap);
-	if (toAdd != 0)
-		mediaClock.tick(toAdd);
-	if (!mediaClock.hasCountdown())
-		mediaClock.addCountdownNanos(nanosPerFrame);
-	while (mediaClock.expired()) {
-		mediaClock.addCountdownNanos(nanosPerFrame);
-		framesToAdvance++;
+	if (!isPaused) {
+		if (toAdd != 0)
+			mediaClock.tick(toAdd);
+		if (!mediaClock.hasCountdown())
+			mediaClock.addCountdownNanos(nanosPerFrame);
+		while (mediaClock.expired()) {
+			mediaClock.addCountdownNanos(nanosPerFrame);
+			framesToAdvance++;
+		}
 	}
 
 	// sendToLog(LogLevel::Info, "framesToAdvance: %i\n", framesToAdvance);
@@ -274,8 +276,8 @@ bool MediaLayer::update(bool old) {
 			media.giveImageBack(thisVideoFrame->surface);
 		}
 	}
-	if (isPaused) {
-		framesToAdvance--;
+	if (isPaused) { // W_TEMP
+		framesToAdvance = 0;
 		return true;
 	}
 	return true;
