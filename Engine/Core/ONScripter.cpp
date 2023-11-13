@@ -80,6 +80,8 @@ static std::unordered_map<HashedString, CommandFunc> func_lut {
 	    {"ssa_font", &ONScripter::subtitleFontCommand},
 	    {"stopwatch", &ONScripter::stopwatchCommand},
 	    {"stopvideo", &ONScripter::movieCommand},
+	    {"videopause", &ONScripter::movieCommand},  // W_TEMP
+	    {"videoresume", &ONScripter::movieCommand}, // W_TEMP
 	    {"setlog", &ONScripter::setLogCommand},
 	    {"aspt2", &ONScripter::spritePropertyCommand},
 	    {"aspt", &ONScripter::spritePropertyCommand},

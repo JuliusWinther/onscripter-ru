@@ -30,10 +30,10 @@ bool MediaLayer::loadVideo(std::string &filename, unsigned audioStream, unsigned
 
 	// If we arrived here we are guaranteed to be not playing anything
 	// However, we may still display some frame of the previous video
-	//videoState &= ~VS_END_OF_FILE;
+	// videoState &= ~VS_END_OF_FILE;
 	videoState = VS_OFFLINE;
 
-	//Secondly, try to open the video
+	// Secondly, try to open the video
 	std::unique_ptr<char[]> video_file((*reader)->completePath(filename.c_str(), FileType::File));
 	return media.loadVideo(video_file.get(), audioStream, subtitleStream);
 }
@@ -179,7 +179,25 @@ bool MediaLayer::ensurePlanesImgs(AVPixelFormat f, size_t n, float w, float h) {
 	return true;
 }
 
+void videoPause() { // W_TEMP
+	if (!(videoState & VS_PAUSED) && (videoState & VS_PLAYING)) {
+		isPaused = true;
+	}
+}
+
+void videoResume() { // W_TEMP
+	if (isPaused) {
+		isPaused = false;
+	}
+}
+
 bool MediaLayer::update(bool old) {
+
+	if (isPaused) { // W_TEMP
+		// Do nothing or handle frame dropping logic here
+		return true;
+	}
+
 	// Not much to do here, although I doubt this can happen
 	if (!sprite)
 		return true;
@@ -197,7 +215,7 @@ bool MediaLayer::update(bool old) {
 			return true;
 	}
 
-	//sendToLog(LogLevel::Info, "MediaLayer::update. Total: %i, Lap: %i, ", mediaClock.time(), mediaClock.lap());
+	// sendToLog(LogLevel::Info, "MediaLayer::update. Total: %i, Lap: %i, ", mediaClock.time(), mediaClock.lap());
 	uint32_t toAdd{0};
 
 	// Do not update until audio plays if it is enabled
@@ -206,12 +224,12 @@ bool MediaLayer::update(bool old) {
 
 	if (toAdd != 0) {
 		sp->clock.reset();
-		//sendToLog(LogLevel::Info, "toAdd %d\n", toAdd);
+		// sendToLog(LogLevel::Info, "toAdd %d\n", toAdd);
 	}
 
 	auto objectClockLap = sp->clock.lapNanos();
 
-	//sendToLog(LogLevel::Info, "mediaClock: %llu, yesobjectClock: %llu, objectClockLap: %llu\n", mediaClock.timeNanos(), object->clock.timeNanos(), objectClockLap);
+	// sendToLog(LogLevel::Info, "mediaClock: %llu, yesobjectClock: %llu, objectClockLap: %llu\n", mediaClock.timeNanos(), object->clock.timeNanos(), objectClockLap);
 	mediaClock.tickNanos(objectClockLap);
 	if (toAdd != 0)
 		mediaClock.tick(toAdd);
@@ -222,7 +240,7 @@ bool MediaLayer::update(bool old) {
 		framesToAdvance++;
 	}
 
-	//sendToLog(LogLevel::Info, "framesToAdvance: %i\n", framesToAdvance);
+	// sendToLog(LogLevel::Info, "framesToAdvance: %i\n", framesToAdvance);
 
 	if (framesToAdvance > 0) {
 		bool endOfFile      = false;
@@ -234,7 +252,7 @@ bool MediaLayer::update(bool old) {
 			// This is not a mistake, frame update logic does not depend on old
 			// old is only relevant in sprite verification
 			auto frame = frame_gpu[NewFrame] ? frame_gpu[NewFrame] : frame_gpu[DefFrame];
-			//sendToLog(LogLevel::Info, "[Frame %lld] Fmt: %d(nv12<%d>,yuv420p<%d>), planes: %d<%d, %d, %d>, gpu out: %dx%d\n",
+			// sendToLog(LogLevel::Info, "[Frame %lld] Fmt: %d(nv12<%d>,yuv420p<%d>), planes: %d<%d, %d, %d>, gpu out: %dx%d\n",
 			//			thisVideoFrame->frameNumber, thisVideoFrame->srcFormat, AV_PIX_FMT_NV12, AV_PIX_FMT_YUV420P,
 			//			thisVideoFrame->planesCnt, thisVideoFrame->linesize[0], thisVideoFrame->linesize[1], thisVideoFrame->linesize[2],
 			//			frame->w, frame->h);
@@ -255,7 +273,7 @@ bool MediaLayer::update(bool old) {
 				}
 			}
 
-			//sendToLog(LogLevel::Info, "Updated frame number %d\n", thisFrame->frameNumber);
+			// sendToLog(LogLevel::Info, "Updated frame number %d\n", thisFrame->frameNumber);
 
 			// Now we are done; give back the surface for later use
 			media.giveImageBack(thisVideoFrame->surface);
@@ -280,7 +298,7 @@ void MediaLayer::refresh(GPU_Target *target, GPU_Rect &clip, float x, float y, b
 	scalex = scalex != 0 ? wFactor * scalex : wFactor;
 	scaley = scaley != 0 ? hFactor * scaley : hFactor;
 
-	//sendToLog(LogLevel::Info, "frame_gpu->h %u h_factor %f y %f y+(f*h/2.0) %f\n", frame_gpu->h, h_factor, y, y+((frame_gpu->h*h_factor)/2.0));
+	// sendToLog(LogLevel::Info, "frame_gpu->h %u h_factor %f y %f y+(f*h/2.0) %f\n", frame_gpu->h, h_factor, y, y+((frame_gpu->h*h_factor)/2.0));
 
 	gpu.copyGPUImage(frame, nullptr, &clip, target, x, y, scalex, scaley, 0, true);
 
