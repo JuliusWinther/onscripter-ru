@@ -179,13 +179,13 @@ bool MediaLayer::ensurePlanesImgs(AVPixelFormat f, size_t n, float w, float h) {
 	return true;
 }
 
-void videoPause() { // W_TEMP
-	if (!(videoState & VS_PAUSED) && (videoState & VS_PLAYING)) {
+void MediaLayer::videoPause() { // W_TEMP
+	if (!isPaused) {
 		isPaused = true;
 	}
 }
 
-void videoResume() { // W_TEMP
+void MediaLayer::videoResume() { // W_TEMP
 	if (isPaused) {
 		isPaused = false;
 	}
