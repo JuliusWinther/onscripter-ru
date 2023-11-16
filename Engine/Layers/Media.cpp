@@ -224,9 +224,9 @@ bool MediaLayer::update(bool old) {
 
 	auto objectClockLap = sp->clock.lapNanos();
 
-	sendToLog(LogLevel::Info, "mediaClock: %llu, yesobjectClock: %llu, objectClockLap: %llu\n", mediaClock.timeNanos(), object->clock.timeNanos(), objectClockLap);
-	mediaClock.tickNanos(objectClockLap);
+	// sendToLog(LogLevel::Info, "mediaClock: %llu, yesobjectClock: %llu, objectClockLap: %llu\n", mediaClock.timeNanos(), object->clock.timeNanos(), objectClockLap);
 	if (!isPaused) {
+		mediaClock.tickNanos(objectClockLap);
 		if (toAdd != 0)
 			mediaClock.tick(toAdd);
 		if (!mediaClock.hasCountdown())
