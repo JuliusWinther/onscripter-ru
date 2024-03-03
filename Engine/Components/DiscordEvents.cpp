@@ -34,6 +34,12 @@ LogLevel translateLogLevel(discord::LogLevel level) {
 	}
 }
 
+void shutdownDiscord() {
+	state.core->ActivityManager().ClearActivity([](discord::Result result) {
+		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension!\n");
+	});
+}
+
 void initDiscord(const char* id) {
 	auto result = discord::Core::Create(strtoll(id, NULL, 10), DiscordCreateFlags_NoRequireDiscord, &core);
 	state.core.reset(core);
@@ -220,7 +226,7 @@ void initDiscord(const char* id) {
 				break;
 		}
 
-		sendToLog(LogLevel::Error, "Discord error: %s, description: %s\n", error.c_str(), description.c_str());
+		sendToLog(LogLevel::Error, "Discord Error: %s, Description: %s\n", error.c_str(), description.c_str());
 
 		// std::exit(-1);
 		shutdownDiscord(); // W_CUSTOM - discord extensions - reenabled the shutdown function on error
@@ -249,12 +255,6 @@ void setPresence(const char* details, const char* currentState, const char* larg
 
 void runDiscordCallbacks() {
 	state.core->RunCallbacks();
-}
-
-void shutdownDiscord() {
-	state.core->ActivityManager().ClearActivity([](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension!\n");
-	});
 }
 
 #endif
