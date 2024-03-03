@@ -228,7 +228,7 @@ void initDiscord(const char* id) {
 
 		sendToLog(LogLevel::Error, "Discord Error: %s, Description: %s\n", error.c_str(), description.c_str());
 
-		// std::exit(-1);
+		std::exit(-1);
 		shutdownDiscord(); // W_CUSTOM - discord extensions - reenabled the shutdown function on error
 	}
 	state.core->SetLogHook(
