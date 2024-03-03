@@ -229,17 +229,13 @@ void initDiscord(const char* id) {
 		sendToLog(LogLevel::Error, "Discord Error: %s, Description: %s\n", error.c_str(), description.c_str());
 
 		// std::exit(-1);
-		// shutdownDiscord();
 		// state.core.reset();
+		shutdownDiscord();
 	}
-	sendToLog(LogLevel::Error, "OH 1\n");
 	// state.core->SetLogHook(
 	//     discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
-	//	    sendToLog(LogLevel::Error, "OH 2\n");
 	//	    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
-	//	    sendToLog(LogLevel::Error, "OH 3\n");
 	//     });
-	sendToLog(LogLevel::Error, "OH 4\n");
 }
 
 void setPresence(const char* details, const char* currentState, const char* largeImageKey, const char* largeImageText, const char* smallImageKey, const char* smallImageText, const char* startTimestamp, const char* endTimestamp = NULL) {
