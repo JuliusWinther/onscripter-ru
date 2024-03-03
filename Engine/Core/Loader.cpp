@@ -900,12 +900,17 @@ int main(int argc, char **argv) {
 #if defined(DISCORD)
 	if (opts.find("discord") != opts.end()) {
 		shutdownDiscord();
+		sendToLog(LogLevel::Error, "AH BOH BOH");
 	}
 #endif
 
-	//	if (ons.init())
-	//		ctrl.quit(-1);
+	if (ons.init()) {
+		ctrl.quit(-1);
+		sendToLog(LogLevel::Error, "AH BOH 1");
+	}
 	ons.executeLabel();
+	sendToLog(LogLevel::Error, "AH BOH 2");
 
 	ctrl.quit(0);
+	sendToLog(LogLevel::Error, "AH BOH 3");
 }
