@@ -232,11 +232,14 @@ void initDiscord(const char* id) {
 		// shutdownDiscord();
 		// state.core.reset();
 	}
-
+	sendToLog(LogLevel::Error, "OH 1");
 	state.core->SetLogHook(
 	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
+		    sendToLog(LogLevel::Error, "OH 2");
 		    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
+		    sendToLog(LogLevel::Error, "OH 3");
 	    });
+	sendToLog(LogLevel::Error, "OH 4");
 }
 
 void setPresence(const char* details, const char* currentState, const char* largeImageKey, const char* largeImageText, const char* smallImageKey, const char* smallImageText, const char* startTimestamp, const char* endTimestamp = NULL) {
