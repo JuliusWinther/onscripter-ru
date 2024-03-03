@@ -2744,11 +2744,10 @@ int ONScripter::dialogueNameCommand() {
 		dlgCtrl.nameLayouted = false;
 		dlgCtrl.nameRenderState.clear();
 		dlgCtrl.layoutName();
-	} /*else {
-	    const char *buf = script_h.readStr();
-	    dlgCtrl.setDialogueName(buf);
-	}*/
-	// W_TEMP
+	} else {
+		const char *buf = script_h.readStr();
+		dlgCtrl.setDialogueName(buf);
+	}
 	return RET_CONTINUE;
 }
 
