@@ -896,13 +896,13 @@ int main(int argc, char **argv) {
 	// }
 	// Deinitialisation is done automatically by ctrl.quit(exit_code);
 
-// W_CUSTOM - discord integration
-#if defined(DISCORD)
-	if (opts.find("discord") != opts.end()) {
-		shutdownDiscord();
-		sendToLog(LogLevel::Error, "AH BOH BOH\n");
-	}
-#endif
+	// W_CUSTOM - discord integration
+	// #if defined(DISCORD)
+	//	if (opts.find("discord") != opts.end()) {
+	//		sendToLog(LogLevel::Error, "AH BOH BOH\n");
+	//		shutdownDiscord();
+	//	}
+	// #endif
 
 	if (ons.init()) {
 		ctrl.quit(-1);
