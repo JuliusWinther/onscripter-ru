@@ -233,12 +233,7 @@ void initDiscord(const char* id) {
 		// state.core.reset();
 	}
 	sendToLog(LogLevel::Error, "OH 1");
-	state.core->SetLogHook(
-	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
-		    sendToLog(LogLevel::Error, "OH 2");
-		    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
-		    sendToLog(LogLevel::Error, "OH 3");
-	    });
+
 	sendToLog(LogLevel::Error, "OH 4");
 }
 
