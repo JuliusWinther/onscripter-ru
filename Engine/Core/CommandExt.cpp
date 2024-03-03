@@ -2748,6 +2748,7 @@ int ONScripter::dialogueNameCommand() {
 	    const char *buf = script_h.readStr();
 	    dlgCtrl.setDialogueName(buf);
 	}*/
+	// W_TEMP
 	return RET_CONTINUE;
 }
 

@@ -56,7 +56,7 @@ void initDiscord(const char* id) {
 				break;
 			case discord::Result::InternalError:
 				error       = "InternalError";
-				description = "something on our side went wrong";
+				description = "something on our side went wrong (probably discord isn't running)";
 				break;
 			case discord::Result::InvalidPayload:
 				error       = "InvalidPayload";
@@ -223,7 +223,8 @@ void initDiscord(const char* id) {
 		sendToLog(LogLevel::Error, "Discord error: %s, description: %s\n", error.c_str(), description.c_str());
 
 		// std::exit(-1);
-		shutdownDiscord(); // W_CUSTOM - discord extensions - reenabled the shutdown function on error
+		// shutdownDiscord(); // W_CUSTOM - discord extensions - reenabled the shutdown function on error
+		return;
 	}
 	state.core->SetLogHook(
 	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {

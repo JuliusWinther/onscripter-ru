@@ -75,7 +75,7 @@ void *__wrap_SDL_LoadObject(const char *sofile) {
 		if (targetMajor > 0)
 			lookupdir += std::to_string(targetMajor) + '.' + std::to_string(targetMinor) + DELIMITER;
 
-		//sendToLog(LogLevel::Info, "Looking up %s%s\n", lookupdir.c_str(), sofile);
+		// sendToLog(LogLevel::Info, "Looking up %s%s\n", lookupdir.c_str(), sofile);
 
 		if (FileIO::accessFile(lookupdir + sofile, FileType::File)) {
 			sendToLog(LogLevel::Info, "Redirected to %s%s\n", lookupdir.c_str(), sofile);
@@ -104,7 +104,7 @@ void *__wrap_SDL_LoadObject(const char *sofile) {
 #ifdef WIN32
 	printf("     --waveout-audio              use the windows waveform audio driver (instead of Direct Sound)\n");
 #endif
-//W_CUSTOM - discord integration
+// W_CUSTOM - discord integration
 #if defined(DISCORD)
 	printf("     --discord                    use discord integration\n");
 	printf("     --discord-id id              set discord id for integration (REQUIRED)\n");
@@ -235,13 +235,11 @@ static void parseOptions(int argc, char **argv, bool &hasArchivePath) {
 				argc--;
 				argv++;
 				ons.ons_cfg_options["d3dcompiler"] = argv[0];
-//W_CUSTOM - discord integration
+// W_CUSTOM - discord integration
 #if defined(DISCORD)
-			}
-			else if (!std::strcmp(argv[0] + 1, "-discord")) {
+			} else if (!std::strcmp(argv[0] + 1, "-discord")) {
 				ons.ons_cfg_options["discord"] = "noval";
-			}
-			else if (!std::strcmp(argv[0] + 1, "-discord-id")) {
+			} else if (!std::strcmp(argv[0] + 1, "-discord-id")) {
 				argc--;
 				argv++;
 				ons.ons_cfg_options["discord-id"] = argv[0];
@@ -668,10 +666,10 @@ static void requestHighMemoryUsage() {
 		uint64_t user_data;
 	};
 
-	//int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
+	// int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
 	const int MEMORYSTATUS_CMD_SET_PRIORITY_PROPERTIES    = 2;
 	const int MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK = 5;
-	//const int JETSAM_PRIORITY_CRITICAL = 19;
+	// const int JETSAM_PRIORITY_CRITICAL = 19;
 	const int JETSAM_PRIORITY_MAX  = 21;
 	const int MEMORYSTATUS_SYSCALL = 440;
 
@@ -685,40 +683,40 @@ static void requestHighMemoryUsage() {
 	sendToLog(LogLevel::Info, "Result is: %d %d\n", mem, pri);
 
 	/* Looks like it is no longer allowed, perhaps, using a tool with root privileges is a better idea?
-		#include <stdio.h>
-		#include <stdlib.h>
-		#include <unistd.h>
+	    #include <stdio.h>
+	    #include <stdlib.h>
+	    #include <unistd.h>
 
-		typedef struct memorystatus_priority_properties {
-			int32_t  priority;
-			uint64_t user_data;
-		} memorystatus_priority_properties_t;
+	    typedef struct memorystatus_priority_properties {
+	        int32_t  priority;
+	        uint64_t user_data;
+	    } memorystatus_priority_properties_t;
 
-		int main(int argc, char **argv) {
-			if (argc != 3) {
-				std::fprintf(stderr, "You must pass the pid and RAM limit\n");
-				return -1;
-			}
+	    int main(int argc, char **argv) {
+	        if (argc != 3) {
+	            std::fprintf(stderr, "You must pass the pid and RAM limit\n");
+	            return -1;
+	        }
 
-			unsigned pid = std::atoi(argv[1]);
-			int ram = std::atoi(argv[2]);
-			std::fprintf(stderr, "Setting memory limit of %d on %u\n", ram, pid);
+	        unsigned pid = std::atoi(argv[1]);
+	        int ram = std::atoi(argv[2]);
+	        std::fprintf(stderr, "Setting memory limit of %d on %u\n", ram, pid);
 
-			//int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
-			const int MEMORYSTATUS_CMD_SET_PRIORITY_PROPERTIES = 2;
-			const int MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK = 5;
-			//const int JETSAM_PRIORITY_CRITICAL = 19;
-			const int JETSAM_PRIORITY_MAX = 21;
-			const int MEMORYSTATUS_SYSCALL = 440;
+	        //int memorystatus_control(uint32_t command, int32_t pid, uint32_t flags, void *buffer, size_t buffersize);
+	        const int MEMORYSTATUS_CMD_SET_PRIORITY_PROPERTIES = 2;
+	        const int MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK = 5;
+	        //const int JETSAM_PRIORITY_CRITICAL = 19;
+	        const int JETSAM_PRIORITY_MAX = 21;
+	        const int MEMORYSTATUS_SYSCALL = 440;
 
-			memorystatus_priority_properties_t props;
-			props.priority = JETSAM_PRIORITY_MAX;
-			props.user_data = 0;
+	        memorystatus_priority_properties_t props;
+	        props.priority = JETSAM_PRIORITY_MAX;
+	        props.user_data = 0;
 
-			int r = syscall(MEMORYSTATUS_SYSCALL, MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK, pid, ram, nullptr, 0);
-			int p = syscall(MEMORYSTATUS_SYSCALL, MEMORYSTATUS_CMD_SET_PRIORITY_PROPERTIES, pid, 0, &props, sizeof(props));
-			std::fprintf(stderr, "Result is %d %d\n", r, p);
-		}
+	        int r = syscall(MEMORYSTATUS_SYSCALL, MEMORYSTATUS_CMD_SET_JETSAM_HIGH_WATER_MARK, pid, ram, nullptr, 0);
+	        int p = syscall(MEMORYSTATUS_SYSCALL, MEMORYSTATUS_CMD_SET_PRIORITY_PROPERTIES, pid, 0, &props, sizeof(props));
+	        std::fprintf(stderr, "Result is %d %d\n", r, p);
+	    }
 	*/
 #endif
 }
@@ -820,7 +818,7 @@ int main(int argc, char **argv) {
 	if (!FileIO::setArguments(ons.argc, ons.argv, argc, argv))
 		performTerminate("Failed to obtain program arguments!");
 
-	//Firstly, read command line options
+	// Firstly, read command line options
 	parseOptions(ons.argc, ons.argv, hasArchivePath);
 
 	// --root has zero priority
@@ -860,12 +858,12 @@ int main(int argc, char **argv) {
 	} else if (FileIO::getLogMode() == FileIO::LogMode::Console) {
 		FileIO::prepareConsole(150, 30);
 	}
-//W_CUSTOM - discord integration
+// W_CUSTOM - discord integration
 #if defined(DISCORD)
 	if (opts.find("discord") != opts.end()) {
-		
+
 		// needed to be set once to make sure that the discord integration does not fail
-		//sendToLog(LogLevel::Info, opts.find("discord-id")->second);
+		// sendToLog(LogLevel::Info, opts.find("discord-id")->second);
 		auto it = opts.find("discord-id");
 		if (it != opts.end() && !(it->second).empty()) {
 			initDiscord(it->second.c_str());
@@ -898,7 +896,7 @@ int main(int argc, char **argv) {
 	// }
 	// Deinitialisation is done automatically by ctrl.quit(exit_code);
 
-//W_CUSTOM - discord integration
+// W_CUSTOM - discord integration
 #if defined(DISCORD)
 	if (opts.find("discord") != opts.end()) {
 		shutdownDiscord();
