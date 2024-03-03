@@ -896,8 +896,15 @@ int main(int argc, char **argv) {
 	// }
 	// Deinitialisation is done automatically by ctrl.quit(exit_code);
 
-	if (ons.init())
-		ctrl.quit(-1);
+// W_CUSTOM - discord integration
+#if defined(DISCORD)
+	if (opts.find("discord") != opts.end()) {
+		shutdownDiscord();
+	}
+#endif
+
+	//	if (ons.init())
+	//		ctrl.quit(-1);
 	ons.executeLabel();
 
 	ctrl.quit(0);
