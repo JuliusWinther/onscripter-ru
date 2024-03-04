@@ -230,7 +230,7 @@ void initDiscord(const char* id) {
 
 		// std::exit(-1);
 		// state.core.reset();
-		shutdownDiscord();
+		// shutdownDiscord();
 	}
 	// state.core->SetLogHook(
 	//     discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
