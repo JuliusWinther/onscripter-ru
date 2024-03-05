@@ -88,7 +88,7 @@ extern "C" void waveCallback(int channel) {
 }
 
 void ONScripter::flushEventSub(SDL_Event &event) {
-	//event related to streaming media
+	// event related to streaming media
 	if (event.user.code == ONS_MUSIC_EVENT && event.type == SDL_USEREVENT) {
 		if (music_play_loop_flag ||
 		    (cd_play_loop_flag && !cdaudio_flag)) {
@@ -108,7 +108,7 @@ void ONScripter::flushEventSub(SDL_Event &event) {
 		uint32_t ch = event.user.code;
 		if (wave_sample[ch]) {
 			if (ch >= ONS_MIX_CHANNELS || !channel_preloaded[ch]) {
-				//don't free preloaded channels
+				// don't free preloaded channels
 				wave_sample[ch] = nullptr;
 			}
 			if (ch == MIX_LOOPBGM_CHANNEL0 &&
@@ -203,7 +203,7 @@ void ONScripter::fetchEventsToQueue() {
 	auto pushFingerEvents = [this, &lastTimeStamp, pushEvent](bool force = false) {
 		for (auto &fingerEvent : fingerEvents) {
 			if (fingerEvent) {
-				//sendToLog(LogLevel::Error, "Pushing finger event %s force %d at %d by %d, current %d\n",
+				// sendToLog(LogLevel::Error, "Pushing finger event %s force %d at %d by %d, current %d\n",
 				//			fingerEvent->type == SDL_FINGERUP ? "up" : "down", force,
 				//			fingerEvent->common.timestamp, lastTimeStamp, SDL_GetTicks());
 				if (force || fingerEvent->common.timestamp + MAX_TOUCH_TAP_TIMESPAN <
@@ -234,7 +234,7 @@ void ONScripter::fetchEventsToQueue() {
 		bool queueEmpty{false};
 		while (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
 			auto &finger = event->type == SDL_FINGERUP ? fingerEvents[1] : fingerEvents[0];
-			//sendToLog(LogLevel::Error, "Found finger %s event %d from %lld (%f, %f, %f, %f, %f) current %d has %d fingers\n",
+			// sendToLog(LogLevel::Error, "Found finger %s event %d from %lld (%f, %f, %f, %f, %f) current %d has %d fingers\n",
 			//			event->type == SDL_FINGERUP ? "up" : "down",
 			//			event->common.timestamp, event->tfinger.touchId, event->tfinger.x, event->tfinger.y,
 			//			event->tfinger.dx, event->tfinger.dy, event->tfinger.pressure,
@@ -256,7 +256,7 @@ void ONScripter::fetchEventsToQueue() {
 		}
 
 		if (!queueEmpty) {
-			//sendToLog(LogLevel::Error, "Updating from %d last timestamp with %d current %d\n",
+			// sendToLog(LogLevel::Error, "Updating from %d last timestamp with %d current %d\n",
 			//			event->type, event->common.timestamp, SDL_GetTicks());
 			lastTimeStamp = event->common.timestamp;
 			pushEvent(event);
@@ -268,7 +268,7 @@ void ONScripter::fetchEventsToQueue() {
 }
 
 void ONScripter::waitEvent(int count, bool nopPreferred) {
-	//sendToLog(LogLevel::Info, "----waitEventSub(%i)\n", count);
+	// sendToLog(LogLevel::Info, "----waitEventSub(%i)\n", count);
 	static unsigned int lastExitTime   = 0;
 	unsigned int externalTimeThreshold = 5; // for instance
 
@@ -280,7 +280,7 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 	}
 
 	bool timerBreakout = count >= 0;
-	//TODO: remove me, when done with constant_refresh
+	// TODO: remove me, when done with constant_refresh
 	static int nested_calls = 0;
 	nested_calls++;
 
@@ -345,13 +345,6 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 		}
 
 		while (true) {
-			//W_CUSTOM - discord integration
-#if defined(DISCORD)	
-			auto it = ons.ons_cfg_options.find("discord");
-			if (it != ons.ons_cfg_options.end()) {
-				runDiscordCallbacks();
-			}
-#endif
 			ticksNow = SDL_GetTicks();
 			if (ticksNow - lastFlipTime >= timeThisFrame) {
 				accumulatedOvershoot += (ticksNow - lastFlipTime) - timeThisFrame;
@@ -366,6 +359,14 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 			if (!processed && ((ticksNow - lastFlipTime) + 5 <= timeThisFrame)) {
 				SDL_Delay(1);
 			}
+
+			// W_CUSTOM - discord integration
+#if defined(DISCORD)
+			auto it = ons.ons_cfg_options.find("discord");
+			if (it != ons.ons_cfg_options.end()) {
+				runDiscordCallbacks();
+			}
+#endif
 		}
 
 		if (allow_rendering && !(skip_mode & SKIP_SUPERSKIP) && !deferredLoadingEnabled) {
@@ -405,10 +406,10 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 			freearr(&titlestring);
 		}
 
-		//sendToLog(LogLevel::Info,"  flipped -- aimed for %i ms, took %i ms\n", constant_refresh_interval, ticksNow - lastFlipTime);
+		// sendToLog(LogLevel::Info,"  flipped -- aimed for %i ms, took %i ms\n", constant_refresh_interval, ticksNow - lastFlipTime);
 		lastFlipTime = ticksNow;
 
-		//printClock("(next iteration)");
+		// printClock("(next iteration)");
 
 		if (!endOfEventBatch) {
 			// we were broken out prematurely by some condition we were waiting for, so we should return.
@@ -421,9 +422,9 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 
 		count -= (ticksNow - ticks);
 		ticks = ticksNow;
-		//sendToLog(LogLevel::Info,"  next iteration\n");
+		// sendToLog(LogLevel::Info,"  next iteration\n");
 	} while (count > 0 || !timerBreakout); // if we are told not to break out by timer, this is an infinite loop
-	//sendToLog(LogLevel::Info, "-----------------\n");
+	// sendToLog(LogLevel::Info, "-----------------\n");
 	nested_calls--;
 
 	lastExitTime = SDL_GetTicks();
@@ -544,13 +545,13 @@ bool ONScripter::mouseButtonDecision(EventProcessingState &state, bool left, boo
 		return true;
 	};
 
-	return (right && up && rclick(state)) || //right-click
-	       (left && lclick(state, down)) ||  //left-click
-	       (middle && mclick(state, down));  //middle-click
+	return (right && up && rclick(state)) || // right-click
+	       (left && lclick(state, down)) ||  // left-click
+	       (middle && mclick(state, down));  // middle-click
 }
 
 bool ONScripter::checkClearAutomode(EventProcessingState &state, bool up) {
-	//any mousepress clears automode, on the release
+	// any mousepress clears automode, on the release
 	if (up) {
 		addToPostponedEventChanges([this]() { eventCallbackRequired = true; automode_flag = false; });
 		if (getskipoff_flag && (event_mode & WAIT_BUTTON_MODE)) {
@@ -563,7 +564,7 @@ bool ONScripter::checkClearAutomode(EventProcessingState &state, bool up) {
 
 bool ONScripter::checkClearTrap(bool left, bool right) {
 	if (lrTrap.enabled) {
-		//trap that mouseclick!
+		// trap that mouseclick!
 		if ((right && lrTrap.right) || (left && lrTrap.left)) {
 
 			addToPostponedEventChanges("trapHandler", [this]() { trapHandler(); });
@@ -662,7 +663,7 @@ bool ONScripter::touchEvent(SDL_Event &event, EventProcessingState &state) {
 	if (event.type == SDL_MULTIGESTURE) {
 		SDL_MultiGestureEvent &gesture = event.mgesture;
 
-		//sendToLog(LogLevel::Error, "Multiguesture %d last %d, num %d (%f, %f)\n",
+		// sendToLog(LogLevel::Error, "Multiguesture %d last %d, num %d (%f, %f)\n",
 		//			event.common.timestamp, last_touchswipe_time,
 		//			event.mgesture.numFingers, event.mgesture.dDist, event.mgesture.dTheta);
 
@@ -706,7 +707,7 @@ bool ONScripter::touchEvent(SDL_Event &event, EventProcessingState &state) {
 		return false;
 	}
 
-	//sendToLog(LogLevel::Error, "Finger prevention %d %d (num %d)\n",
+	// sendToLog(LogLevel::Error, "Finger prevention %d %d (num %d)\n",
 	//			last_touchswipe_time, event.tfinger.timestamp, event.tfinger.fingerId);
 
 	// Prevent extra clicks right after scrolling
@@ -848,17 +849,17 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 			if (event.keysym.scancode == SDL_SCANCODE_LCTRL || event.keysym.scancode == SDL_SCANCODE_RCTRL)
 				if (skipIsAllowed()) {
 					state.keyState.ctrl |= (event.keysym.scancode == SDL_SCANCODE_LCTRL ? 0x02 : 0x01);
-					internal_slowdown_counter = 0; //maybe a slightly wrong place to do it
+					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 				}
 			if (!skipIsAllowed())
-				break; //Skip not allowed, exit
+				break; // Skip not allowed, exit
 			if (last_ctrl_status != state.keyState.ctrl) {
 				skip_effect = true; // allow short-circuiting the current effect with ctrl
 				if (video_skip_mode == VideoSkip::Normal) {
 					request_video_shutdown = true;
 				}
 			}
-			//Ctrl key: do skip in text
+			// Ctrl key: do skip in text
 			if (event_mode & (WAIT_INPUT_MODE | WAIT_TEXTOUT_MODE | WAIT_TEXTBTN_MODE)) {
 				state.buttonState.set(0);
 
@@ -934,7 +935,7 @@ void ONScripter::keyUpEvent(SDL_KeyboardEvent &event, EventProcessingState &stat
 
 // returns true if should break out of the event loop
 bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &state) {
-	//reset the button state
+	// reset the button state
 	state.buttonState.reset();
 	state.buttonState.down_flag = false;
 
@@ -977,9 +978,9 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 
 	// i to spew some debug information
 	/*if (event.type == SDL_KEYUP && event.keysym.scancode == SDL_SCANCODE_i) {
-		sendToLog(LogLevel::Error, "Last executed command lines:\n");
-		for (auto &log : script_h.debugCommandLog)
-			sendToLog(LogLevel::Error, "%s\n", log.c_str());
+	    sendToLog(LogLevel::Error, "Last executed command lines:\n");
+	    for (auto &log : script_h.debugCommandLog)
+	        sendToLog(LogLevel::Error, "%s\n", log.c_str());
 	}*/
 
 	if (checkClearTrap((event.keysym.scancode == SDL_SCANCODE_RETURN ||
@@ -988,7 +989,7 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 	                   event.keysym.scancode == SDL_SCANCODE_ESCAPE))
 		return true;
 
-	//so many ways to 'left-click' a button
+	// so many ways to 'left-click' a button
 	if ((event_mode & WAIT_BUTTON_MODE) &&
 	    (((event.type == SDL_KEYUP || btndown_flag) &&
 	      ((!getenter_flag && event.keysym.scancode == SDL_SCANCODE_RETURN) ||
@@ -1023,7 +1024,7 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 
 	if ((event_mode & (WAIT_INPUT_MODE | WAIT_BUTTON_MODE)) &&
 	    (autoclick_time == 0 || (event_mode & WAIT_BUTTON_MODE))) {
-		//Esc is for 'right-click' (sometimes)
+		// Esc is for 'right-click' (sometimes)
 		if (!useescspc_flag && event.keysym.scancode == SDL_SCANCODE_ESCAPE) {
 			state.buttonState.set(-1);
 		} else if (useescspc_flag && event.keysym.scancode == SDL_SCANCODE_ESCAPE) {
@@ -1137,10 +1138,10 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 		}
 	};
 
-	//catch 'left-button click' that fell through?
+	// catch 'left-button click' that fell through?
 	if ((event_mode & WAIT_INPUT_MODE) && !state.keyState.pressedFlag &&
 	    (autoclick_time == 0 || (event_mode & WAIT_BUTTON_MODE))) {
-		//check for "button click"
+		// check for "button click"
 		if (event.keysym.scancode == SDL_SCANCODE_RETURN ||
 		    event.keysym.scancode == SDL_SCANCODE_KP_ENTER ||
 		    event.keysym.scancode == SDL_SCANCODE_SPACE) {
@@ -1170,9 +1171,9 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 			if (!(state.skipMode & SKIP_NORMAL))
 				skip_effect = true; // short-circuit a current effect
 			state.skipMode |= SKIP_NORMAL;
-			internal_slowdown_counter = 0; //maybe a slightly wrong place to do it
-			                               //if (event.keysym.scancode == SDL_SCANCODE_D) state.skipMode |= SKIP_SUPERSKIP; // rocket engines engaged
-			//sendToLog(LogLevel::Info, "toggle skip to true\n");
+			internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
+			                               // if (event.keysym.scancode == SDL_SCANCODE_D) state.skipMode |= SKIP_SUPERSKIP; // rocket engines engaged
+			// sendToLog(LogLevel::Info, "toggle skip to true\n");
 			state.keyState.pressedFlag = true;
 			if (video_skip_mode == VideoSkip::Normal) {
 				request_video_shutdown = true;
@@ -1212,7 +1213,7 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 	}
 #endif
 
-	//using insani's skippable wait
+	// using insani's skippable wait
 	if ((event_mode & WAIT_SLEEP_MODE) && (event.keysym.scancode == SDL_SCANCODE_S || event.keysym.scancode == ONS_SCANCODE_SKIP) && skipIsAllowed()) {
 		state.skipMode |= SKIP_TO_WAIT;
 		state.skipMode &= ~SKIP_NORMAL;
@@ -1234,7 +1235,7 @@ bool ONScripter::keyPressEvent(SDL_KeyboardEvent &event, EventProcessingState &s
 	}
 
 	if ((event.keysym.scancode == SDL_SCANCODE_F1) && (version_str != nullptr)) {
-		//F1 is for Help (on Windows), so show the About dialog box
+		// F1 is for Help (on Windows), so show the About dialog box
 		addToPostponedEventChanges("display message box", [this]() {
 			window.showSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "About", version_str);
 		});
@@ -1257,7 +1258,7 @@ void ONScripter::translateKeyDownEvent(SDL_Event &event, EventProcessingState &s
 
 	ret                  = keyDownEvent(event.key, state);
 	bool new_ctrl_toggle = ctrl_toggle ^ (state.keyState.ctrl != 0);
-	//allow skipping sleep waits with start of ctrl keydown
+	// allow skipping sleep waits with start of ctrl keydown
 	ret |= (event_mode & WAIT_SLEEP_MODE) && new_ctrl_toggle;
 	if (btndown_flag)
 		ret |= keyPressEvent(event.key, state);
@@ -1303,8 +1304,8 @@ bool ONScripter::mainThreadDowntimeProcessing(bool essentialProcessingOnly) {
 	// Load chunk call
 	// Check loadGPUImageByChunks if you want to use this.
 	/*if (imageLoader.isActive && !imageLoader.isLoaded) {
-		imageLoader.loadChunk();
-		didSomething = true;
+	    imageLoader.loadChunk();
+	    didSomething = true;
 	}*/
 
 	if (allow_rendering && !essentialProcessingOnly) {
@@ -1415,11 +1416,11 @@ void ONScripter::constantRefresh() {
 		// In fact, even REFRESH_BEFORESCENE_MODE is not needed until last_call
 		flush(CONSTANT_REFRESH_MODE | REFRESH_BEFORESCENE_MODE, scene_rect, hud_rect, effect_rect_cleanup, false);
 	} else if (display_mode & DISPLAY_MODE_TEXT) {
-		//When we are in DISPLAY_MODE_TEXT (and normal mode) we don't clear our rects.
-		//This is incorrect (due to animations/quakes) for cr. Make sure we at least have this part in CR
+		// When we are in DISPLAY_MODE_TEXT (and normal mode) we don't clear our rects.
+		// This is incorrect (due to animations/quakes) for cr. Make sure we at least have this part in CR
 		addTextWindowClip(before_dirty_rect_hud);
-		//Our CR mode is always resetted due to specific style of CR.
-		//alphaBlendText gives proper hud_gpu to us, but we (may) update it with our cursors
+		// Our CR mode is always resetted due to specific style of CR.
+		// alphaBlendText gives proper hud_gpu to us, but we (may) update it with our cursors
 		if (constant_refresh_mode != REFRESH_NONE_MODE)
 			constant_refresh_mode |= (REFRESH_TEXT_MODE | REFRESH_WINDOW_MODE);
 		flush(constant_refresh_mode | CONSTANT_REFRESH_MODE | REFRESH_BEFORESCENE_MODE, scene_rect, hud_rect, true, false);
@@ -1458,7 +1459,7 @@ void ONScripter::runEventLoop() {
 
 		if (exitCode.load(std::memory_order_relaxed) != ExitType::None) {
 			ons.requestQuit(exitCode);
-			return; //dummy
+			return; // dummy
 		}
 
 		bool ret{false};
@@ -1573,7 +1574,7 @@ void ONScripter::runEventLoop() {
 
 					case ONS_CHUNK_EVENT:
 						flushEventSub(*event);
-						//sendToLog(LogLevel::Info, "ONS_CHUNK_EVENT %d: %x %d %x\n", event.user.code, wave_sample[0], automode_flag, event_mode);
+						// sendToLog(LogLevel::Info, "ONS_CHUNK_EVENT %d: %x %d %x\n", event.user.code, wave_sample[0], automode_flag, event_mode);
 						if (event->user.code != 0 || !(event_mode & WAIT_VOICE_MODE))
 							break;
 						event_mode &= ~WAIT_VOICE_MODE;
@@ -1597,7 +1598,7 @@ void ONScripter::runEventLoop() {
 							stopCursorAnimation(clickstr_state);
 						}
 						ret = chunk_reported_return;
-						break; //will return right after this event in ONS_EVENT_BATCH_END, possibly breaks a call from fade event
+						break; // will return right after this event in ONS_EVENT_BATCH_END, possibly breaks a call from fade event
 
 #if defined(IOS) || defined(DROID)
 					case SDL_APP_WILLENTERBACKGROUND:
@@ -1661,7 +1662,7 @@ void ONScripter::runEventLoop() {
 						else if (event->window.event == SDL_WINDOWEVENT_EXPOSED || event->window.event == SDL_WINDOWEVENT_MOVED) {
 							// Now that we have commands like textoff2 we are not allowed to recklessly update hud
 							before_dirty_rect_scene.fill(window.canvas_width, window.canvas_height);
-							//fillCanvas(false, true);
+							// fillCanvas(false, true);
 						}
 
 						break;
