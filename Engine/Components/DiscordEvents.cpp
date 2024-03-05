@@ -36,7 +36,7 @@ LogLevel translateLogLevel(discord::LogLevel level) {
 
 void shutdownDiscord() {
 	state.core->ActivityManager().ClearActivity([](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension!\n");
+		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension\n");
 	});
 }
 
@@ -230,7 +230,7 @@ void initDiscord(const char* id) {
 
 		// std::exit(-1);
 		// state.core.reset();
-		// shutdownDiscord();
+		shutdownDiscord();
 	}
 	// state.core->SetLogHook(
 	//     discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
@@ -250,7 +250,7 @@ void setPresence(const char* details, const char* currentState, const char* larg
 	activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
 	activity.SetType(discord::ActivityType::Playing);
 	state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status!\n");
+		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
 	});
 }
 
