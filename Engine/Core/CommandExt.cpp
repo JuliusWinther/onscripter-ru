@@ -2365,23 +2365,19 @@ int ONScripter::getLogDataCommand() {
 // W_CUSTOM - discord integration
 #if defined(DISCORD)
 int ONScripter::setDiscordRPCCommand() {
-	try {
-		std::string state          = script_h.readStr();
-		std::string details        = script_h.readStr();
-		std::string largeImageKey  = script_h.readStr();
-		std::string largeImageText = script_h.readStr();
-		std::string smallImageKey  = script_h.readStr();
-		std::string smallImageText = script_h.readStr();
-		std::string startTimestamp = script_h.readStr();
-		std::string endTimestamp   = script_h.readStr();
-		auto it                    = ons.ons_cfg_options.find("discord");
-		if (it != ons.ons_cfg_options.end()) {
-			setPresence(state.c_str(), details.c_str(), largeImageKey.c_str(), largeImageText.c_str(), smallImageKey.c_str(), smallImageText.c_str(), startTimestamp.c_str(), endTimestamp.c_str());
-		}
-		return RET_CONTINUE;
-	} catch (const char *error) {
-		sendToLog(LogLevel::Error, "Discord CPP Error: %s", error);
+	std::string state          = script_h.readStr();
+	std::string details        = script_h.readStr();
+	std::string largeImageKey  = script_h.readStr();
+	std::string largeImageText = script_h.readStr();
+	std::string smallImageKey  = script_h.readStr();
+	std::string smallImageText = script_h.readStr();
+	std::string startTimestamp = script_h.readStr();
+	std::string endTimestamp   = script_h.readStr();
+	auto it                    = ons.ons_cfg_options.find("discord");
+	if (it != ons.ons_cfg_options.end()) {
+		setPresence(state.c_str(), details.c_str(), largeImageKey.c_str(), largeImageText.c_str(), smallImageKey.c_str(), smallImageText.c_str(), startTimestamp.c_str(), endTimestamp.c_str());
 	}
+	return RET_CONTINUE;
 }
 #endif
 

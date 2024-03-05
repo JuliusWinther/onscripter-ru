@@ -345,6 +345,13 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 		}
 
 		while (true) {
+			// W_CUSTOM - discord integration
+#if defined(DISCORD)
+			auto it = ons.ons_cfg_options.find("discord");
+			if (it != ons.ons_cfg_options.end()) {
+				runDiscordCallbacks();
+			}
+#endif
 			ticksNow = SDL_GetTicks();
 			if (ticksNow - lastFlipTime >= timeThisFrame) {
 				accumulatedOvershoot += (ticksNow - lastFlipTime) - timeThisFrame;
@@ -359,14 +366,6 @@ void ONScripter::waitEvent(int count, bool nopPreferred) {
 			if (!processed && ((ticksNow - lastFlipTime) + 5 <= timeThisFrame)) {
 				SDL_Delay(1);
 			}
-
-			// W_CUSTOM - discord integration
-#if defined(DISCORD)
-			auto it = ons.ons_cfg_options.find("discord");
-			if (it != ons.ons_cfg_options.end()) {
-				runDiscordCallbacks();
-			}
-#endif
 		}
 
 		if (allow_rendering && !(skip_mode & SKIP_SUPERSKIP) && !deferredLoadingEnabled) {
