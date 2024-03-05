@@ -35,9 +35,13 @@ LogLevel translateLogLevel(discord::LogLevel level) {
 }
 
 void shutdownDiscord() {
-	state.core->ActivityManager().ClearActivity([](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension\n");
-	});
+	try {
+		state.core->ActivityManager().ClearActivity([](discord::Result result) {
+			sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension\n");
+		});
+	} catch (const char* error) {
+		sendToLog(LogLevel::Error, "Discord CPP Error: %s", error);
+	}
 }
 
 void initDiscord(const char* id) {
@@ -231,32 +235,43 @@ void initDiscord(const char* id) {
 		// std::exit(-1);
 		// state.core.reset();
 		shutdownDiscord();
-		return;
 	}
-	state.core->SetLogHook(
-	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
-		    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
-	    });
+	try {
+		state.core->SetLogHook(
+		    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
+			    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
+		    });
+	} catch (const char* error) {
+		sendToLog(LogLevel::Error, "Discord CPP Error: %s", error);
+	}
 }
 
 void setPresence(const char* details, const char* currentState, const char* largeImageKey, const char* largeImageText, const char* smallImageKey, const char* smallImageText, const char* startTimestamp, const char* endTimestamp = NULL) {
-	discord::Activity activity{};
-	activity.SetDetails(details);
-	activity.SetState(currentState);
-	activity.GetAssets().SetSmallImage(smallImageKey);
-	activity.GetAssets().SetSmallText(smallImageText);
-	activity.GetAssets().SetLargeImage(largeImageKey);
-	activity.GetAssets().SetLargeText(largeImageText);
-	activity.GetTimestamps().SetStart(strtoll(startTimestamp, NULL, 10));
-	activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
-	activity.SetType(discord::ActivityType::Playing);
-	state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
-	});
+	try {
+		discord::Activity activity{};
+		activity.SetDetails(details);
+		activity.SetState(currentState);
+		activity.GetAssets().SetSmallImage(smallImageKey);
+		activity.GetAssets().SetSmallText(smallImageText);
+		activity.GetAssets().SetLargeImage(largeImageKey);
+		activity.GetAssets().SetLargeText(largeImageText);
+		activity.GetTimestamps().SetStart(strtoll(startTimestamp, NULL, 10));
+		activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
+		activity.SetType(discord::ActivityType::Playing);
+		state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+			sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
+		});
+	} catch (const char* error) {
+		sendToLog(LogLevel::Error, "Discord CPP Error: %s", error);
+	}
 }
 
 void runDiscordCallbacks() {
-	state.core->RunCallbacks();
+	try {
+		state.core->RunCallbacks();
+	} catch (const char* error) {
+		sendToLog(LogLevel::Error, "Discord CPP Error: %s", error);
+	}
 }
 
 #endif
