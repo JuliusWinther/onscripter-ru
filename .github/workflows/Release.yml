@@ -113,41 +113,43 @@ jobs:
           artifacts: "ciout/*.zip"
 
   macOS:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: macos-11
+
     strategy:
       matrix:
         BUILD_TYPE: ["Debug", "Release"]
+
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
       dev: ${{ matrix.BUILD_TYPE == 'Debug' && '_dbg' || '' }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install deps
+
+      - name: Install dependencies
         run: |
           brew install yasm meson ninja
-      - name: Env setup
+          brew install bzip2
+
+      - name: Set up build environment
         run: |
           BUILD=$(($(git rev-list --count --first-parent HEAD)+3500))
           echo "Build number ${BUILD}"
           echo "BUILD=${BUILD}" >> $GITHUB_ENV
           mkdir -p ciout
+
       - name: Build
         run: |
           xcodebuild ARCHS=x86_64 ONLY_ACTIVE_ARCH=NO -target onscripter-ru-osx -configuration ${{ matrix.BUILD_TYPE }} -arch x86_64 || exit 1
           mv build/${{ matrix.BUILD_TYPE }}/onscripter-ru-osx.app ciout ; cd ciout
           zip -qry onscripter-ru_osx_r${BUILD}${{ env.dev }}.zip onscripter-ru-osx.app || exit 1
           rm -rf onscripter-ru-osx.app ; cd -
+
       - name: Upload files
-        uses: ncipollo/release-action@v1
+        uses: actions/upload-artifact@v2
         with:
-          allowUpdates: true
-          replacesArtifacts: false
-          tag: z${{ env.BUILD }}
-          name: ONScripter-ru r${{ env.BUILD }}
-          artifacts: "ciout/*.zip"
+          name: onscripter-ru-artifacts
+          path: ciout/*.zip
