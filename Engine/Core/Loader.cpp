@@ -902,16 +902,12 @@ int main(int argc, char **argv) {
 #if defined(DISCORD)
 	if (opts.find("discord") != opts.end()) {
 		shutdownDiscord();
-		// AH BOH BOH
 	}
 #endif
 
-	if (ons.init()) {
-		sendToLog(LogLevel::Error, "AH BOH 1\n");
+	if (ons.init())
 		ctrl.quit(-1);
-	}
 
-	// AH BOH TEMP
 	ons.executeLabel();
 
 	ctrl.quit(0);

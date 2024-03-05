@@ -232,13 +232,12 @@ void initDiscord(const char* id) {
 
 		// std::exit(-1);
 		// shutdownDiscord();
+
 	} else {
-		// OH 1
 		state.core->SetLogHook(
 		    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
 			    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
 		    });
-		// 0H4
 	}
 }
 
