@@ -3278,7 +3278,7 @@
 		CE9D810120E3CA9200670C17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-mac";
 				CLANG = /opt/clang/bin/clang;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -3332,7 +3332,7 @@
 		CE9D810220E3CA9200670C17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-mac";
 				CLANG = /opt/clang/bin/clang;
 				CLANG_ANALYZER_NONNULL = YES;
