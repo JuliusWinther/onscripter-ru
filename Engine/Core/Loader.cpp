@@ -905,6 +905,7 @@ int main(int argc, char **argv) {
 
 	if (ons.init())
 		ctrl.quit(-1);
+
 	ons.executeLabel();
 
 	ctrl.quit(0);
