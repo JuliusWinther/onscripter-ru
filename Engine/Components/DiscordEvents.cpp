@@ -35,9 +35,11 @@ LogLevel translateLogLevel(discord::LogLevel level) {
 }
 
 void shutdownDiscord() {
-	state.core->ActivityManager().ClearActivity([](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension\n");
-	});
+	if (state.core) {
+		state.core->ActivityManager().ClearActivity([](discord::Result result) {
+			sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Stopping discord extension\n");
+		});
+	}
 }
 
 void initDiscord(const char* id) {
@@ -230,33 +232,38 @@ void initDiscord(const char* id) {
 
 		// std::exit(-1);
 		// shutdownDiscord();
+	} else {
+		// OH 1
+		state.core->SetLogHook(
+		    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
+			    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
+		    });
+		// 0H4
 	}
-	// OH 1
-	/*state.core->SetLogHook(
-	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
-	        sendToLog(translateLogLevel(level), "Discord: %s\n", message);
-	    });*/
-	// 0H4
 }
 
 void setPresence(const char* details, const char* currentState, const char* largeImageKey, const char* largeImageText, const char* smallImageKey, const char* smallImageText, const char* startTimestamp, const char* endTimestamp = NULL) {
-	discord::Activity activity{};
-	activity.SetDetails(details);
-	activity.SetState(currentState);
-	activity.GetAssets().SetSmallImage(smallImageKey);
-	activity.GetAssets().SetSmallText(smallImageText);
-	activity.GetAssets().SetLargeImage(largeImageKey);
-	activity.GetAssets().SetLargeText(largeImageText);
-	activity.GetTimestamps().SetStart(strtoll(startTimestamp, NULL, 10));
-	activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
-	activity.SetType(discord::ActivityType::Playing);
-	state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-		sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
-	});
+	if (state.core) {
+		discord::Activity activity{};
+		activity.SetDetails(details);
+		activity.SetState(currentState);
+		activity.GetAssets().SetSmallImage(smallImageKey);
+		activity.GetAssets().SetSmallText(smallImageText);
+		activity.GetAssets().SetLargeImage(largeImageKey);
+		activity.GetAssets().SetLargeText(largeImageText);
+		activity.GetTimestamps().SetStart(strtoll(startTimestamp, NULL, 10));
+		activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
+		activity.SetType(discord::ActivityType::Playing);
+		state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+			sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
+		});
+	}
 }
 
 void runDiscordCallbacks() {
-	state.core->RunCallbacks();
+	if (state.core) {
+		state.core->RunCallbacks();
+	}
 }
 
 #endif
