@@ -874,6 +874,8 @@ int main(int argc, char **argv) {
 #endif
 	sendToLog(LogLevel::Info, "Available crash reporter features error code %d\n", crashReporterError);
 
+	// CHE CI FAI
+
 	// ONScripter is based on a set of dependent controllers that are
 	// initialised and deinitialised in a defined order. The deinitialisation
 	// order is reverse to the initialisation order. The initialisation order
@@ -900,12 +902,16 @@ int main(int argc, char **argv) {
 #if defined(DISCORD)
 	if (opts.find("discord") != opts.end()) {
 		shutdownDiscord();
+		// AH BOH BOH
 	}
 #endif
 
-	if (ons.init())
+	if (ons.init()) {
+		sendToLog(LogLevel::Error, "AH BOH 1\n");
 		ctrl.quit(-1);
+	}
 
+	// AH BOH TEMP
 	ons.executeLabel();
 
 	ctrl.quit(0);
