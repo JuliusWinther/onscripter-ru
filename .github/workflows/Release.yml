@@ -116,7 +116,7 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: macos-11
+    runs-on: macos-10.6
     strategy:
       matrix:
         BUILD_TYPE: ["Debug", "Release"]
@@ -139,7 +139,7 @@ jobs:
           mkdir -p ciout
       - name: Build
         run: |
-          xcodebuild ARCHS=x86_64 -target onscripter-ru-osx -configuration ${{ matrix.BUILD_TYPE }} -arch x86_64 || exit 1
+          xcodebuild ARCHS=x86_64 ONLY_ACTIVE_ARCH=NO -target onscripter-ru-osx -configuration ${{ matrix.BUILD_TYPE }} -arch x86_64 || exit 1
           mv build/${{ matrix.BUILD_TYPE }}/onscripter-ru-osx.app ciout ; cd ciout
           zip -qry onscripter-ru_osx_r${BUILD}${{ env.dev }}.zip onscripter-ru-osx.app || exit 1
           rm -rf onscripter-ru-osx.app ; cd -
