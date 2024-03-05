@@ -231,10 +231,12 @@ void initDiscord(const char* id) {
 		// std::exit(-1);
 		// shutdownDiscord();
 	}
-	state.core->SetLogHook(
+	// OH 1
+	/*state.core->SetLogHook(
 	    discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
-		    sendToLog(translateLogLevel(level), "Discord: %s\n", message);
-	    });
+	        sendToLog(translateLogLevel(level), "Discord: %s\n", message);
+	    });*/
+	// 0H4
 }
 
 void setPresence(const char* details, const char* currentState, const char* largeImageKey, const char* largeImageText, const char* smallImageKey, const char* smallImageText, const char* startTimestamp, const char* endTimestamp = NULL) {
