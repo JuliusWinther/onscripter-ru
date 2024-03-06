@@ -181,6 +181,7 @@ static std::unordered_map<HashedString, CommandFunc> func_lut {
 	    {"jskip_s", &ONScripter::jskipSuperCommand},
 	    {"jnskip_s", &ONScripter::jnskipSuperCommand},
 	    {"jskip", &ONScripter::jskipCommand},
+	    {"jskipnotallowed", &ONScripter::jskipnotallowedCommand}, // W_TEMP
 	    {"jnskip", &ONScripter::jnskipCommand},
 	    {"italic_font", &ONScripter::aliasFontCommand},
 	    {"ignore_voicedelay", &ONScripter::ignoreVoiceDelayCommand},
@@ -830,7 +831,7 @@ ONScripter::ONScripter()
 #ifdef PNG_AUTODETECT_NSCRIPTER_MASKS
 	png_mask_type = PNG_MASK_AUTODETECT;
 #elif defined PNG_FORCE_NSCRIPTER_MASKS
-	png_mask_type    = PNG_MASK_USE_NSCRIPTER;
+	png_mask_type = PNG_MASK_USE_NSCRIPTER;
 #else
 	png_mask_type = PNG_MASK_USE_ALPHA;
 #endif
