@@ -288,7 +288,6 @@ public:
 	int jskipSuperCommand();
 	int jnskipSuperCommand();
 	int jskipCommand();
-	int jskipnotallowedCommand(); // W_TEMP
 	int jnskipCommand();
 	int ignoreVoiceDelayCommand();
 	int hyphenCarryCommand();
