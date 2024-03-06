@@ -32,6 +32,7 @@ static std::unordered_map<HashedString, CommandFunc> func_lut{
     {"hudz", &ScriptParser::hudzCommand},
     {"getstralias", &ScriptParser::getStraliasCommand},
     {"event_callback", &ScriptParser::eventCallbackCommand},
+    {"ctrl_callback", &ScriptParser::eventCallbackCommand}, // W_TEMP
     {"disablespeedbuttons", &ScriptParser::disablespeedbuttonsCommand},
     {"borderstyle", &ScriptParser::borderstyleCommand},
 
@@ -186,9 +187,9 @@ void ScriptParser::reset() {
 
 	freearr(&version_str);
 	version_str = new char[std::strlen(VERSION_STR1) +
-						   std::strlen("\n") +
-						   std::strlen(VERSION_STR2) +
-						   std::strlen("\n") +
+	                       std::strlen("\n") +
+	                       std::strlen(VERSION_STR2) +
+	                       std::strlen("\n") +
 	                       +1];
 	std::sprintf(version_str, "%s\n%s\n", VERSION_STR1, VERSION_STR2);
 
@@ -201,6 +202,7 @@ void ScriptParser::reset() {
 	pretextgosub_label   = nullptr;
 	loadgosub_label      = nullptr;
 	event_callback_label = nullptr;
+	ctrl_callback_label  = nullptr; // W_TEMP
 
 	/* ---------------------------------------- */
 	/* Sound related variables */
@@ -229,7 +231,7 @@ void ScriptParser::resetDefineFlags() {
 	useescspc_flag        = false;
 	mode_wave_demo_flag   = false;
 	mode_saya_flag        = false;
-	//NScr 2.82+ enables mode_ext (automode) by default, let's do so too
+	// NScr 2.82+ enables mode_ext (automode) by default, let's do so too
 	mode_ext_flag        = true;
 	pagetag_flag         = false;
 	windowchip_sprite_no = -1;
@@ -249,8 +251,8 @@ void ScriptParser::resetDefineFlags() {
 
 	/* ---------------------------------------- */
 	/* Text related variables */
-	//shade_distance[0] = 1;
-	//shade_distance[1] = 1;
+	// shade_distance[0] = 1;
+	// shade_distance[1] = 1;
 
 	clickstr_line  = 0;
 	clickstr_state = CLICK_NONE;
@@ -382,7 +384,7 @@ int ScriptParser::evaluateCommand(const char *cmd, bool builtin, bool textgosub_
 			return (this->*it->second)();
 	} else {
 		copystr(script_h.current_cmd, cmd, sizeof(script_h.current_cmd));
-		//Check against user-defined cmds
+		// Check against user-defined cmds
 		if (cmd[0] >= 'a' && cmd[0] <= 'z') {
 			auto it = user_func_lut.find(cmd);
 			if (it != user_func_lut.end()) {
@@ -440,7 +442,7 @@ int ScriptParser::parseLine() {
 	copystr(script_h.current_cmd, cmd[0] == '_' ? cmd + 1 : cmd, sizeof(script_h.current_cmd));
 
 	if (*cmd != '_') {
-		//Check against user-defined cmds
+		// Check against user-defined cmds
 		auto it = user_func_lut.find(hash);
 		if (it != user_func_lut.end()) {
 			if (it->second) {
@@ -455,7 +457,7 @@ int ScriptParser::parseLine() {
 		}
 	}
 
-	//Check against builtin cmds
+	// Check against builtin cmds
 	auto it = func_lut.find(hash);
 	if (it != func_lut.end())
 		return (this->*it->second)();
@@ -494,13 +496,13 @@ void ScriptParser::setSavePath(const char *path) {
 	}
 
 	if (!FileIO::accessFile(script_h.save_path, FileType::Directory) &&
-		!FileIO::makeDir(script_h.save_path, true))
+	    !FileIO::makeDir(script_h.save_path, true))
 		errorAndExit("Failed to create missing save directory!");
 
 	if (debug_level > 0) {
 		sendToLog(LogLevel::Info, "setting save path to '%s'\n", script_h.save_path);
 		if (debug_level > 1) {
-			//dump the byte values (for debugging cmd-line codepage settings)
+			// dump the byte values (for debugging cmd-line codepage settings)
 			sendToLog(LogLevel::Info, "save_path:");
 			if (script_h.save_path)
 				for (size_t i = 0, len = std::strlen(script_h.save_path); i < len; i++)
@@ -535,8 +537,8 @@ int ScriptParser::saveFileIOBuf(const char *filename) {
 	// all files except envdata go in savedir
 	bool usesavedir = !equalstr(filename, "envdata");
 
-	//Mion: create a temporary file, to avoid overwriting valid files
-	// (if an error occurs)
+	// Mion: create a temporary file, to avoid overwriting valid files
+	//  (if an error occurs)
 	const char *root = script_h.save_path;
 	if (usesavedir && script_h.savedir)
 		root = script_h.savedir;
@@ -802,12 +804,12 @@ int ScriptParser::readEffect(EffectLink *effect) {
 		effect->effect = 0; // to suppress error
 	}
 
-	//sendToLog(LogLevel::Info, "readEffect %d: %d %d %s\n", num, effect->effect, effect->duration, effect->anim.image_name);
+	// sendToLog(LogLevel::Info, "readEffect %d: %d %d %s\n", num, effect->effect, effect->duration, effect->anim.image_name);
 	return num;
 }
 
 ScriptParser::EffectLink *ScriptParser::parseEffect(bool init_flag) {
-	//sendToLog(LogLevel::Info, "parseEffect start\n");
+	// sendToLog(LogLevel::Info, "parseEffect start\n");
 
 	if (init_flag)
 		tmp_effect.anim.remove();
@@ -828,11 +830,11 @@ ScriptParser::EffectLink *ScriptParser::parseEffect(bool init_flag) {
 	              "effect %d not found", tmp_effect.effect);
 	errorAndExit(script_h.errbuf);
 
-	//sendToLog(LogLevel::Info, "parseEffect return\n");
+	// sendToLog(LogLevel::Info, "parseEffect return\n");
 	return nullptr;
 }
 
-//Mion: for kinsoku
+// Mion: for kinsoku
 void ScriptParser::setKinsoku(const char *start_chrs, const char *end_chrs, bool add) {
 	int num_start, num_end, i;
 	const char *kchr;
@@ -923,7 +925,7 @@ bool ScriptParser::isEndKinsoku(const char *str) {
 void ScriptParser::setVariableQueue(bool state, std::string cmd) {
 	if (state == variableQueueEnabled) {
 		errorAndExit("Variable queue is already using the same mode");
-		return; //dummy
+		return; // dummy
 	}
 
 	if (!state && !variableQueue.empty()) {

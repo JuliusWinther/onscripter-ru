@@ -181,7 +181,6 @@ static std::unordered_map<HashedString, CommandFunc> func_lut {
 	    {"jskip_s", &ONScripter::jskipSuperCommand},
 	    {"jnskip_s", &ONScripter::jnskipSuperCommand},
 	    {"jskip", &ONScripter::jskipCommand},
-	    {"jskipnotallowed", &ONScripter::jskipnotallowedCommand}, // W_TEMP
 	    {"jnskip", &ONScripter::jnskipCommand},
 	    {"italic_font", &ONScripter::aliasFontCommand},
 	    {"ignore_voicedelay", &ONScripter::ignoreVoiceDelayCommand},
@@ -1865,6 +1864,7 @@ void ONScripter::executeLabel() {
 					keyState.ctrl         = 0;
 					skip_mode             = 0;
 					eventCallbackRequired = true;
+					gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 				}
 			}
 

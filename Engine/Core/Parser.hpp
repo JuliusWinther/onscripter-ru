@@ -49,7 +49,7 @@ public:
 
 		std::srand(static_cast<unsigned>(time(nullptr)));
 
-		//Default kinsoku
+		// Default kinsoku
 		setKinsoku(DEFAULT_START_KINSOKU, DEFAULT_END_KINSOKU, false);
 	}
 	int ownDeinit() override;
@@ -79,6 +79,7 @@ public:
 	int setdefaultspeedCommand();
 	int getStraliasCommand();
 	int eventCallbackCommand();
+	int ctrlCallbackCommand(); // W_TEMP
 	int disablespeedbuttonsCommand();
 	int borderstyleCommand();
 
@@ -186,7 +187,7 @@ public:
 	void errorAndExit(const char *str, const char *reason = nullptr, const char *title = nullptr, bool is_simple = false);
 	void errorAndCont(const char *str, const char *reason = nullptr, const char *title = nullptr, bool is_simple = false, bool force_message = false);
 
-	//Mion: syntax flags
+	// Mion: syntax flags
 	bool allow_color_type_only{false};     // only allow color type (#RRGGBB) for args of color type,
 	                                       // i.e. not string variables
 	bool set_tag_page_origin_to_1{false};  // 'gettaglog' will consider the current page as 1, not 0
@@ -224,12 +225,12 @@ protected:
 		SYSTEM_NULL  = 0,
 		SYSTEM_SKIP  = 1,
 		SYSTEM_RESET = 2,
-		//SYSTEM_SAVE        = 3,
-		//SYSTEM_LOAD        = 4,
-		//SYSTEM_LOOKBACK    = 5,
-		//SYSTEM_WINDOWERASE = 6,
-		//SYSTEM_MENU        = 7,
-		//SYSTEM_YESNO       = 8,
+		// SYSTEM_SAVE        = 3,
+		// SYSTEM_LOAD        = 4,
+		// SYSTEM_LOOKBACK    = 5,
+		// SYSTEM_WINDOWERASE = 6,
+		// SYSTEM_MENU        = 7,
+		// SYSTEM_YESNO       = 8,
 		SYSTEM_AUTOMODE = 9,
 		SYSTEM_END      = 10,
 		SYSTEM_SYNC     = 11
@@ -239,7 +240,7 @@ protected:
 		   RET_CONTINUE  = 2,
 		   RET_NO_READ   = 4,
 		   RET_EOL       = 8, // end of line (0x0a is found)
-		                      //RET_EOT       = 16 // end of text (the end of string_buffer is reached)
+		                      // RET_EOT       = 16 // end of text (the end of string_buffer is reached)
 	};
 	enum { CLICK_NONE    = 0,
 		   CLICK_WAIT    = 1,
@@ -276,20 +277,20 @@ protected:
 	bool useescspc_flag;
 	bool mode_wave_demo_flag;
 	bool mode_saya_flag;
-	bool mode_ext_flag; //enables automode capability
+	bool mode_ext_flag; // enables automode capability
 	bool force_button_shortcut_flag{false};
 	bool pagetag_flag;
 	int windowchip_sprite_no;
 
 public:
 	int string_buffer_offset;
-	std::deque<NestInfo> callStack;          //TODO: give NestInfo a proper name
+	std::deque<NestInfo> callStack;          // TODO: give NestInfo a proper name
 	bool callStackHasUninterruptible{false}; // callStackHasUninterruptible -> scriptExecutionHasPriority
 	std::unordered_set<const char *> uninterruptibleLabels;
 	LabelInfo *current_label_info;
 	bool use_text_atlas{false};
 	int current_line;
-	//CHECKME: not initialized? any of this? resetDefineFlags seems to be the thing initting our stuff and it is missing current_line + other things?
+	// CHECKME: not initialized? any of this? resetDefineFlags seems to be the thing initting our stuff and it is missing current_line + other things?
 
 protected:
 #ifdef USE_LUA
@@ -325,7 +326,7 @@ protected:
 	EffectLink *parseEffect(bool init_flag);
 
 	/* ---------------------------------------- */
-	/* Layer related variables */ //Mion
+	/* Layer related variables */ // Mion
 	struct LayerInfo {
 		LayerInfo *next{nullptr};
 		std::unique_ptr<Layer> handler;
@@ -338,7 +339,7 @@ protected:
 			if (next)
 				next->commit();
 		}
-	} * layer_info{nullptr};
+	} *layer_info{nullptr};
 
 	template <typename T>
 	T *getLayer(unsigned int num, bool die = true) {
@@ -353,7 +354,7 @@ protected:
 
 		if ((!tmp || !handler) && die) {
 			errorAndExit("Invalid layer id");
-			return nullptr; //dummy
+			return nullptr; // dummy
 		}
 
 		return handler;
@@ -368,7 +369,7 @@ protected:
 
 		if (!tmp && die) {
 			errorAndExit("Invalid layer id");
-			return nullptr; //dummy
+			return nullptr; // dummy
 		}
 
 		return tmp;
@@ -379,7 +380,7 @@ protected:
 
 	/* ---------------------------------------- */
 	/* Lookback related variables */
-	//char *lookback_image_name[4];
+	// char *lookback_image_name[4];
 	int lookback_sp[2];
 	uchar3 lookback_color;
 
@@ -418,9 +419,9 @@ protected:
 
 	struct Kinsoku {
 		char chr[2];
-	} * start_kinsoku{nullptr}, *end_kinsoku{nullptr}; //Mion: for kinsoku chars
+	} *start_kinsoku{nullptr}, *end_kinsoku{nullptr}; // Mion: for kinsoku chars
 	int num_start_kinsoku{0}, num_end_kinsoku{0};
-	void setKinsoku(const char *start_chrs, const char *end_chrs, bool add); //Mion
+	void setKinsoku(const char *start_chrs, const char *end_chrs, bool add); // Mion
 	bool isStartKinsoku(const char *str);
 	bool isEndKinsoku(const char *str);
 
@@ -464,7 +465,7 @@ protected:
 	int saveFileIOBuf(const char *filename);
 	int loadFileIOBuf(const char *filename, bool savedata = true);
 
-	//TODO: separate from ScriptParser
+	// TODO: separate from ScriptParser
 	union ConvBytes {
 		float f;
 		int32_t i32;
@@ -502,7 +503,8 @@ protected:
 	char *pretextgosub_label{nullptr};
 	char *loadgosub_label{nullptr};
 	char *event_callback_label{nullptr};
-	bool eventCallbackRequired{false}; // Just because I am lazy
+	char *ctrl_callback_label{nullptr}; // W_TEMP
+	bool eventCallbackRequired{false};  // Just because I am lazy
 
 	ScriptHandler script_h;
 };

@@ -315,7 +315,7 @@ int ScriptParser::borderstyleCommand() {
 	return RET_CONTINUE;
 }
 
-//Mion
+// Mion
 int ScriptParser::setlayerCommand() {
 	if (current_mode != DEFINE_MODE)
 		errorAndExit("setlayer: not in the define section");
@@ -369,7 +369,7 @@ int ScriptParser::setlayerCommand() {
 	return RET_CONTINUE;
 }
 
-//Mion: for kinsoku
+// Mion: for kinsoku
 int ScriptParser::setkinsokuCommand() {
 	if (current_mode != DEFINE_MODE)
 		errorAndExit("setkinsoku: not in the define section");
@@ -474,6 +474,15 @@ int ScriptParser::eventCallbackCommand() {
 	return RET_CONTINUE;
 }
 
+int ScriptParser::ctrlCallbackCommand() {
+	if (current_mode != DEFINE_MODE)
+		errorAndExit("ctrl_callback: not in the define section");
+
+	script_h.setStr(&ctrl_callback_label, script_h.readLabel() + 1);
+
+	return RET_CONTINUE;
+}
+
 int ScriptParser::returnCommand() {
 	if (callStack.empty() || callStack.back().nest_mode != NestInfo::LABEL)
 		errorAndExit("return: not in gosub");
@@ -494,7 +503,7 @@ int ScriptParser::returnCommand() {
 	int ret = RET_CONTINUE;
 	// Hook for alerting dialogueController to returns from dialogue inline commands
 	if (b.dialogueEventOnReturn) {
-		//sendToLog(LogLevel::Info, "returnCommand dialogue event\n");
+		// sendToLog(LogLevel::Info, "returnCommand dialogue event\n");
 		dlgCtrl.events.emplace();
 		dlgCtrl.events.back().dialogueInlineCommandEnd = true;
 		ret                                            = RET_NO_READ;
@@ -512,7 +521,7 @@ int ScriptParser::returnCommand() {
 			return RET_NO_READ;
 
 		errorAndExit("RET_EOT, this should not happen");
-		//return ret==RET_NO_READ?ret:(RET_CONTINUE | RET_EOT);
+		// return ret==RET_NO_READ?ret:(RET_CONTINUE | RET_EOT);
 	}
 
 	return ret;
@@ -567,10 +576,10 @@ int ScriptParser::nsadirCommand() {
 }
 
 int ScriptParser::nsaCommand() {
-	//Mion: WARNING - commands "ns2" and "ns3" have nothing to do with
-	// archive files named "*.ns2", they are for "*.nsa" files.
-	// I suggest using command-line options "--nsa-offset 1" and
-	// "--nsa-offset 2" instead of these commands
+	// Mion: WARNING - commands "ns2" and "ns3" have nothing to do with
+	//  archive files named "*.ns2", they are for "*.nsa" files.
+	//  I suggest using command-line options "--nsa-offset 1" and
+	//  "--nsa-offset 2" instead of these commands
 	if (script_h.isName("ns2")) {
 		nsa_offset = 1;
 	} else if (script_h.isName("ns3")) {
@@ -587,7 +596,7 @@ int ScriptParser::nsaCommand() {
 }
 
 int ScriptParser::nextCommand() {
-	//Mion: apparently NScr allows 'break' outside of a for loop, it just skips ahead to 'next'
+	// Mion: apparently NScr allows 'break' outside of a for loop, it just skips ahead to 'next'
 	if (callStack.empty() || callStack.back().nest_mode != NestInfo::FOR) {
 		errorAndCont("next: not in for loop\n");
 		break_flag = false;
@@ -924,7 +933,7 @@ int ScriptParser::incCommand() {
 }
 
 int ScriptParser::ifCommand() {
-	//sendToLog(LogLevel::Info, "ifCommand\n");
+	// sendToLog(LogLevel::Info, "ifCommand\n");
 	int condition_status = 0; // 0 ... none, 1 ... and, 2 ... or
 	bool f = false, condition_flag = false;
 	const char *op_buf, *buf;
@@ -944,7 +953,7 @@ int ScriptParser::ifCommand() {
 					f = (script_h.findAndAddLog(script_h.log_info[ScriptHandler::FILE_LOG], buf, false) != nullptr);
 				else
 					errorAndExit("filelog command is not called but file logging is requested");
-				//sendToLog(LogLevel::Info, "fchk %s(%d) ", tmp_string_buffer, (findAndAddFileLog(tmp_string_buffer, fasle)));
+				// sendToLog(LogLevel::Info, "fchk %s(%d) ", tmp_string_buffer, (findAndAddFileLog(tmp_string_buffer, fasle)));
 			}
 		} else if (script_h.compareString("lchk")) {
 			script_h.readName();
@@ -956,14 +965,14 @@ int ScriptParser::ifCommand() {
 					f = (script_h.findAndAddLog(script_h.log_info[ScriptHandler::LABEL_LOG], buf + 1, false) != nullptr);
 				else
 					errorAndExit("labellog command is not called but label logging is requested");
-				//sendToLog(LogLevel::Info, "lchk %s (%d)\n", buf, f);
+				// sendToLog(LogLevel::Info, "lchk %s (%d)\n", buf, f);
 			}
 		} else {
 			int no = script_h.readInt();
 			if (script_h.current_variable.type & VariableInfo::TypeInt ||
 			    script_h.current_variable.type & VariableInfo::TypeArray) {
 				int left_value = no;
-				//sendToLog(LogLevel::Info, "left (%d) ", left_value);
+				// sendToLog(LogLevel::Info, "left (%d) ", left_value);
 
 				op_buf = script_h.getNext();
 				if ((op_buf[0] == '>' && op_buf[1] == '=') ||
@@ -976,10 +985,10 @@ int ScriptParser::ifCommand() {
 				         op_buf[0] == '>' ||
 				         op_buf[0] == '=')
 					script_h.setCurrent(op_buf + 1);
-				//sendToLog(LogLevel::Info, "current %c%c ", op_buf[0], op_buf[1]);
+				// sendToLog(LogLevel::Info, "current %c%c ", op_buf[0], op_buf[1]);
 
 				int right_value = script_h.readInt();
-				//sendToLog(LogLevel::Info, "right (%d) ", right_value);
+				// sendToLog(LogLevel::Info, "right (%d) ", right_value);
 
 				if (op_buf[0] == '>' && op_buf[1] == '=')
 					f = (left_value >= right_value);
@@ -1512,7 +1521,7 @@ int ScriptParser::btnnowindoweraseCommand() {
 }
 
 int ScriptParser::breakCommand() {
-	//Mion: apparently NScr allows 'break' outside of a for loop, it just skips ahead to 'next'
+	// Mion: apparently NScr allows 'break' outside of a for loop, it just skips ahead to 'next'
 	bool unnested = false;
 	if (callStack.empty() || callStack.back().nest_mode != NestInfo::FOR) {
 		unnested = true;
@@ -1589,7 +1598,7 @@ int ScriptParser::addnsadirCommand() {
 	return RET_CONTINUE;
 }
 
-//Mion: for kinsoku
+// Mion: for kinsoku
 int ScriptParser::addkinsokuCommand() {
 	if (current_mode != DEFINE_MODE)
 		errorAndExit("addkinsoku: not in the define section");
@@ -1637,6 +1646,6 @@ int ScriptParser::addCommand() {
 }
 
 int ScriptParser::dsoundCommand() {
-	//added to remove "unsupported command" warnings for 'dsound'
+	// added to remove "unsupported command" warnings for 'dsound'
 	return RET_CONTINUE;
 }
