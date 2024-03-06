@@ -1861,10 +1861,11 @@ void ONScripter::executeLabel() {
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
+					sendToLog(LogLevel::Info, "OHI, CTRL PRESSED\n", );
+					gosubReal(ctrl_callback_label, script_h.getCurrent());
 					keyState.ctrl         = 0;
 					skip_mode             = 0;
 					eventCallbackRequired = true;
-					gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 				}
 			}
 
