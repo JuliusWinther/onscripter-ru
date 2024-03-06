@@ -474,7 +474,7 @@ int ScriptParser::eventCallbackCommand() {
 	return RET_CONTINUE;
 }
 
-int ScriptParser::ctrlCallbackCommand() {
+int ScriptParser::ctrlCallbackCommand() { // W_TEMP
 	if (current_mode != DEFINE_MODE)
 		errorAndExit("ctrl_callback: not in the define section");
 
