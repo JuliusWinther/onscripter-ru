@@ -851,6 +851,7 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 				}
 			if (!skipIsAllowed()) {
+				sendToLog(LogLevel::Info, "OHI, CTRL PRESSED2\n");
 				gosubReal(ctrl_callback_label, script_h.getCurrent());
 				break; // Skip not allowed, exit
 			}
