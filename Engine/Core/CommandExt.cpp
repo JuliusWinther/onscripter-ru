@@ -2314,7 +2314,7 @@ int ONScripter::jskipCommand() {
 }
 
 int ONScripter::jskipnotallowedCommand() { // W_TEMP
-	if ((!skipIsAllowed()) && keyState.ctrl)
+	if (!((!skipIsAllowed()) && keyState.ctrl))
 		jumpToTilde(false);
 	return RET_CONTINUE;
 }
