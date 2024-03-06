@@ -149,8 +149,8 @@ public:
 	char langdir_path[PATH_MAX]{};
 	char fontdir_path[PATH_MAX]{};
 	ScriptLanguage script_language{ScriptLanguage::English};
-	//That's a feature duplication
-	//TODO: make this an <enum_opt_id, val> map with a const
+	// That's a feature duplication
+	// TODO: make this an <enum_opt_id, val> map with a const
 	//<enum_opt_id, pair<name, desc> reference map
 	std::unordered_map<std::string, std::string> ons_cfg_options;  // normal cfg options
 	std::unordered_map<std::string, std::string> user_cfg_options; // env[param]=value options
@@ -183,7 +183,7 @@ public:
 	void resetFlags();    // for resetting (non-pointer) definereset variables
 	void resetFlagsSub(); // for resetting (non-pointer) reset variables
 
-	//Mion: routines for error handling & cleanup
+	// Mion: routines for error handling & cleanup
 	bool doErrorBox(const char *title, const char *errstr, bool is_simple = false, bool is_warning = false);
 	void openDebugFolders();
 
@@ -288,6 +288,7 @@ public:
 	int jskipSuperCommand();
 	int jnskipSuperCommand();
 	int jskipCommand();
+	int jskipnotallowedCommand(); // W_TEMP
 	int jnskipCommand();
 	int ignoreVoiceDelayCommand();
 	int hyphenCarryCommand();
@@ -383,7 +384,7 @@ public:
 	int setwindow2Command();
 	int setwindowCommand();
 	int seteffectspeedCommand();
-//W_CUSTOM - discord integration
+// W_CUSTOM - discord integration
 #if defined(DISCORD)
 	int setDiscordRPCCommand();
 #endif
@@ -560,31 +561,31 @@ public:
 		if (no < MAX_SPRITE_NUM)
 			return no;
 		errorAndExit("An invalid sprite number was read!");
-		return 0; //dummy
+		return 0; // dummy
 	}
 
 	uint32_t validTree(uint32_t no) {
 		if (no < MAX_TEXT_TREES)
 			return no;
 		errorAndExit("An invalid tree number was read!");
-		return 0; //dummy
+		return 0; // dummy
 	}
 
 	uint32_t validVolume(uint32_t vol) {
 		if (vol <= DEFAULT_VOLUME)
 			return vol;
 		errorAndExit("An invalid volume level was read!");
-		return 0; //dummy
+		return 0; // dummy
 	}
 
 	uint32_t validChannel(uint32_t ch) {
 		// This is how it was originally, but I think we must be more restrictive
-		//if (ch >= ONS_MIX_CHANNELS) ch = ONS_MIX_CHANNELS-1;
-		//return ch;
+		// if (ch >= ONS_MIX_CHANNELS) ch = ONS_MIX_CHANNELS-1;
+		// return ch;
 		if (ch < ONS_MIX_CHANNELS)
 			return ch;
 		errorAndExit("An invalid channel was read!");
-		return 0; //dummy
+		return 0; // dummy
 	}
 
 	void btnwaitCommandHandleResult(uint32_t button_timer_start, VariableInfo *resultVar, ButtonState buttonState, bool del_flag);
@@ -722,7 +723,7 @@ private:
 	// Global definitions
 	uint32_t internal_timer;
 	uint32_t internal_slowdown_counter{0};
-	uint32_t ticksNow{0}; //TODO: rewrite more code using this
+	uint32_t ticksNow{0}; // TODO: rewrite more code using this
 	bool automode_flag;
 	bool preferred_automode_time_set{false};
 	int32_t preferred_automode_time{1000};
@@ -824,7 +825,7 @@ public:
 #ifdef IOS
 	// Currently we have a weird issue on iOS, iPad 4 only, where text rendered from text_gpu looks differently
 	// when text_gpu is not equal to canvas size.
-	//FIXME: this should be addressed properly
+	// FIXME: this should be addressed properly
 	static constexpr bool canvasTextWindow{true};
 #else
 	static constexpr bool canvasTextWindow{false};
@@ -861,7 +862,7 @@ private:
 		};
 
 		ButtonLink *next{nullptr};
-		ButtonLink *same{nullptr}; //Mion: to link buttons that act in concert
+		ButtonLink *same{nullptr}; // Mion: to link buttons that act in concert
 		BUTTON_TYPE button_type{NORMAL_BUTTON};
 		int no{0};
 		int sprite_no{0};
@@ -923,7 +924,7 @@ private:
 	/* Mion: textbtn related variables */
 	struct TextButtonInfoLink {
 		TextButtonInfoLink *next{nullptr};
-		const char *text{nullptr}; //actual "text" of the button
+		const char *text{nullptr}; // actual "text" of the button
 		char *prtext{nullptr};     // button text as printed (w/linebreaks)
 		ButtonLink *button{nullptr};
 		int xy[2]{-1, -1};
@@ -1022,10 +1023,10 @@ private:
 			for (i = 0; i < 3; i++) insertIfExists(tachi_info[i], w_old, ret);
 		if (which & SPRITE_SENTENCE_FONT)
 			insertIfExists(sentence_font_info, w_old, ret);
-		//FIXME: Not sure what to do about this bunch of extra stuff
+		// FIXME: Not sure what to do about this bunch of extra stuff
 		if (which & SPRITE_BG)
 			insertIfExists(bg_info, w_old, ret);
-		//FIXME: Give these their own pointer-existence maps or turn them into such, this iteration defeats the purpose
+		// FIXME: Give these their own pointer-existence maps or turn them into such, this iteration defeats the purpose
 		if (which & SPRITE_BAR)
 			for (i = 0; i < MAX_PARAM_NUM; i++)
 				if (bar_info[i])
@@ -1116,7 +1117,7 @@ private:
 	using IniContainer = std::unordered_map<std::string, std::unordered_map<std::string, std::string>>;
 	IniContainer registry;
 
-	//Mion: track the last few sprite numbers loaded, for sprite data reuse
+	// Mion: track the last few sprite numbers loaded, for sprite data reuse
 	static const int SPRITE_NUM_LAST_LOADS = 4;
 	int last_loaded_sprite[SPRITE_NUM_LAST_LOADS];
 	int last_loaded_sprite_ind;
@@ -1202,7 +1203,7 @@ public:
 	enum {
 		SKIP_NONE   = 0,
 		SKIP_NORMAL = 1, // skip endlessly/to unread text (press 's' button)
-		//SKIP_TO_EOP  = 2, // skip to end of page (press 'o' button)
+		// SKIP_TO_EOP  = 2, // skip to end of page (press 'o' button)
 		SKIP_TO_WAIT   = 4, // skip to next clickwait
 		SKIP_TO_EOL    = 8, // skip to end of line
 		SKIP_SUPERSKIP = 16 // no i/o, just execute all the commands as fast as possible and do the i/o later
@@ -1231,9 +1232,9 @@ private:
 	DirtyRect before_dirty_rect_scene, before_dirty_rect_hud;
 
 	int effect_counter{0};  // counter in each effect
-	int effect_duration{1}; //avoid possible div by zero
+	int effect_duration{1}; // avoid possible div by zero
 	int effect_previous_time{0};
-	int effect_tmp{0}; //tmp variable for use by effect routines
+	int effect_tmp{0}; // tmp variable for use by effect routines
 	// Added to support effects being applied via constant refresh
 	EffectLink *effect_current{nullptr};
 	bool effect_first_time{false};
@@ -1366,7 +1367,7 @@ private:
 		SOUND_PRELOAD  = 1,
 		SOUND_CHUNK    = 2, // WAV, Ogg Vorbis
 		SOUND_MUSIC    = 4, // WAV, MP3, Ogg Vorbis (streaming)
-		SOUND_SEQMUSIC = 8, //MIDI/XM/MOD
+		SOUND_SEQMUSIC = 8, // MIDI/XM/MOD
 		SOUND_OTHER    = 16
 	};
 	bool cdaudio_on_flag{false}; // false if mute
@@ -1397,8 +1398,8 @@ private:
 	char *loop_bgm_name[2]{};
 	int playSoundThreadedLock;
 
-	uint32_t channelvolumes[ONS_MIX_CHANNELS]{}; //insani's addition
-	bool channel_preloaded[ONS_MIX_CHANNELS]{};  //seems we need to track this...
+	uint32_t channelvolumes[ONS_MIX_CHANNELS]{}; // insani's addition
+	bool channel_preloaded[ONS_MIX_CHANNELS]{};  // seems we need to track this...
 public:
 	std::shared_ptr<Wrapped_Mix_Chunk> wave_sample[ONS_MIX_CHANNELS + ONS_MIX_EXTRA_CHANNELS]{};
 	std::shared_ptr<Wrapped_Mix_Chunk> pending_cache_chunk[2]{};
@@ -1484,7 +1485,7 @@ private:
 	void advanceAIclocks(uint64_t ns);
 	void advanceSpecificAIclocks(uint64_t ns, int i, int type, bool old_ai = false);
 
-	//AnimationInfos that have old_ai to be freed in commitVisualState
+	// AnimationInfos that have old_ai to be freed in commitVisualState
 	std::vector<AnimationInfo *> queueAnimationInfo;
 
 	void commitVisualState();
@@ -1527,7 +1528,7 @@ private:
 	void loadReadLabels(const char *filename);
 	void saveReadLabels(const char *filename);
 
-	//TODO: These should communicate with a separate File I/O class and be class member functions
+	// TODO: These should communicate with a separate File I/O class and be class member functions
 	void readFontinfo(Fontinfo &fi);
 	void writeFontinfo(Fontinfo &fi);
 	void readWindowCtrl(TextWindowController &wnd);
@@ -1565,7 +1566,7 @@ private:
 
 public:
 	inline void preventExit(bool state) {
-		//assert(canExit != state);
+		// assert(canExit != state);
 		canExit = !state;
 		if (canExit && exitCode.load(std::memory_order_relaxed) != ExitType::None)
 			requestQuit(exitCode);

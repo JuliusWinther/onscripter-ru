@@ -2313,6 +2313,12 @@ int ONScripter::jskipCommand() {
 	return RET_CONTINUE;
 }
 
+int ONScripter::jskipnotallowedCommand() { // W_TEMP
+	if ((!skipIsAllowed()) && keyState.ctrl))
+		jumpToTilde(false);
+	return RET_CONTINUE;
+}
+
 int ONScripter::jnskipCommand() {
 	if (!(skip_mode & SKIP_NORMAL || keyState.ctrl))
 		jumpToTilde(false);
