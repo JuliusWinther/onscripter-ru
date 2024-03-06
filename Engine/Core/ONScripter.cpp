@@ -1868,7 +1868,7 @@ void ONScripter::executeLabel() {
 				}
 			}
 
-			if (ctrl_pressed_skip_disabled) {
+			if (ctrl_pressed_skip_disabled) { // W_TEMP
 				gosubReal(ctrl_callback_label, script_h.getCurrent());
 			}
 
