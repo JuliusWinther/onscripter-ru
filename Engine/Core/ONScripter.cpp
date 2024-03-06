@@ -1868,6 +1868,10 @@ void ONScripter::executeLabel() {
 				}
 			}
 
+			if (ctrl_pressed_skip_disabled) {
+				gosubReal(ctrl_callback_label, script_h.getCurrent());
+			}
+
 			int ret{RET_NO_READ};
 			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
 				gosubReal(event_callback_label, script_h.getCurrent());
