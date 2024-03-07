@@ -1211,8 +1211,6 @@ public:
 	int skip_mode{SKIP_NONE};
 	bool deferredLoadingEnabled{false};
 
-	bool ctrl_pressed_skip_disabled{false}; // W_TEMP
-
 private:
 	bool skip_unread{true};
 
@@ -1242,6 +1240,8 @@ private:
 	bool effect_set{false};
 	bool effect_rect_cleanup{false};
 	int effect_refresh_mode_src, effect_refresh_mode_dst;
+
+	bool ctrl_pressed_skip_disabled{false}; // W_TEMP
 
 	bool effectskip_flag;
 	bool skip_effect{false};

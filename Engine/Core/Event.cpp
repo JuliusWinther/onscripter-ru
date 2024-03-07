@@ -845,9 +845,9 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 #endif
 		case SDL_SCANCODE_RCTRL:
 		case SDL_SCANCODE_LCTRL:
-			ctrl_pressed_skip_disabled = false; // W_TEMP
 			if (event.keysym.scancode == SDL_SCANCODE_LCTRL || event.keysym.scancode == SDL_SCANCODE_RCTRL)
 				if (skipIsAllowed()) {
+					ctrl_pressed_skip_disabled = false; // W_TEMP
 					state.keyState.ctrl |= (event.keysym.scancode == SDL_SCANCODE_LCTRL ? 0x02 : 0x01);
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 				}
