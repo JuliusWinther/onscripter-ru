@@ -1861,6 +1861,7 @@ void ONScripter::executeLabel() {
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
 				if (ctrl_pressed_skip_disabled) { // W_TEMP
+					ctrl_pressed_skip_disabled = false;
 					gosubReal(ctrl_callback_label, script_h.getCurrent());
 				}
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
