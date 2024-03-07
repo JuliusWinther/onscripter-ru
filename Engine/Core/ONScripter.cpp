@@ -1860,16 +1860,17 @@ void ONScripter::executeLabel() {
 			// (Plus having it in here will ensure it always responds at the very moment it is necessary, and besides, it does not actually interface with any particular event from SDL)
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
-				if (ctrl_pressed_skip_disabled) { // W_TEMP
-					ctrl_pressed_skip_disabled = false;
-					gosubReal(ctrl_callback_label, script_h.getCurrent());
-				}
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
 					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 					keyState.ctrl         = 0;
 					skip_mode             = 0;
 					eventCallbackRequired = true;
 				}
+			}
+
+			if (ctrl_pressed_skip_disabled) { // W_TEMP
+				ctrl_pressed_skip_disabled = false;
+				gosubReal(ctrl_callback_label, script_h.getCurrent());
 			}
 
 			int ret{RET_NO_READ};
