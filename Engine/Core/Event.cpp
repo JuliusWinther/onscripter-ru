@@ -852,8 +852,8 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 				}
 			if (!skipIsAllowed()) {
-				ctrl_pressed_skip_disabled = true; // W_TEMP
-				                                   // gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
+				//ctrl_pressed_skip_disabled = true; // W_TEMP
+				gosubReal(ctrl_callback_label, script_h.getCurrent(), true); // W_TEMP
 				break;                             // Skip not allowed, exit
 			}
 			if (last_ctrl_status != state.keyState.ctrl) {
