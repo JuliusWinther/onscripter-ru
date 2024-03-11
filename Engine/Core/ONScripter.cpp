@@ -1869,9 +1869,10 @@ void ONScripter::executeLabel() {
 			}
 
 			/*if (ctrl_pressed_skip_disabled) { // W_TEMP
-				ctrl_pressed_skip_disabled = false;
-				gosubReal(ctrl_callback_label, script_h.getCurrent());
+			    ctrl_pressed_skip_disabled = false;
+			    gosubReal(ctrl_callback_label, script_h.getCurrent());
 			}*/
+			sendToLog(LogLevel::Info, "TEST 0\n");
 
 			int ret{RET_NO_READ};
 			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
