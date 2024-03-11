@@ -1132,8 +1132,6 @@ int ScriptParser::humanposCommand() {
 void ScriptParser::gosubReal(const char *label, const char *next_script,
                              bool textgosub_flag) {
 
-	sendToLog(LogLevel::Info, "CTRL DISABLED");
-
 	callStack.emplace_back();
 	auto &b       = callStack.back();
 	b.next_script = next_script;
