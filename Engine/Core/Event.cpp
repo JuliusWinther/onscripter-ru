@@ -854,8 +854,8 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 			if (!skipIsAllowed()) {
 				// sendToLog(LogLevel::Info, "CTRL DISABLED");
 				//  ctrl_pressed_skip_disabled = true; // W_TEMP
-				gosubReal(ctrl_callback_label, script_h.getNext(), true); // W_TEMP
-				break;                                                    // Skip not allowed, exit
+				gosubReal(ctrl_callback_label, script_h.getCurrent(), true); // W_TEMP
+				break;                                                       // Skip not allowed, exit
 			}
 			if (last_ctrl_status != state.keyState.ctrl) {
 				skip_effect = true; // allow short-circuiting the current effect with ctrl
