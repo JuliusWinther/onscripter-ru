@@ -63,6 +63,8 @@ public:
 	void setCurrentLabel(const char *label);
 	void gosubReal(const char *label, const char *next_script, bool textgosub_flag = false);
 
+	void gosubReal_w(const char *label, const char *next_script, bool textgosub_flag = false); // W_TEMP
+
 	void saveGlovalData(bool no_error = false);
 	void setArchivePath(const char *path);
 	void setSavePath(const char *path);

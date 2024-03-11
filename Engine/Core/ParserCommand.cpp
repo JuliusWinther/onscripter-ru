@@ -1151,6 +1151,28 @@ void ScriptParser::gosubReal(const char *label, const char *next_script,
 	}
 }
 
+void ScriptParser::gosubReal_w(const char *label, const char *next_script,
+                               bool textgosub_flag) { // W_TEMP
+
+	callStack.emplace_back();
+	auto &b       = callStack.back();
+	b.next_script = next_script;
+	b.label       = current_label_info;
+	b.line        = current_line;
+
+	if (textgosub_flag) {
+		script_h.pushStringBuffer(string_buffer_offset);
+		b.textgosub_flag = true;
+	}
+
+	setCurrentLabel(label);
+
+	if (uninterruptibleLabels.count(script_h.getCurrent())) {
+		callStackHasUninterruptible = true;
+		b.uninterruptible           = true;
+	}
+}
+
 int ScriptParser::gosubCommand() {
 	const char *buf = script_h.readLabel();
 	gosubReal(buf + 1, script_h.getNext());

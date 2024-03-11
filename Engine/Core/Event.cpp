@@ -845,21 +845,28 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 #endif
 		case SDL_SCANCODE_RCTRL:
 		case SDL_SCANCODE_LCTRL:
-			if (event.keysym.scancode == SDL_SCANCODE_LCTRL || event.keysym.scancode == SDL_SCANCODE_RCTRL)
+			if (event.keysym.scancode == SDL_SCANCODE_LCTRL || event.keysym.scancode == SDL_SCANCODE_RCTRL) {
+				sendToLog(LogLevel::Info, "TEST 1");
 				if (skipIsAllowed()) {
 					// ctrl_pressed_skip_disabled = false; // W_TEMP
 					state.keyState.ctrl |= (event.keysym.scancode == SDL_SCANCODE_LCTRL ? 0x02 : 0x01);
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
+					sendToLog(LogLevel::Info, "TEST 2");
 				}
+				if (!skipIsAllowed())
+					sendToLog(LogLevel::Info, "TEST 3");
+			}
 			if (!skipIsAllowed()) {
 				// sendToLog(LogLevel::Info, "CTRL DISABLED");
-				//  ctrl_pressed_skip_disabled = true; // W_TEMP
-				gosubReal(ctrl_callback_label, script_h.getCurrent(), false); // W_TEMP
-				break;                                                        // Skip not allowed, exit
+				// ctrl_pressed_skip_disabled = true;                       // W_TEMP
+				// gosubReal_w(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
+				break; // Skip not allowed, exit
 			}
 			if (last_ctrl_status != state.keyState.ctrl) {
+				sendToLog(LogLevel::Info, "TEST 4");
 				skip_effect = true; // allow short-circuiting the current effect with ctrl
 				if (video_skip_mode == VideoSkip::Normal) {
+					sendToLog(LogLevel::Info, "TEST 5");
 					request_video_shutdown = true;
 				}
 			}
