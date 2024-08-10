@@ -858,7 +858,7 @@ int ONScripter::scrollableConfigCommand() {
 	     textmargintop = false, scrollbar = false, tightfit = false,
 	     hovertext = false, normaltext = false, mousectrl = false,
 	     elemimg = false, imgmarginleft = false, imgmarginright = false, // W_TEMP
-	    imgmargintop = false;                                            // W_TEMP
+	    imgmargintop = false, imgscalex = false, imgscaley = false;      // W_TEMP
 	if (script_h.compareString("divider"))
 		divider = true;
 	else if (script_h.compareString("scrollbar"))
@@ -882,6 +882,10 @@ int ONScripter::scrollableConfigCommand() {
 		imgmarginright = true;
 	else if (script_h.compareString("imgmargintop")) // W_TEMP
 		imgmargintop = true;
+	else if (script_h.compareString("imgscalex")) // W_TEMP
+		imgscalex = true;
+	else if (script_h.compareString("imgscaley")) // W_TEMP
+		imgscaley = true;
 
 	else if (script_h.compareString("cols"))
 		cols = true;
@@ -952,6 +956,10 @@ int ONScripter::scrollableConfigCommand() {
 		si.imgMarginRight = script_h.readInt();
 	else if (imgmargintop) // W_TEMP
 		si.imgMarginTop = script_h.readInt();
+	else if (imgscalex) // W_TEMP
+		si.imgScaleX = script_h.readInt();
+	else if (imgscaley) // W_TEMP
+		si.imgScaleY = script_h.readInt();
 
 	else if (tightfit)
 		si.tightlyFit = script_h.readInt();
