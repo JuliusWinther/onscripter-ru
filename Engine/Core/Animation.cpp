@@ -717,7 +717,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			}
 			gpu.copyGPUImage(spriteImg->gpu_image, &img_rect, &localClip,
 			                 target, info->pos.x + xLeft + marginLeft, info->pos.y + yTop + marginTop,
-			                 1 + (scaleX / 100), 1(scaleY / 100), 0, false);
+			                 1 + (scaleX / 100), 1 + (scaleY / 100), 0, false);
 		}
 		// End Custom
 
