@@ -707,9 +707,9 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			                  elem.has("imgmarginright") ? std::stoi(elem["imgmarginright"].value) :
 			                                               si.imgMarginRight;
 			int marginTop   = elem.has("imgmargintop") ? std::stoi(elem["imgmargintop"].value) : si.imgMarginTop;
-			float scaleX    = elem.has("imgscalex") ? std::stoi(elem["imgscalex"].value) : si.imgScaleX;
-			float scaleY    = elem.has("imgscaley") ? std::stoi(elem["imgscaley"].value) : si.imgScaleY;
-			GPU_Rect img_rect{0, 0, spriteImg->pos.w * scaleX, spriteImg->pos.h * scaleY};
+			int scaleX      = elem.has("imgscalex") ? std::stoi(elem["imgscalex"].value) : si.imgScaleX;
+			int scaleY      = elem.has("imgscaley") ? std::stoi(elem["imgscaley"].value) : si.imgScaleY;
+			GPU_Rect img_rect{0, 0, spriteImg->pos.w, spriteImg->pos.h};
 			if (spriteBg->num_of_cells > 1 && si.hoveredElement == elementIndex) {
 				// May need to be expanded to allow for elements you can set into a state (e.g. "playing") and then move away from
 				// e.g. selectedElement field (seems confuseable with hoveredElement lol)
@@ -717,7 +717,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			}
 			gpu.copyGPUImage(spriteImg->gpu_image, &img_rect, &localClip,
 			                 target, info->pos.x + xLeft + marginLeft, info->pos.y + yTop + marginTop,
-			                 1, 1, 0, false);
+			                 1 + (scaleX / 100), 1(scaleY / 100), 0, false);
 		}
 		// End Custom
 
