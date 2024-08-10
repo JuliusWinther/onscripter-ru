@@ -395,8 +395,7 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 		return;
 	}
 	if (buffer[0] == ':') {
-		while (*++buffer == ' ')
-			;
+		while (*++buffer == ' ');
 
 		if (buffer[0] == 'a') {
 			anim->trans_mode = AnimationInfo::TRANS_ALPHA;
@@ -695,6 +694,30 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			char *txt         = const_cast<char *>(text.data());
 			dlgCtrl.renderToTarget(target, &localClip, txt, &fi, false, si.tightlyFit);
 		}
+
+		// W_TEMP - All of this is custom
+		auto spriteImg = elem.has("img") ? &sprite2_info[std::stoi(elem["img"].value)] : si.elementImg;
+		if (spriteImg)
+			spriteImg = spriteImg->oldNew(refresh_mode);
+		if (elem.has("img")) {
+			int marginLeft  = elem.has("imgmarginwidth") ? std::stoi(elem["imgmarginwidth"].value) :
+			                  elem.has("imgmarginleft")  ? std::stoi(elem["imgmarginleft"].value) :
+			                                               si.imgMarginLeft;
+			int marginRight = elem.has("imgmarginwidth") ? std::stoi(elem["imgmarginwidth"].value) :
+			                  elem.has("imgmarginright") ? std::stoi(elem["imgmarginright"].value) :
+			                                               si.imgMarginRight;
+			int marginTop   = elem.has("imgmargintop") ? std::stoi(elem["imgmargintop"].value) : si.imgMarginTop;
+			GPU_Rect img_rect{0, 0, spriteImg->pos.w, spriteImg->pos.h};
+			if (spriteBg->num_of_cells > 1 && si.hoveredElement == elementIndex) {
+				// May need to be expanded to allow for elements you can set into a state (e.g. "playing") and then move away from
+				// e.g. selectedElement field (seems confuseable with hoveredElement lol)
+				img_rect.x += spriteBg->pos.w;
+			}
+			gpu.copyGPUImage(spriteImg->gpu_image, &img_rect, &localClip,
+			                 target, info->pos.x + xLeft + marginLeft, info->pos.y + yTop + marginTop,
+			                 1, 1, 0, false);
+		}
+		// End Custom
 
 		// Draw divider after each element
 		if (si.divider)

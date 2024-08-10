@@ -23,20 +23,20 @@
 
 #include <cstring>
 
-const int TRANSBTN_CUTOFF = 1; //alpha threshold for ignoring transparent areas
+const int TRANSBTN_CUTOFF = 1; // alpha threshold for ignoring transparent areas
 
 enum {
 	SPRITE_NONE = 0,
 	SPRITE_LSP  = 0x1,
 	SPRITE_LSP2 = 0x2,
-	//SPRITE_SYSMENUTITLE = 0x4,
+	// SPRITE_SYSMENUTITLE = 0x4,
 	SPRITE_BAR           = 0x8,
 	SPRITE_PRNUM         = 0x10,
 	SPRITE_BG            = 0x20,
 	SPRITE_SENTENCE_FONT = 0x40,
 	SPRITE_CURSOR        = 0x80,
 	SPRITE_TACHI         = 0x100,
-	//SPRITE_LOOKBACK = 0x200,
+	// SPRITE_LOOKBACK = 0x200,
 	SPRITE_BUTTONS = 0x400,
 	SPRITE_ALL     = 0xFFF
 };
@@ -70,7 +70,7 @@ public:
 	/* identification variables */
 	int type{SPRITE_NONE};
 	int id{0};
-	std::map<int, SpriteIdentifier> childImages; //ordered by z-order
+	std::map<int, SpriteIdentifier> childImages; // ordered by z-order
 	bool exists{false};                          // this is here temporarily
 
 	/* never copied */
@@ -110,6 +110,7 @@ public:
 		uchar3 hoverMultiplier{0xFF, 0xFF, 0xFF};
 		uchar3 normalMultipler{0xFF, 0xFF, 0xFF};
 		AnimationInfo *elementBackground = nullptr;
+		AnimationInfo *elementImg        = nullptr; // W_TEMP
 		AnimationInfo *divider           = nullptr;
 		AnimationInfo *scrollbar         = nullptr;
 		int scrollbarTop                 = 0;
@@ -125,6 +126,10 @@ public:
 		int textMarginLeft               = 0;
 		int textMarginRight              = 0;
 		int textMarginTop                = 0;
+
+		int imgMarginLeft  = 0; // W_TEMP
+		int imgMarginRight = 0; // W_TEMP
+		int imgMarginTop   = 0; // W_TEMP
 
 		long layoutedElements = 0;
 		long hoveredElement   = 0;
@@ -167,7 +172,7 @@ public:
 	bool vertical_cells{false};
 	bool is_animatable{false};
 	bool skip_whitespace{false};
-	int layer_no{-1}; //Mion: for Layer effects
+	int layer_no{-1}; // Mion: for Layer effects
 	char *file_name{nullptr};
 	char *lips_name{nullptr};
 	char *mask_file_name{nullptr};
@@ -176,14 +181,14 @@ public:
 
 	/* Variables from AnimationInfo */
 	bool deferredLoading{false};
-	bool stale_image{true}; //set to true when the image needs to be created/redone
+	bool stale_image{true}; // set to true when the image needs to be created/redone
 	bool visible{false};
 	bool abs_flag{true};
 
 	bool has_z_order_override{false};
 	int z_order_override;
 
-	GPU_Rect orig_pos{0, 0, 0, 0}; //Mion: position and size of the image before resizing
+	GPU_Rect orig_pos{0, 0, 0, 0}; // Mion: position and size of the image before resizing
 	GPU_Rect pos{0, 0, 0, 0};      // position and size of the current cell
 	GPU_Rect scrollable{0, 0, 0, 0};
 
