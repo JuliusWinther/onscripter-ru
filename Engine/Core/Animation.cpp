@@ -389,7 +389,7 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 			anim->duration_list    = new int[1];
 			anim->duration_list[0] = tmp->interval;
 			anim->is_animatable    = true;
-			//sendToLog(LogLevel::Info, "setup a sprite for layer %d\n", anim->layer_no);
+			// sendToLog(LogLevel::Info, "setup a sprite for layer %d\n", anim->layer_no);
 		} else
 			anim->layer_no = -1;
 		return;
@@ -700,15 +700,12 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 		if (spriteImg)
 			spriteImg = spriteImg->oldNew(refresh_mode);
 		if (elem.has("img")) {
-			int marginLeft  = elem.has("imgmarginwidth") ? std::stoi(elem["imgmarginwidth"].value) :
-			                  elem.has("imgmarginleft")  ? std::stoi(elem["imgmarginleft"].value) :
-			                                               si.imgMarginLeft;
-			int marginRight = elem.has("imgmarginwidth") ? std::stoi(elem["imgmarginwidth"].value) :
-			                  elem.has("imgmarginright") ? std::stoi(elem["imgmarginright"].value) :
-			                                               si.imgMarginRight;
-			int marginTop   = elem.has("imgmargintop") ? std::stoi(elem["imgmargintop"].value) : si.imgMarginTop;
-			float scaleX    = elem.has("imgscalex") ? std::stoi(elem["imgscalex"].value) : si.imgScaleX;
-			float scaleY    = elem.has("imgscaley") ? std::stoi(elem["imgscaley"].value) : si.imgScaleY;
+			int marginLeft = elem.has("imgmarginwidth") ? std::stoi(elem["imgmarginwidth"].value) :
+			                 elem.has("imgmarginleft")  ? std::stoi(elem["imgmarginleft"].value) :
+			                                              si.imgMarginLeft;
+			int marginTop  = elem.has("imgmargintop") ? std::stoi(elem["imgmargintop"].value) : si.imgMarginTop;
+			float scaleX   = elem.has("imgscalex") ? std::stoi(elem["imgscalex"].value) : si.imgScaleX;
+			float scaleY   = elem.has("imgscaley") ? std::stoi(elem["imgscaley"].value) : si.imgScaleY;
 			GPU_Rect img_rect{0, 0, spriteImg->pos.w, spriteImg->pos.h};
 			if (spriteBg->num_of_cells > 1 && si.hoveredElement == elementIndex) {
 				// May need to be expanded to allow for elements you can set into a state (e.g. "playing") and then move away from

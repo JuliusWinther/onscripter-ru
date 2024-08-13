@@ -127,11 +127,10 @@ public:
 		int textMarginRight              = 0;
 		int textMarginTop                = 0;
 
-		int imgMarginLeft  = 0;     // W_TEMP
-		int imgMarginRight = 0;     // W_TEMP
-		int imgMarginTop   = 0;     // W_TEMP
-		float imgScaleX    = 100.0; // W_TEMP
-		float imgScaleY    = 100.0; // W_TEMP
+		int imgMarginLeft = 0;     // W_TEMP
+		int imgMarginTop  = 0;     // W_TEMP
+		float imgScaleX   = 100.0; // W_TEMP
+		float imgScaleY   = 100.0; // W_TEMP
 
 		long layoutedElements = 0;
 		long hoveredElement   = 0;
