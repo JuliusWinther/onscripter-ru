@@ -389,7 +389,7 @@ void ONScripter::parseTaggedString(AnimationInfo *anim, bool is_mask) {
 			anim->duration_list    = new int[1];
 			anim->duration_list[0] = tmp->interval;
 			anim->is_animatable    = true;
-			sendToLog(LogLevel::Info, "setup a sprite for layer %d\n", anim->layer_no);
+			//sendToLog(LogLevel::Info, "setup a sprite for layer %d\n", anim->layer_no);
 		} else
 			anim->layer_no = -1;
 		return;

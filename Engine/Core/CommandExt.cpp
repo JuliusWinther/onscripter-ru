@@ -1559,7 +1559,7 @@ int ONScripter::rumbleCommand() {
 	bool didSomething = joyCtrl.rumble(strength, length);
 
 	if (!didSomething) {
-		sendToLog(LogLevel::Warn, "Unable to rumble %f,%d\n", strength, length);
+		// sendToLog(LogLevel::Warn, "Unable to rumble %f,%d\n", strength, length);
 	}
 
 	return RET_CONTINUE;

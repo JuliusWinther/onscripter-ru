@@ -254,7 +254,7 @@ void setPresence(const char* details, const char* currentState, const char* larg
 		activity.GetTimestamps().SetEnd(strtoll(endTimestamp, NULL, 10));
 		activity.SetType(discord::ActivityType::Playing);
 		state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-			sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
+			// sendToLog(((result == discord::Result::Ok) ? LogLevel::Info : LogLevel::Error), "Updating discord status\n");
 		});
 	}
 }
