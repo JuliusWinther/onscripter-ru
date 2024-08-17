@@ -710,7 +710,7 @@ void ONScripter::drawSpecialScrollable(GPU_Target *target, AnimationInfo *info, 
 			if (spriteBg->num_of_cells > 1 && si.hoveredElement == elementIndex) {
 				// May need to be expanded to allow for elements you can set into a state (e.g. "playing") and then move away from
 				// e.g. selectedElement field (seems confuseable with hoveredElement lol)
-				img_rect.x += spriteImg->pos.w;
+				// img_rect.x += spriteImg->pos.w;
 			}
 			gpu.copyGPUImage(spriteImg->gpu_image, &img_rect, &localClip,
 			                 target, info->pos.x + xLeft + marginLeft, info->pos.y + yTop + marginTop,
