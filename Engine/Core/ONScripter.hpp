@@ -459,6 +459,7 @@ public:
 	int gettagCommand();
 	int gettabCommand();
 	int getspsizeCommand();
+	int getscrollposCommand(); // W_TEMP
 	int getspmodeCommand();
 	int getskipoffCommand();
 	int getsevolCommand();

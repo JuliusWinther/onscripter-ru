@@ -2223,6 +2223,25 @@ int ONScripter::getspsizeCommand() {
 	return RET_CONTINUE;
 }
 
+// W_TEMP
+int ONScripter::getscrollposCommand() {
+	bool lsp2 = script_h.isName("getscrollpos2");
+	int no    = validSprite(script_h.readInt());
+
+	AnimationInfo &info = lsp2 ? sprite2_info[no] : sprite_info[no]; // as info
+
+	script_h.readVariable();
+	if (sprite.scrollableInfo.isSpecialScrollable) {
+		AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;
+		script_h.setInt(&script_h.current_variable, info.scrollable.y);
+	} else {
+		console.log("Indicated sprite is not a scrollable")
+	}
+
+	return RET_CONTINUE;
+}
+// End Custom
+
 int ONScripter::getspmodeCommand() {
 	script_h.readVariable();
 	script_h.pushVariable();

@@ -390,6 +390,7 @@ static std::unordered_map<HashedString, CommandFunc> func_lut{
     {"gettab", &ONScripter::gettabCommand},
     {"getspsize2", &ONScripter::getspsizeCommand},
     {"getspsize", &ONScripter::getspsizeCommand},
+    {"getscrollpos", &ONScripter::getscrollposCommand}, // W_TEMP
     {"getspmode", &ONScripter::getspmodeCommand},
     {"getskipoff", &ONScripter::getskipoffCommand},
     {"getsevol", &ONScripter::getsevolCommand},
