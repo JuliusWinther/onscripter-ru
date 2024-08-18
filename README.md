@@ -1,4 +1,4 @@
-ONScripter-RU
+ONScripter-RU-W
 =============
 
 [![Build Status](https://travis-ci.com/umineko-project/onscripter-ru.svg?branch=master)](https://travis-ci.com/umineko-project/onscripter-ru)
