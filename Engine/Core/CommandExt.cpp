@@ -1197,13 +1197,21 @@ int ONScripter::splitCommand() {
 	script_h.readStr();
 	const char *save_buf = script_h.saveStringBuffer();
 
-	char delimiter = script_h.readStr()[0];
+	std::string delimiter = script_h.readStr(); // Change delimiter to a string
+	size_t delimiter_len  = delimiter.length(); // Get the length of the delimiter
 
 	char *token = new char[std::strlen(save_buf) + 1];
 	while (script_h.hasMoreArgs()) {
 
+		const char *delim_pos = std::strstr(save_buf, delimiter.c_str()); // Find the delimiter in the string
+
 		unsigned int c = 0;
-		while (save_buf[c] != delimiter && save_buf[c] != '\0') c++;
+		if (delim_pos != nullptr) {
+			c = delim_pos - save_buf; // Calculate the length until the delimiter
+		} else {
+			c = std::strlen(save_buf); // No delimiter found, take the rest of the string
+		}
+
 		std::memcpy(token, save_buf, c);
 		token[c] = '\0';
 
@@ -1215,9 +1223,11 @@ int ONScripter::splitCommand() {
 			script_h.setStr(&script_h.getVariableData(script_h.current_variable.var_no).str, token);
 		}
 
-		save_buf += c;
-		if (save_buf[0] != '\0')
-			save_buf++;
+		if (delim_pos != nullptr) {
+			save_buf = delim_pos + delimiter_len; // Move the buffer past the delimiter
+		} else {
+			save_buf += c; // Move the buffer to the end of the string
+		}
 	}
 	delete[] token;
 
