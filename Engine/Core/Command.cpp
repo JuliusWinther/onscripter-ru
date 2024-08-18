@@ -2234,9 +2234,9 @@ int ONScripter::getscrollposCommand() {
 	if (info.scrollableInfo.isSpecialScrollable) {
 		// AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;
 		script_h.setInt(&script_h.current_variable, info.scrollable.y);
-	} else {
-		sendToLog(LogLevel::Error, "Indicated sprite is not a scrollable");
-	}
+	} /*else {
+	    sendToLog(LogLevel::Error, "Indicated sprite is not a scrollable");
+	}*/
 
 	return RET_CONTINUE;
 }
