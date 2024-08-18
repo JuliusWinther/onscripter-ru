@@ -1193,7 +1193,7 @@ int ONScripter::spritesetPropertyCommand() {
 	return RET_CONTINUE;
 }
 
-int ONScripter::splitCommand() {
+int ONScripter::splitCommand() { // W_CUSTOM - More than a char split
 	script_h.readStr();
 	const char *save_buf = script_h.saveStringBuffer();
 
