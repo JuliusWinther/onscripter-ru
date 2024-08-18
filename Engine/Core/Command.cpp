@@ -2232,7 +2232,7 @@ int ONScripter::getscrollposCommand() {
 
 	script_h.readVariable();
 	if (sprite.scrollableInfo.isSpecialScrollable) {
-		AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;
+		// AnimationInfo::ScrollableInfo &si = sprite.scrollableInfo;
 		script_h.setInt(&script_h.current_variable, info.scrollable.y);
 	} else {
 		console.log("Indicated sprite is not a scrollable")
