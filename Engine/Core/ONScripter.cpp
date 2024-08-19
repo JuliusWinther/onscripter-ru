@@ -1279,8 +1279,7 @@ void ONScripter::resetFlags() {
 	event_mode                     = IDLE_EVENT_MODE;
 	did_leavetext                  = false;
 	skip_effect                    = false;
-	ctrl_pressed_skip_disabled     = false; // W_TEMP
-	effectskip_flag                = true;  // on by default
+	effectskip_flag                = true; // on by default
 
 	hoveredButtonNumber = -1;
 	hoveringButton      = false;
@@ -1861,10 +1860,10 @@ void ONScripter::executeLabel() {
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
 					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
-					keyState.ctrl              = 0;
-					skip_mode                  = 0;
-					ctrl_pressed_skip_disabled = true;
-					eventCallbackRequired      = true;
+					keyState.ctrl = 0;
+					skip_mode     = 0;
+					// ctrl_pressed_skip_disabled = true;
+					eventCallbackRequired = true;
 				}
 			}
 
