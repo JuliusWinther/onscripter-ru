@@ -1874,14 +1874,12 @@ void ONScripter::executeLabel() {
 			// sendToLog(LogLevel::Info, "TEST 0\n");
 
 			int ret{RET_NO_READ};
-			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
-				if (!ctrl_pressed_skip_disabled) {
-					sendToLog(LogLevel::Info, "TEST 0\n");
-					gosubReal(event_callback_label, script_h.getCurrent());
-				} else {
-					sendToLog(LogLevel::Info, "TEST 1\n");
-					gosubReal(ctrl_callback_label, script_h.getCurrent());
-				}
+			if (ctrl_pressed_skip_disabled) {
+				gosubReal(ctrl_callback_label, script_h.getCurrent());
+				eventCallbackRequired = false;
+				ret                   = RET_CONTINUE;
+			} else if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
+				gosubReal(event_callback_label, script_h.getCurrent());
 				eventCallbackRequired = false;
 				ret                   = RET_CONTINUE;
 			} else if (dlgCtrl.wantsControl() && !callStackHasUninterruptible) {
