@@ -855,7 +855,7 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 				//  sendToLog(LogLevel::Info, "TEST 3\n");
 			}
 			if (!skipIsAllowed()) {
-				// sendToLog(LogLevel::Info, "CTRL DISABLED");
+				sendToLog(LogLevel::Info, "CTRL DISABLED");
 				// ctrl_pressed_skip_disabled = true;                       // W_TEMP
 				// gosubReal_w(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 				break; // Skip not allowed, exit
