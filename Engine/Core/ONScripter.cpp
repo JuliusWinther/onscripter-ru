@@ -1878,6 +1878,7 @@ void ONScripter::executeLabel() {
 				// sendToLog(LogLevel::Info, "TEST 0\n");
 				ctrl_pressed_skip_disabled = false;
 				gosubReal(ctrl_callback_label, script_h.getCurrent());
+				ret = RET_CONTINUE;
 			} else if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
 				gosubReal(event_callback_label, script_h.getCurrent());
 				eventCallbackRequired = false;
