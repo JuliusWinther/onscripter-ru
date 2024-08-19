@@ -1931,6 +1931,11 @@ void ONScripter::executeLabel() {
 				prevEnd = end;*/
 			}
 
+			if (ctrl_pressed_skip_disabled) {
+				ctrl_pressed_skip_disabled = false;
+				gosubReal(ctrl_callback_label, script_h.getCurrent());
+			}
+
 			// These need to execute in both cases.
 			if (ret & (RET_SKIP_LINE | RET_EOL)) {
 				if (ret & RET_SKIP_LINE)
