@@ -849,7 +849,7 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 					// ctrl_pressed_skip_disabled = false; // W_TEMP
 					state.keyState.ctrl |= (event.keysym.scancode == SDL_SCANCODE_LCTRL ? 0x02 : 0x01);
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
-					endToLog(LogLevel::Info, "TEST 2\n");
+					sendToLog(LogLevel::Info, "TEST 2\n");
 				}
 				if (!skipIsAllowed()) {
 					sendToLog(LogLevel::Info, "TEST 3\n");
