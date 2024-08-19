@@ -1799,9 +1799,11 @@ void ONScripter::executeLabel() {
 	int last_token_line = -1;
 
 	while (true) {
-		sendToLog(LogLevel::Info, "bof 0\n") while (current_line < current_label_info->num_of_lines) {
-			sendToLog(LogLevel::Info, "bof 1\n") if ((debug_level > 1) && (last_token_line != current_line) &&
-			                                         (script_h.getStringBufferR()[0] != 0x0a)) {
+		sendToLog(LogLevel::Info, "bof 0\n");
+		while (current_line < current_label_info->num_of_lines) {
+			sendToLog(LogLevel::Info, "bof 1\n");
+			if ((debug_level > 1) && (last_token_line != current_line) &&
+			    (script_h.getStringBufferR()[0] != 0x0a)) {
 				sendToLog(LogLevel::Info, "\n*****  executeLabel %s:%d/%d:mode=%s *****\n",
 				          current_label_info->name,
 				          current_line,
@@ -1832,11 +1834,13 @@ void ONScripter::executeLabel() {
 			if (kidokuskip_flag && (skip_mode & SKIP_NORMAL) &&
 			    kidokumode_flag && !script_h.isKidoku())
 				skip_mode &= ~SKIP_NORMAL;
-			sendToLog(LogLevel::Info, "bof 2\n") static unsigned int waitEventCounter{0};
+			sendToLog(LogLevel::Info, "bof 2\n");
+			static unsigned int waitEventCounter{0};
 			if (!atomic_flag) {
 				waitEventCounter = (waitEventCounter + 1) % 5000; // run once every 5000 commands in superskip mode
 				if (!(skip_mode & SKIP_SUPERSKIP) || !waitEventCounter) {
-					sendToLog(LogLevel::Info, "bof 3\n") bool waitedOnce = false;
+					sendToLog(LogLevel::Info, "bof 3\n");
+					bool waitedOnce = false;
 					while (takeEventsOut(ONS_UPKEEP_EVENT)) {
 						waitedOnce = true;
 						waitEvent(0);
@@ -1857,11 +1861,12 @@ void ONScripter::executeLabel() {
 			// (Plus having it in here will ensure it always responds at the very moment it is necessary, and besides, it does not actually interface with any particular event from SDL)
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
-				sendToLog(LogLevel::Info, "bof 4\n") if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
-					sendToLog(LogLevel::Info, "bof 5\n")
-					    // gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
-					    keyState.ctrl = 0;
-					skip_mode         = 0;
+				sendToLog(LogLevel::Info, "bof 4\n");
+				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
+					sendToLog(LogLevel::Info, "bof 5\n");
+					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
+					keyState.ctrl = 0;
+					skip_mode     = 0;
 					// ctrl_pressed_skip_disabled = true;
 					eventCallbackRequired = true;
 				}
@@ -1881,46 +1886,46 @@ void ONScripter::executeLabel() {
 			    ret = RET_CONTINUE;
 			} else*/
 			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
-				sendToLog(LogLevel::Info, "bof 6\n")
-				    gosubReal(event_callback_label, script_h.getCurrent());
+				sendToLog(LogLevel::Info, "bof 6\n");
+				gosubReal(event_callback_label, script_h.getCurrent());
 				eventCallbackRequired = false;
 				ret                   = RET_CONTINUE;
 			} else if (dlgCtrl.wantsControl() && !callStackHasUninterruptible) {
-				sendToLog(LogLevel::Info, "bof 7\n")
-				    ret = dlgCtrl.processDialogueEvents();
+				sendToLog(LogLevel::Info, "bof 7\n");
+				ret = dlgCtrl.processDialogueEvents();
 			} else if (scriptExecutionPermitted()) {
-				sendToLog(LogLevel::Info, "bof 8\n")
-				    // static auto prevEnd = SDL_GetPerformanceCounter();
-				    // auto start = SDL_GetPerformanceCounter();
+				sendToLog(LogLevel::Info, "bof 8\n");
+				// static auto prevEnd = SDL_GetPerformanceCounter();
+				// auto start = SDL_GetPerformanceCounter();
 
-				    // Very useful debugging code! :)
-				    // Uncomment to use
-				    /*{
-				        std::ostringstream logStream;
-				        logStream << "Since last command: " << (start-prevEnd);
-				        if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
-				        script_h.debugCommandLog.push_back(logStream.str());
-				    }
+				// Very useful debugging code! :)
+				// Uncomment to use
+				/*{
+				    std::ostringstream logStream;
+				    logStream << "Since last command: " << (start-prevEnd);
+				    if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
+				    script_h.debugCommandLog.push_back(logStream.str());
+				}
 
-				    {
-				        auto st = script_h.getCurrent();
-				        auto firstRN0 = strpbrk(st, "\r\n\0");
-				        int eol = firstRN0 ? firstRN0 - st : 0;
-				        std::string log;
-				        log.insert(0, st, eol);
-				        //if (script_h.getStringBuffer()) {
-				        //	log += "(((";
-				        //	log += script_h.getStringBuffer();
-				        //	log += ")))";
-				        //}
-				        if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
-				        script_h.debugCommandLog.push_back(log);
-				        log.clear();
-				    }*/
+				{
+				    auto st = script_h.getCurrent();
+				    auto firstRN0 = strpbrk(st, "\r\n\0");
+				    int eol = firstRN0 ? firstRN0 - st : 0;
+				    std::string log;
+				    log.insert(0, st, eol);
+				    //if (script_h.getStringBuffer()) {
+				    //	log += "(((";
+				    //	log += script_h.getStringBuffer();
+				    //	log += ")))";
+				    //}
+				    if (script_h.debugCommandLog.size() > 300) script_h.debugCommandLog.pop_front();
+				    script_h.debugCommandLog.push_back(log);
+				    log.clear();
+				}*/
 
-				    // count script execution time
-				    auto start = SDL_GetPerformanceCounter();
-				ret            = ScriptParser::parseLine();
+				// count script execution time
+				auto start = SDL_GetPerformanceCounter();
+				ret        = ScriptParser::parseLine();
 				if (ret == RET_NOMATCH)
 					ret = this->parseLine();
 				commandExecutionTime += SDL_GetPerformanceCounter() - start;
@@ -1935,8 +1940,9 @@ void ONScripter::executeLabel() {
 
 			// These need to execute in both cases.
 			if (ret & (RET_SKIP_LINE | RET_EOL)) {
-				sendToLog(LogLevel::Info, "bof 9\n") if (ret & RET_SKIP_LINE)
-				    script_h.skipLine();
+				sendToLog(LogLevel::Info, "bof 9\n");
+				if (ret & RET_SKIP_LINE)
+					script_h.skipLine();
 				if (++current_line >= current_label_info->num_of_lines)
 					break;
 			}
