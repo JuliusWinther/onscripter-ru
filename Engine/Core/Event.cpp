@@ -851,8 +851,9 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 					                               // sendToLog(LogLevel::Info, "TEST 2\n");
 				}
-				// if (!skipIsAllowed())
-				//  sendToLog(LogLevel::Info, "TEST 3\n");
+				if (!skipIsAllowed()) {
+					sendToLog(LogLevel::Info, "TEST 3\n");
+				}
 			}
 			if (!skipIsAllowed()) {
 				sendToLog(LogLevel::Info, "CTRL DISABLED\n");
