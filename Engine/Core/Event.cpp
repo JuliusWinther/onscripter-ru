@@ -846,7 +846,7 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 			if (event.keysym.scancode == SDL_SCANCODE_LCTRL || event.keysym.scancode == SDL_SCANCODE_RCTRL) {
 				// sendToLog(LogLevel::Info, "TEST 1\n");
 				if (skipIsAllowed()) {
-					// ctrl_pressed_skip_disabled = false; // W_TEMP
+					ctrl_pressed_skip_disabled = false; // W_TEMP
 					state.keyState.ctrl |= (event.keysym.scancode == SDL_SCANCODE_LCTRL ? 0x02 : 0x01);
 					internal_slowdown_counter = 0; // maybe a slightly wrong place to do it
 					                               // sendToLog(LogLevel::Info, "TEST 2\n");
@@ -856,9 +856,9 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 			}
 			if (!skipIsAllowed()) {
 				// sendToLog(LogLevel::Info, "CTRL DISABLED");
-				// ctrl_pressed_skip_disabled = true;                       // W_TEMP
-				gosubReal_w(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
-				break;                                                   // Skip not allowed, exit
+				ctrl_pressed_skip_disabled = true; // W_TEMP
+				// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
+				break; // Skip not allowed, exit
 			}
 			if (last_ctrl_status != state.keyState.ctrl) {
 				// sendToLog(LogLevel::Info, "TEST 4\n");

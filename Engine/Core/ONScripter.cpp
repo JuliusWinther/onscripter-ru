@@ -1874,7 +1874,10 @@ void ONScripter::executeLabel() {
 
 			int ret{RET_NO_READ};
 			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
-				gosubReal(event_callback_label, script_h.getCurrent());
+				if (!ctrl_pressed_skip_disabled)
+					gosubReal(event_callback_label, script_h.getCurrent());
+				else
+					gosubReal(ctrl_callback_label, script_h.getCurrent());
 				eventCallbackRequired = false;
 				ret                   = RET_CONTINUE;
 			} else if (dlgCtrl.wantsControl() && !callStackHasUninterruptible) {
