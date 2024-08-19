@@ -1861,9 +1861,10 @@ void ONScripter::executeLabel() {
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
 					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
-					keyState.ctrl         = 0;
-					skip_mode             = 0;
-					eventCallbackRequired = true;
+					keyState.ctrl              = 0;
+					skip_mode                  = 0;
+					ctrl_pressed_skip_disabled = true;
+					eventCallbackRequired      = true;
 				}
 			}
 
