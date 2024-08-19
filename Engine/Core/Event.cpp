@@ -855,10 +855,12 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 				//  sendToLog(LogLevel::Info, "TEST 3\n");
 			}
 			if (!skipIsAllowed()) {
-				// sendToLog(LogLevel::Info, "CTRL DISABLED");
+				sendToLog(LogLevel::Info, "CTRL DISABLED\n");
 				ctrl_pressed_skip_disabled = true; // W_TEMP
 				// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 				break; // Skip not allowed, exit
+			} else {
+				ctrl_pressed_skip_disabled = false; // W_TEMP
 			}
 			if (last_ctrl_status != state.keyState.ctrl) {
 				// sendToLog(LogLevel::Info, "TEST 4\n");
@@ -871,7 +873,6 @@ bool ONScripter::keyDownEvent(SDL_KeyboardEvent &event, EventProcessingState &st
 			// Ctrl key: do skip in text
 			if (event_mode & (WAIT_INPUT_MODE | WAIT_TEXTOUT_MODE | WAIT_TEXTBTN_MODE)) {
 				state.buttonState.set(0);
-				ctrl_pressed_skip_disabled = false; // W_TEMP
 
 				if (event_mode & WAIT_WAIT_MODE) {
 					for (const auto &a : fetchConstantRefreshActions<WaitAction>()) a->terminate();

@@ -1279,8 +1279,8 @@ void ONScripter::resetFlags() {
 	event_mode                     = IDLE_EVENT_MODE;
 	did_leavetext                  = false;
 	skip_effect                    = false;
-	// ctrl_pressed_skip_disabled     = false; // W_TEMP
-	effectskip_flag = true; // on by default
+	ctrl_pressed_skip_disabled     = false; // W_TEMP
+	effectskip_flag                = true;  // on by default
 
 	hoveredButtonNumber = -1;
 	hoveringButton      = false;
