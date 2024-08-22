@@ -1935,7 +1935,6 @@ void ONScripter::executeLabel() {
 
 			// These need to execute in both cases.
 			if (ret & (RET_SKIP_LINE | RET_EOL)) {
-				sendToLog(LogLevel::Info, "bof 9\n");
 				if (ret & RET_SKIP_LINE)
 					script_h.skipLine();
 				if (++current_line >= current_label_info->num_of_lines)
