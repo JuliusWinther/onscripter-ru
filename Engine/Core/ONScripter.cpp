@@ -1801,7 +1801,6 @@ void ONScripter::executeLabel() {
 	while (true) {
 		sendToLog(LogLevel::Info, "bof 0\n");
 		while (current_line < current_label_info->num_of_lines) {
-			sendToLog(LogLevel::Info, "bof 1\n");
 			if ((debug_level > 1) && (last_token_line != current_line) &&
 			    (script_h.getStringBufferR()[0] != 0x0a)) {
 				sendToLog(LogLevel::Info, "\n*****  executeLabel %s:%d/%d:mode=%s *****\n",
@@ -1834,12 +1833,10 @@ void ONScripter::executeLabel() {
 			if (kidokuskip_flag && (skip_mode & SKIP_NORMAL) &&
 			    kidokumode_flag && !script_h.isKidoku())
 				skip_mode &= ~SKIP_NORMAL;
-			sendToLog(LogLevel::Info, "bof 2\n");
 			static unsigned int waitEventCounter{0};
 			if (!atomic_flag) {
 				waitEventCounter = (waitEventCounter + 1) % 5000; // run once every 5000 commands in superskip mode
 				if (!(skip_mode & SKIP_SUPERSKIP) || !waitEventCounter) {
-					sendToLog(LogLevel::Info, "bof 3\n");
 					bool waitedOnce = false;
 					while (takeEventsOut(ONS_UPKEEP_EVENT)) {
 						waitedOnce = true;
@@ -1861,7 +1858,6 @@ void ONScripter::executeLabel() {
 			// (Plus having it in here will ensure it always responds at the very moment it is necessary, and besides, it does not actually interface with any particular event from SDL)
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
-				sendToLog(LogLevel::Info, "bof 4\n");
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
 					sendToLog(LogLevel::Info, "bof 5\n");
 					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
@@ -1894,7 +1890,6 @@ void ONScripter::executeLabel() {
 				sendToLog(LogLevel::Info, "bof 7\n");
 				ret = dlgCtrl.processDialogueEvents();
 			} else if (scriptExecutionPermitted()) {
-				sendToLog(LogLevel::Info, "bof 8\n");
 				// static auto prevEnd = SDL_GetPerformanceCounter();
 				// auto start = SDL_GetPerformanceCounter();
 
