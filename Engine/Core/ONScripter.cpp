@@ -1799,7 +1799,6 @@ void ONScripter::executeLabel() {
 	int last_token_line = -1;
 
 	while (true) {
-		sendToLog(LogLevel::Info, "bof 0\n");
 		while (current_line < current_label_info->num_of_lines) {
 			if ((debug_level > 1) && (last_token_line != current_line) &&
 			    (script_h.getStringBufferR()[0] != 0x0a)) {
@@ -1859,7 +1858,6 @@ void ONScripter::executeLabel() {
 			// (Shouldn't there be some kind of other function than the event loop for checks just like these? I can't believe this is the first instance)
 			if (!(skip_mode & SKIP_SUPERSKIP)) {
 				if (!skipIsAllowed() && (keyState.ctrl || skip_mode)) {
-					sendToLog(LogLevel::Info, "bof 5\n");
 					// gosubReal(ctrl_callback_label, script_h.getCurrent()); // W_TEMP
 					keyState.ctrl = 0;
 					skip_mode     = 0;
@@ -1882,12 +1880,10 @@ void ONScripter::executeLabel() {
 			    ret = RET_CONTINUE;
 			} else*/
 			if (event_callback_label && eventCallbackRequired && !inVariableQueueSubroutine && !callStackHasUninterruptible) {
-				sendToLog(LogLevel::Info, "bof 6\n");
 				gosubReal(event_callback_label, script_h.getCurrent());
 				eventCallbackRequired = false;
 				ret                   = RET_CONTINUE;
 			} else if (dlgCtrl.wantsControl() && !callStackHasUninterruptible) {
-				sendToLog(LogLevel::Info, "bof 7\n");
 				ret = dlgCtrl.processDialogueEvents();
 			} else if (scriptExecutionPermitted()) {
 				// static auto prevEnd = SDL_GetPerformanceCounter();
